@@ -12,45 +12,76 @@
         body { font-family: 'Inter', sans-serif; }
         .glass-card { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); }
         .sidebar-item.active { background: #3b82f6; color: white; }
+        
+        /* Mobile Overlay */
+        #sidebar-overlay {
+            display: none;
+        }
+        @media (max-width: 768px) {
+            #sidebar.open {
+                transform: translateX(0);
+            }
+            #sidebar {
+                transform: translateX(-100%);
+                position: fixed;
+                z-index: 50;
+                height: 100%;
+            }
+            #sidebar-overlay.active {
+                display: block;
+            }
+        }
     </style>
 </head>
 <body class="bg-slate-50 text-slate-900 overflow-hidden h-screen flex">
 
+    <!-- Mobile Overlay -->
+    <div id="sidebar-overlay" onclick="toggleSidebar()" class="fixed inset-0 bg-slate-900/40 z-40"></div>
+
     <!-- Sidebar -->
-    <aside class="w-72 bg-white border-r border-slate-200 flex flex-col hidden md:flex">
-        <div class="p-6 border-b border-slate-100 flex items-center gap-3">
-            <div class="bg-blue-600 p-2 rounded-lg text-white">
-                <i data-lucide="graduation-cap"></i>
+    <aside id="sidebar" class="w-72 bg-white border-r border-slate-200 flex flex-col transition-transform duration-300 ease-in-out shadow-xl md:shadow-none">
+        <div class="p-6 border-b border-slate-100 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="bg-blue-600 p-2 rounded-lg text-white">
+                    <i data-lucide="graduation-cap"></i>
+                </div>
+                <h1 class="font-bold text-xl tracking-tight text-blue-900">HR Academy</h1>
             </div>
-            <h1 class="font-bold text-xl tracking-tight text-blue-900">HR Academy</h1>
+            <button onclick="toggleSidebar()" class="md:hidden p-2 text-slate-400">
+                <i data-lucide="x"></i>
+            </button>
         </div>
         
         <nav class="flex-1 p-4 space-y-1 overflow-y-auto">
-            <button onclick="switchTab('dashboard')" id="btn-dashboard" class="sidebar-item w-full flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-100 transition-all font-medium active">
+            <button onclick="handleNavClick('dashboard')" id="btn-dashboard" class="sidebar-item w-full flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-100 transition-all font-medium active">
                 <i data-lucide="layout-dashboard" class="w-5 h-5"></i> Dashboard
             </button>
             
-            <div class="pt-4 pb-2 px-4 text-xs font-semibold text-slate-400 uppercase tracking-wider">Programs</div>
+            <div class="pt-4 pb-2 px-4 text-xs font-semibold text-slate-400 uppercase tracking-wider">Program</div>
             
-            <button onclick="switchTab('onboarding')" id="btn-onboarding" class="sidebar-item w-full flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-100 transition-all font-medium">
+            <button onclick="handleNavClick('onboarding')" id="btn-onboarding" class="sidebar-item w-full flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-100 transition-all font-medium">
                 <i data-lucide="user-plus" class="w-5 h-5"></i> Onboarding Training
             </button>
-            <button onclick="switchTab('mandatory')" id="btn-mandatory" class="sidebar-item w-full flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-100 transition-all font-medium">
+            <button onclick="handleNavClick('mandatory')" id="btn-mandatory" class="sidebar-item w-full flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-100 transition-all font-medium">
                 <i data-lucide="shield-check" class="w-5 h-5"></i> Mandatory Training
             </button>
-            <button onclick="switchTab('request')" id="btn-request" class="sidebar-item w-full flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-100 transition-all font-medium">
+            <button onclick="handleNavClick('request')" id="btn-request" class="sidebar-item w-full flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-100 transition-all font-medium">
                 <i data-lucide="send" class="w-5 h-5"></i> Training by Request
             </button>
-            <button onclick="switchTab('tna')" id="btn-tna" class="sidebar-item w-full flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-100 transition-all font-medium">
+            <button onclick="handleNavClick('tna')" id="btn-tna" class="sidebar-item w-full flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-100 transition-all font-medium">
                 <i data-lucide="target" class="w-5 h-5"></i> Training by TNA
             </button>
+            <!-- Menu Baru -->
+            <button onclick="handleNavClick('leadership')" id="btn-leadership" class="sidebar-item w-full flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-100 transition-all font-medium">
+                <i data-lucide="users-2" class="w-5 h-5"></i> Leadership Development
+            </button>
 
-            <div class="pt-4 pb-2 px-4 text-xs font-semibold text-slate-400 uppercase tracking-wider">Schedules</div>
+            <div class="pt-4 pb-2 px-4 text-xs font-semibold text-slate-400 uppercase tracking-wider">Jadwal</div>
             
-            <button onclick="switchTab('jadwal-training')" id="btn-jadwal-training" class="sidebar-item w-full flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-100 transition-all font-medium">
+            <button onclick="handleNavClick('jadwal-training')" id="btn-jadwal-training" class="sidebar-item w-full flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-100 transition-all font-medium">
                 <i data-lucide="calendar-days" class="w-5 h-5"></i> Jadwal Training
             </button>
-            <button onclick="switchTab('jadwal-genba')" id="btn-jadwal-genba" class="sidebar-item w-full flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-100 transition-all font-medium">
+            <button onclick="handleNavClick('jadwal-genba')" id="btn-jadwal-genba" class="sidebar-item w-full flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-100 transition-all font-medium">
                 <i data-lucide="factory" class="w-5 h-5"></i> Jadwal Genba
             </button>
         </nav>
@@ -69,23 +100,28 @@
     <!-- Main Content -->
     <main class="flex-1 flex flex-col overflow-hidden">
         <!-- Header -->
-        <header class="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-8 z-10">
-            <h2 id="current-tab-title" class="text-xl font-bold text-slate-800">Dashboard</h2>
+        <header class="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-4 md:px-8 z-10">
             <div class="flex items-center gap-4">
-                <button class="p-2 text-slate-400 hover:text-blue-600 transition-colors"><i data-lucide="search"></i></button>
+                <button onclick="toggleSidebar()" class="md:hidden p-2 text-slate-600 hover:bg-slate-100 rounded-lg">
+                    <i data-lucide="menu"></i>
+                </button>
+                <h2 id="current-tab-title" class="text-lg md:text-xl font-bold text-slate-800">Dashboard</h2>
+            </div>
+            <div class="flex items-center gap-2 md:gap-4">
+                <button class="p-2 text-slate-400 hover:text-blue-600 transition-colors hidden sm:block"><i data-lucide="search"></i></button>
                 <button class="p-2 text-slate-400 hover:text-blue-600 transition-colors"><i data-lucide="bell"></i></button>
-                <button class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition-all shadow-sm flex items-center gap-2">
-                    <i data-lucide="plus" class="w-4 h-4"></i> Data Baru
+                <button class="bg-blue-600 text-white px-3 py-2 md:px-4 md:py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition-all shadow-sm flex items-center gap-2">
+                    <i data-lucide="plus" class="w-4 h-4"></i> <span class="hidden xs:inline">Data Baru</span>
                 </button>
             </div>
         </header>
 
         <!-- Dynamic Content Area -->
-        <div id="content-area" class="flex-1 overflow-y-auto p-8 bg-slate-50">
+        <div id="content-area" class="flex-1 overflow-y-auto p-4 md:p-8 bg-slate-50">
             <!-- Dashboard Content (Default) -->
             <div id="tab-dashboard" class="tab-content space-y-6">
                 <!-- Stats Grid -->
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
                     <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
                         <div class="flex justify-between items-start mb-4">
                             <div class="bg-blue-100 p-2 rounded-lg text-blue-600"><i data-lucide="users"></i></div>
@@ -107,7 +143,7 @@
                             <div class="bg-amber-100 p-2 rounded-lg text-amber-600"><i data-lucide="clock"></i></div>
                             <span class="text-xs font-semibold text-amber-600 bg-amber-50 px-2 py-1 rounded">Pending</span>
                         </div>
-                        <h3 class="text-slate-500 text-sm font-medium">Upcoming Session</h3>
+                        <h3 class="text-slate-500 text-sm font-medium">Sesi Mendatang</h3>
                         <p class="text-2xl font-bold mt-1">18</p>
                     </div>
                     <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
@@ -116,7 +152,7 @@
                             <span class="text-xs font-semibold text-emerald-600 bg-emerald-50 px-2 py-1 rounded">89%</span>
                         </div>
                         <h3 class="text-slate-500 text-sm font-medium">Completion Rate</h3>
-                        <p class="text-2xl font-bold mt-1">Rp 420M</p>
+                        <p class="text-2xl font-bold mt-1">89%</p>
                     </div>
                 </div>
 
@@ -160,12 +196,12 @@
                 </div>
             </div>
 
-            <!-- Program Table Template (Shared by multiple menus) -->
+            <!-- Program Table Template -->
             <div id="tab-generic" class="tab-content hidden">
                 <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
                     <div class="p-6 border-b border-slate-100 flex flex-col md:flex-row md:items-center justify-between gap-4">
                         <div class="flex items-center gap-3">
-                            <div class="relative">
+                            <div class="relative w-full">
                                 <i data-lucide="search" class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
                                 <input type="text" placeholder="Cari data..." class="pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none w-full md:w-64">
                             </div>
@@ -176,15 +212,15 @@
                         <button class="text-blue-600 text-sm font-semibold hover:underline">Ekspor CSV</button>
                     </div>
                     <div class="overflow-x-auto">
-                        <table class="w-full text-left border-collapse">
+                        <table class="w-full text-left border-collapse min-w-[700px]">
                             <thead>
                                 <tr class="bg-slate-50/50">
-                                    <th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase">Nama Program</th>
-                                    <th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase">Departemen</th>
-                                    <th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase">Peserta</th>
-                                    <th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase">Status</th>
-                                    <th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase">Progress</th>
-                                    <th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase">Aksi</th>
+                                    <th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Nama Program</th>
+                                    <th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Departemen</th>
+                                    <th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Peserta</th>
+                                    <th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Status</th>
+                                    <th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Progress</th>
+                                    <th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider text-right">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody id="table-body" class="divide-y divide-slate-100">
@@ -201,34 +237,8 @@
                     <!-- Schedule cards injected here -->
                 </div>
             </div>
-
         </div>
     </main>
-
-    <!-- Modal Form (Placeholder) -->
-    <div id="modal-container" class="fixed inset-0 bg-slate-900/50 hidden items-center justify-center z-50">
-        <div class="bg-white rounded-3xl p-8 w-full max-w-md shadow-2xl">
-            <h3 class="text-xl font-bold mb-4">Tambah Data Baru</h3>
-            <p class="text-slate-500 text-sm mb-6">Silahkan isi detail informasi di bawah ini.</p>
-            <div class="space-y-4">
-                <div>
-                    <label class="block text-sm font-medium text-slate-700 mb-1">Nama Training</label>
-                    <input type="text" class="w-full px-4 py-2 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500">
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-slate-700 mb-1">Kategori</label>
-                    <select class="w-full px-4 py-2 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500">
-                        <option>Internal</option>
-                        <option>Eksternal</option>
-                    </select>
-                </div>
-            </div>
-            <div class="flex gap-3 mt-8">
-                <button onclick="closeModal()" class="flex-1 px-4 py-3 border border-slate-200 rounded-xl font-medium hover:bg-slate-50">Batal</button>
-                <button onclick="closeModal()" class="flex-1 px-4 py-3 bg-blue-600 text-white rounded-xl font-medium hover:bg-blue-700">Simpan</button>
-            </div>
-        </div>
-    </div>
 
     <script>
         // Data Mockup
@@ -246,6 +256,10 @@
             ],
             tna: [
                 { name: "Leadership for Supervisors", dept: "Production", participants: 15, status: "Berjalan", progress: 20 },
+            ],
+            leadership: [
+                { name: "Executive Leadership Program", dept: "Management", participants: 10, status: "Berjalan", progress: 45 },
+                { name: "Conflict Resolution Workshop", dept: "Operations", participants: 20, status: "Selesai", progress: 100 },
             ]
         };
 
@@ -260,25 +274,45 @@
             ]
         };
 
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
+            sidebar.classList.toggle('open');
+            overlay.classList.toggle('active');
+        }
+
+        // Buka sidebar otomatis jika layar kecil (Permintaan User)
+        window.onload = function() {
+            if (window.innerWidth <= 768) {
+                toggleSidebar();
+            }
+            lucide.createIcons();
+        }
+
+        function handleNavClick(tabId) {
+            switchTab(tabId);
+            if (window.innerWidth <= 768) {
+                toggleSidebar();
+            }
+        }
+
         function switchTab(tabId) {
-            // Update UI Active State
             document.querySelectorAll('.sidebar-item').forEach(btn => btn.classList.remove('active'));
             const activeBtn = document.getElementById(`btn-${tabId}`);
             if(activeBtn) activeBtn.classList.add('active');
 
-            // Update Header
             const titles = {
                 'dashboard': 'Dashboard',
                 'onboarding': 'Onboarding Training',
                 'mandatory': 'Mandatory Training',
                 'request': 'Training by Request',
                 'tna': 'Training by TNA',
+                'leadership': 'Leadership Development',
                 'jadwal-training': 'Jadwal Training',
                 'jadwal-genba': 'Jadwal Genba'
             };
             document.getElementById('current-tab-title').innerText = titles[tabId];
 
-            // Hide all contents
             document.querySelectorAll('.tab-content').forEach(content => content.classList.add('hidden'));
 
             if (tabId === 'dashboard') {
@@ -304,9 +338,9 @@
                 
                 tbody.innerHTML += `
                     <tr class="hover:bg-slate-50/50 transition-colors">
-                        <td class="px-6 py-4 font-medium">${item.name}</td>
+                        <td class="px-6 py-4 font-medium text-slate-800">${item.name}</td>
                         <td class="px-6 py-4 text-slate-500">${item.dept}</td>
-                        <td class="px-6 py-4">${item.participants} Orang</td>
+                        <td class="px-6 py-4 text-slate-700">${item.participants} Orang</td>
                         <td class="px-6 py-4">
                             <span class="px-3 py-1 rounded-full text-xs font-semibold ${statusColor}">${item.status}</span>
                         </td>
@@ -318,7 +352,7 @@
                                 <span class="text-xs font-medium text-slate-600">${item.progress}%</span>
                             </div>
                         </td>
-                        <td class="px-6 py-4">
+                        <td class="px-6 py-4 text-right">
                             <button class="text-slate-400 hover:text-blue-600 p-1"><i data-lucide="more-vertical" class="w-5 h-5"></i></button>
                         </td>
                     </tr>
@@ -361,14 +395,6 @@
             });
             lucide.createIcons();
         }
-
-        function closeModal() {
-            document.getElementById('modal-container').classList.add('hidden');
-            document.getElementById('modal-container').classList.remove('flex');
-        }
-
-        // Initialize icons
-        lucide.createIcons();
     </script>
 </body>
 </html>

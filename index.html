@@ -12,6 +12,12 @@
         body { font-family: 'Inter', sans-serif; }
         .glass-card { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); }
         .sidebar-item.active { background: #3b82f6; color: white; }
+        /* Fix teks sidebar agar tidak turun baris */
+.sidebar-item {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
         
         /* Mobile Overlay */
         #sidebar-overlay {

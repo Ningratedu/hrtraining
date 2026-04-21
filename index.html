@@ -398,14 +398,14 @@
     </script>
 
     <!-- ===================================== -->
-<!-- PERFORMANCE MANAGEMENT MODULE -->
-<!-- COPY SEKALI → LANGSUNG JADI -->
+<!-- PERFORMANCE MANAGEMENT - FINAL FIX -->
+<!-- SEKALI COPY → LANGSUNG NYAMBUNG -->
 <!-- ===================================== -->
 
 <script>
 
 // ===============================
-// CONFIG GOOGLE SHEET KPI
+// KPI SHEET CONFIG
 // ===============================
 
 const KPI_SHEET_URL =
@@ -418,98 +418,97 @@ const KPI_SHEET_URL =
 
 function injectPerformanceMenu() {
 
-const sidebar =
-document.querySelector("nav")
-|| document.querySelector(".sidebar")
-|| document.body;
+const nav =
+document.querySelector("nav");
+
+if (!nav) return;
 
 const btn =
-document.createElement("a");
+document.createElement("button");
 
-btn.innerHTML =
-"📊 Performance";
+btn.onclick = () =>
+handleNavClick("performance");
 
-btn.style.cursor = "pointer";
-btn.style.display = "block";
-btn.style.padding = "10px";
+btn.id = "btn-performance";
 
-btn.onclick = () => {
+btn.className =
+"sidebar-item w-full flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-100 transition-all font-medium";
 
-showPerformanceView();
+btn.innerHTML = `
+<i data-lucide="bar-chart-3" class="w-5 h-5"></i>
+Performance Management
+`;
 
-};
+nav.appendChild(btn);
 
-sidebar.appendChild(btn);
+lucide.createIcons();
 
 }
 
 
 // ===============================
-// BUAT VIEW PERFORMANCE
+// BUAT TAB PERFORMANCE
 // ===============================
 
-function createPerformanceView() {
+function injectPerformanceTab() {
 
-if (document.getElementById("view-performance"))
+const content =
+document.getElementById("content-area");
+
+if (!content) return;
+
+if (document.getElementById("tab-performance"))
 return;
 
 const div =
 document.createElement("div");
 
-div.id = "view-performance";
+div.id = "tab-performance";
 
 div.className =
-"view hide p-4 overflow-y-auto";
+"tab-content hidden";
 
 div.innerHTML = `
 
-<h1 style="font-size:20px;
-font-weight:bold;
-margin-bottom:16px;">
+<div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
 
-📊 Performance Management
+<div class="p-6 border-b border-slate-100">
 
-</h1>
+<h3 class="font-bold text-slate-800">
 
-<div style="
-background:white;
-padding:12px;
-border-radius:8px;
-overflow:auto;
-">
+📊 Performance KPI
 
-<table style="
-width:100%;
-border-collapse:collapse;
-font-size:13px;
-">
+</h3>
 
-<thead style="
-background:#1e3a8a;
-color:white;
-">
+</div>
 
-<tr>
+<div class="overflow-x-auto">
 
-<th style="padding:6px;">Username</th>
-<th style="padding:6px;">Nama</th>
-<th style="padding:6px;">Divisi</th>
-<th style="padding:6px;">Departemen</th>
-<th style="padding:6px;">Bulan</th>
-<th style="padding:6px;">KPI</th>
-<th style="padding:6px;">Target</th>
-<th style="padding:6px;">Actual</th>
+<table class="w-full text-left border-collapse min-w-[900px]">
+
+<thead>
+
+<tr class="bg-slate-50">
+
+<th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase">Username</th>
+<th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase">Nama</th>
+<th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase">Divisi</th>
+<th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase">Departemen</th>
+<th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase">Bulan</th>
+<th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase">KPI</th>
+<th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase">Target</th>
+<th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase">Actual</th>
 
 </tr>
 
 </thead>
 
-<tbody id="performanceTable">
+<tbody id="performance-body">
 
 <tr>
 
 <td colspan="8"
-style="text-align:center;padding:12px;">
+class="text-center text-slate-400 py-6">
 
 Loading KPI...
 
@@ -523,30 +522,11 @@ Loading KPI...
 
 </div>
 
+</div>
+
 `;
 
-document.body.appendChild(div);
-
-}
-
-
-// ===============================
-// SHOW VIEW
-// ===============================
-
-function showPerformanceView() {
-
-document
-.querySelectorAll(".view")
-.forEach(v =>
-v.classList.add("hide")
-);
-
-document
-.getElementById("view-performance")
-.classList.remove("hide");
-
-loadPerformanceData();
+content.appendChild(div);
 
 }
 
@@ -557,16 +537,18 @@ loadPerformanceData();
 
 async function loadPerformanceData() {
 
-const table =
-document.getElementById("performanceTable");
+const tbody =
+document.getElementById("performance-body");
+
+if (!tbody) return;
 
 try {
 
-const response =
+const res =
 await fetch(KPI_SHEET_URL);
 
 const text =
-await response.text();
+await res.text();
 
 const rows =
 text.split("\n")
@@ -577,9 +559,7 @@ const headers = rows[0];
 const map = {};
 
 headers.forEach((h,i)=>{
-
 map[h.trim()] = i;
-
 });
 
 let html = "";
@@ -592,37 +572,37 @@ if (!r[0]) continue;
 
 html += `
 
-<tr style="border-bottom:1px solid #ddd;">
+<tr class="border-b">
 
-<td style="padding:6px;">
+<td class="px-6 py-3">
 ${r[map["Username"]]||""}
 </td>
 
-<td style="padding:6px;">
+<td class="px-6 py-3">
 ${r[map["Nama"]]||""}
 </td>
 
-<td style="padding:6px;">
+<td class="px-6 py-3">
 ${r[map["Divisi"]]||""}
 </td>
 
-<td style="padding:6px;">
+<td class="px-6 py-3">
 ${r[map["Departemen"]]||""}
 </td>
 
-<td style="padding:6px;">
+<td class="px-6 py-3">
 ${r[map["Bulan"]]||""}
 </td>
 
-<td style="padding:6px;">
+<td class="px-6 py-3">
 ${r[map["Indikator_KPI"]]||""}
 </td>
 
-<td style="padding:6px;">
+<td class="px-6 py-3">
 ${r[map["Target"]]||""}
 </td>
 
-<td style="padding:6px;">
+<td class="px-6 py-3">
 ${r[map["Actual"]]||""}
 </td>
 
@@ -632,22 +612,20 @@ ${r[map["Actual"]]||""}
 
 }
 
-table.innerHTML = html;
+tbody.innerHTML = html;
 
 }
 
 catch(err){
 
-table.innerHTML = `
+tbody.innerHTML = `
 
 <tr>
 
 <td colspan="8"
-style="color:red;
-text-align:center;
-padding:12px;">
+class="text-red-500 text-center py-6">
 
-Gagal load KPI
+Gagal load data KPI
 
 </td>
 
@@ -661,14 +639,38 @@ Gagal load KPI
 
 
 // ===============================
+// PATCH switchTab OTOMATIS
+// ===============================
+
+const originalSwitchTab =
+switchTab;
+
+switchTab = function(tabId){
+
+originalSwitchTab(tabId);
+
+if (tabId === "performance") {
+
+document
+.getElementById("tab-performance")
+.classList.remove("hidden");
+
+loadPerformanceData();
+
+}
+
+};
+
+
+// ===============================
 // AUTO RUN
 // ===============================
 
 window.addEventListener("load", () => {
 
-createPerformanceView();
-
 injectPerformanceMenu();
+
+injectPerformanceTab();
 
 });
 

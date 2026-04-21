@@ -396,6 +396,283 @@
             lucide.createIcons();
         }
     </script>
+
+    <!-- ===================================== -->
+<!-- PERFORMANCE MANAGEMENT MODULE -->
+<!-- COPY SEKALI → LANGSUNG JADI -->
+<!-- ===================================== -->
+
+<script>
+
+// ===============================
+// CONFIG GOOGLE SHEET KPI
+// ===============================
+
+const KPI_SHEET_URL =
+"https://docs.google.com/spreadsheets/d/e/2PACX-1vQIkiw03OjCokfdb-bsgfm3hKWjU3OVH3r_VOKOElma-3jbXQsn5AebuC3eTH8BqdAiGC8Tss-0rKLb/pub?gid=361653718&single=true&output=csv";
+
+
+// ===============================
+// AUTO TAMBAH MENU PERFORMANCE
+// ===============================
+
+function injectPerformanceMenu() {
+
+const sidebar =
+document.querySelector("nav")
+|| document.querySelector(".sidebar")
+|| document.body;
+
+const btn =
+document.createElement("a");
+
+btn.innerHTML =
+"📊 Performance";
+
+btn.style.cursor = "pointer";
+btn.style.display = "block";
+btn.style.padding = "10px";
+
+btn.onclick = () => {
+
+showPerformanceView();
+
+};
+
+sidebar.appendChild(btn);
+
+}
+
+
+// ===============================
+// BUAT VIEW PERFORMANCE
+// ===============================
+
+function createPerformanceView() {
+
+if (document.getElementById("view-performance"))
+return;
+
+const div =
+document.createElement("div");
+
+div.id = "view-performance";
+
+div.className =
+"view hide p-4 overflow-y-auto";
+
+div.innerHTML = `
+
+<h1 style="font-size:20px;
+font-weight:bold;
+margin-bottom:16px;">
+
+📊 Performance Management
+
+</h1>
+
+<div style="
+background:white;
+padding:12px;
+border-radius:8px;
+overflow:auto;
+">
+
+<table style="
+width:100%;
+border-collapse:collapse;
+font-size:13px;
+">
+
+<thead style="
+background:#1e3a8a;
+color:white;
+">
+
+<tr>
+
+<th style="padding:6px;">Username</th>
+<th style="padding:6px;">Nama</th>
+<th style="padding:6px;">Divisi</th>
+<th style="padding:6px;">Departemen</th>
+<th style="padding:6px;">Bulan</th>
+<th style="padding:6px;">KPI</th>
+<th style="padding:6px;">Target</th>
+<th style="padding:6px;">Actual</th>
+
+</tr>
+
+</thead>
+
+<tbody id="performanceTable">
+
+<tr>
+
+<td colspan="8"
+style="text-align:center;padding:12px;">
+
+Loading KPI...
+
+</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+`;
+
+document.body.appendChild(div);
+
+}
+
+
+// ===============================
+// SHOW VIEW
+// ===============================
+
+function showPerformanceView() {
+
+document
+.querySelectorAll(".view")
+.forEach(v =>
+v.classList.add("hide")
+);
+
+document
+.getElementById("view-performance")
+.classList.remove("hide");
+
+loadPerformanceData();
+
+}
+
+
+// ===============================
+// LOAD KPI DATA
+// ===============================
+
+async function loadPerformanceData() {
+
+const table =
+document.getElementById("performanceTable");
+
+try {
+
+const response =
+await fetch(KPI_SHEET_URL);
+
+const text =
+await response.text();
+
+const rows =
+text.split("\n")
+.map(r => r.split(","));
+
+const headers = rows[0];
+
+const map = {};
+
+headers.forEach((h,i)=>{
+
+map[h.trim()] = i;
+
+});
+
+let html = "";
+
+for (let i=1;i<rows.length;i++){
+
+const r = rows[i];
+
+if (!r[0]) continue;
+
+html += `
+
+<tr style="border-bottom:1px solid #ddd;">
+
+<td style="padding:6px;">
+${r[map["Username"]]||""}
+</td>
+
+<td style="padding:6px;">
+${r[map["Nama"]]||""}
+</td>
+
+<td style="padding:6px;">
+${r[map["Divisi"]]||""}
+</td>
+
+<td style="padding:6px;">
+${r[map["Departemen"]]||""}
+</td>
+
+<td style="padding:6px;">
+${r[map["Bulan"]]||""}
+</td>
+
+<td style="padding:6px;">
+${r[map["Indikator_KPI"]]||""}
+</td>
+
+<td style="padding:6px;">
+${r[map["Target"]]||""}
+</td>
+
+<td style="padding:6px;">
+${r[map["Actual"]]||""}
+</td>
+
+</tr>
+
+`;
+
+}
+
+table.innerHTML = html;
+
+}
+
+catch(err){
+
+table.innerHTML = `
+
+<tr>
+
+<td colspan="8"
+style="color:red;
+text-align:center;
+padding:12px;">
+
+Gagal load KPI
+
+</td>
+
+</tr>
+
+`;
+
+}
+
+}
+
+
+// ===============================
+// AUTO RUN
+// ===============================
+
+window.addEventListener("load", () => {
+
+createPerformanceView();
+
+injectPerformanceMenu();
+
+});
+
+</script>
 </body>
 </html>
 

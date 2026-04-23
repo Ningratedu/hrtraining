@@ -280,12 +280,14 @@ class="view">
 
 <h2 class="text-2xl font-bold mb-6">
 
-Dashboard
+Dashboard Training Analytics
 
 </h2>
 
+<!-- KPI -->
+
 <div
-class="grid grid-cols-1 md:grid-cols-4 gap-4">
+class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
 
 <div class="card glow">
 
@@ -341,7 +343,34 @@ class="text-3xl font-bold">
 
 </div>
 
+<!-- CHART -->
+
+<div
+class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+<div class="card">
+
+<canvas id="chartDivisi">
+
+</canvas>
+
 </div>
+
+<div class="card">
+
+<canvas id="chartKategori">
+
+</canvas>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- ========================= -->
+<!-- ONBOARDING BLOCK -->
+<!-- ========================= -->
 
 <!-- ========================= -->
 <!-- ONBOARDING BLOCK -->
@@ -350,11 +379,67 @@ class="text-3xl font-bold">
 <div id="view-onboarding"
 class="view hidden">
 
-<h2 class="text-2xl font-bold">
+<h2
+class="text-2xl font-bold mb-6">
 
-Onboarding Training
+Onboarding Training Dashboard
 
 </h2>
+
+<!-- KPI -->
+
+<div
+class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+
+<div class="card glow">
+
+<h3>Total Materi</h3>
+
+<p id="onbTotalMateri"
+class="text-3xl font-bold">
+
+0
+
+</p>
+
+</div>
+
+<div class="card">
+
+<h3>Completed</h3>
+
+<p id="onbCompleted"
+class="text-3xl font-bold">
+
+0
+
+</p>
+
+</div>
+
+<div class="card">
+
+<h3>Progress %</h3>
+
+<p id="onbProgress"
+class="text-3xl font-bold">
+
+0%
+
+</p>
+
+</div>
+
+</div>
+
+<!-- LIST MATERI -->
+
+<div
+id="onboardingList"
+
+class="grid grid-cols-1 md:grid-cols-3 gap-4">
+
+</div>
 
 </div>
 
@@ -441,6 +526,14 @@ document
 "view-"+name
 ).classList.remove("hidden");
 
+// AUTO LOAD
+
+if(name=="onboarding"){
+
+loadOnboarding();
+
+}
+
 }
 
 // =========================
@@ -525,7 +618,326 @@ data.length;
 }
 
 </script>
+  
+<script>
+async function loadDashboard(){
 
+// =====================
+// LOAD DATA
+
+const karyawan =
+await fetch(
+API_URL+
+"?action=getSheetData&sheet=Data Karyawan"
+).then(r=>r.json());
+
+const penyelesaian =
+await fetch(
+API_URL+
+"?action=getSheetData&sheet=Data Penyelesaian Training"
+).then(r=>r.json());
+
+const matrix =
+await fetch(
+API_URL+
+"?action=getSheetData&sheet=Data Matrix Materi Training"
+).then(r=>r.json());
+
+// =====================
+// KPI
+
+document
+.getElementById("totalKaryawan")
+.innerText =
+karyawan.length;
+
+document
+.getElementById("totalTraining")
+.innerText =
+penyelesaian.length;
+
+// =====================
+// STATUS
+
+let completed =
+penyelesaian.filter(d=>
+d.Status=="Completed"
+).length;
+
+let progress =
+penyelesaian.filter(d=>
+d.Status!="Completed"
+).length;
+
+document
+.getElementById("totalCompleted")
+.innerText =
+completed;
+
+document
+.getElementById("totalProgress")
+.innerText =
+progress;
+
+// =====================
+// MAP TRAINING → MATRIX
+
+let kategoriMap={};
+
+matrix.forEach(m=>{
+
+kategoriMap[
+m["Judul Materi Training"]
+]=
+m["Kategori Training"];
+
+});
+
+// =====================
+// CHART PER DIVISI
+
+let divisiCount={};
+
+penyelesaian.forEach(p=>{
+
+let div =
+p.Departement;
+
+if(!divisiCount[div])
+divisiCount[div]=0;
+
+divisiCount[div]++;
+
+});
+
+new Chart(
+document
+.getElementById("chartDivisi"),
+{
+
+type:"bar",
+
+data:{
+
+labels:
+Object.keys(divisiCount),
+
+datasets:[{
+
+label:
+"Training per Divisi",
+
+data:
+Object.values(divisiCount)
+
+}]
+
+}
+
+});
+
+// =====================
+// CHART KATEGORI
+
+let kategoriCount={};
+
+penyelesaian.forEach(p=>{
+
+let kategori =
+kategoriMap[p.Training]
+|| "Unknown";
+
+if(!kategoriCount[kategori])
+kategoriCount[kategori]=0;
+
+kategoriCount[kategori]++;
+
+});
+
+new Chart(
+document
+.getElementById("chartKategori"),
+{
+
+type:"doughnut",
+
+data:{
+
+labels:
+Object.keys(kategoriCount),
+
+datasets:[{
+
+data:
+Object.values(kategoriCount)
+
+}]
+
+}
+
+});
+
+}  
+</script>  
+  
+<script> 
+// =============================
+// LOAD ONBOARDING DATA
+// =============================
+
+// =============================
+// LOAD ONBOARDING (REAL LOGIC)
+// =============================
+
+async function loadOnboarding(){
+
+// ======================
+// LOAD DATA
+
+const penyelesaian =
+await fetch(
+API_URL+
+"?action=getSheetData&sheet=Data Penyelesaian Training"
+).then(r=>r.json());
+
+const matrix =
+await fetch(
+API_URL+
+"?action=getSheetData&sheet=Data Matrix Materi Training"
+).then(r=>r.json());
+
+// ======================
+// FILTER MATRIX ONBOARDING
+
+const onboardingMateri =
+matrix.filter(m=>
+
+m["Kategori Training"]
+==
+"Onboarding Training"
+
+);
+
+// ======================
+// TOTAL MATERI
+
+let totalMateri =
+onboardingMateri.length;
+
+document
+.getElementById("onbTotalMateri")
+.innerText =
+totalMateri;
+
+// ======================
+// HITUNG LULUS
+
+let lulusCount=0;
+
+let html="";
+
+onboardingMateri.forEach(m=>{
+
+let materiName =
+m["Judul Materi Training"];
+
+// cari LULUS
+
+let lulus =
+penyelesaian.filter(p=>
+
+p.Training
+==
+materiName
+
+&&
+p.Status
+==
+"LULUS"
+
+);
+
+// ======================
+// HITUNG PROGRESS
+
+if(lulus.length>0)
+lulusCount++;
+
+// ======================
+// STATUS CARD
+
+let statusText =
+lulus.length>0
+? "✅ LULUS"
+: "⏳ Belum Lulus";
+
+// ======================
+// CARD
+
+html+=`
+
+<div class="card">
+
+<h3 class="font-bold">
+
+${materiName}
+
+</h3>
+
+<p class="text-sm opacity-70">
+
+Departemen:
+${m.Departemen}
+
+</p>
+
+<p class="mt-2">
+
+Status:
+${statusText}
+
+</p>
+
+</div>
+
+`;
+
+});
+
+// ======================
+// SET KPI
+
+document
+.getElementById("onbCompleted")
+.innerText =
+lulusCount;
+
+// ======================
+// HITUNG %
+
+let percent =
+Math.round(
+(lulusCount / totalMateri)
+*100
+);
+
+document
+.getElementById("onbProgress")
+.innerText =
+percent+"%";
+
+// ======================
+// RENDER LIST
+
+document
+.getElementById(
+"onboardingList"
+).innerHTML =
+html;
+
+}
+  
+</script>
 </body>
 
 </html>

@@ -9,126 +9,345 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://unpkg.com/lucide@latest"></script>
 
+<style>
+nav button{
+    text-align:left;
+    padding:8px 10px;
+    border-radius:8px;
+}
+
+nav button:hover{
+    background:#f1f5f9;
+}
+
+nav button.active{
+    background:#e2e8f0;
+    font-weight:bold;
+}
+</style>
+
 </head>
 
 <body class="bg-gray-100 flex h-screen">
 
 <!-- SIDEBAR -->
 <aside class="w-72 bg-white border-r p-5 flex flex-col">
-    <h1 class="text-xl font-bold mb-6">HR Academy</h1>
 
-    <nav class="flex flex-col gap-2 text-sm">
+<h1 class="text-xl font-bold mb-6">
+HR Academy
+</h1>
 
-        <button onclick="openView('dashboard')">Dashboard</button>
+<nav class="flex flex-col gap-1 text-sm">
 
-        <p class="mt-4 text-xs text-gray-400">PROGRAM</p>
-        <button onclick="openView('onboarding')">Onboarding Training</button>
-        <button onclick="openView('mandatory')">Mandatory Training</button>
-        <button onclick="openView('request')">Training by Request</button>
-        <button onclick="openView('tna')">Training by TNA</button>
-        <button onclick="openView('leadership')">Leadership Development</button>
+<button onclick="openView('dashboard', event)">
+Dashboard
+</button>
 
-        <p class="mt-4 text-xs text-gray-400">JADWAL</p>
-        <button onclick="openView('jadwal_training')">Jadwal Training</button>
-        <button onclick="openView('jadwal_genba')">Jadwal Genba</button>
+<p class="mt-4 text-xs text-gray-400">
+PROGRAM
+</p>
 
-        <button class="mt-4" onclick="openView('performance')">Performance Management</button>
+<button onclick="loadPage('Onboarding.html', event)">
+Onboarding Training
+</button>
 
-    </nav>
+<button onclick="openView('mandatory', event)">
+Mandatory Training
+</button>
+
+<button onclick="openView('request', event)">
+Training by Request
+</button>
+
+<button onclick="loadPage('Training_By_TNA.html', event)">
+Training by TNA
+</button>
+
+<button onclick="openView('leadership', event)">
+Leadership Development
+</button>
+
+<p class="mt-4 text-xs text-gray-400">
+JADWAL
+</p>
+
+<button onclick="openView('jadwal_training', event)">
+Jadwal Training
+</button>
+
+<button onclick="openView('jadwal_genba', event)">
+Jadwal Genba
+</button>
+
+<button class="mt-4"
+onclick="openView('performance', event)">
+Performance Management
+</button>
+
+</nav>
+
 </aside>
 
 <!-- MAIN -->
 <main class="flex-1 flex flex-col">
-<header class="bg-white border-b p-4 font-bold" id="title">Dashboard</header>
-<div id="content" class="p-6 overflow-auto"></div>
+
+<header class="bg-white border-b p-4 font-bold"
+id="title">
+Dashboard
+</header>
+
+<div id="content"
+class="p-6 overflow-auto">
+</div>
+
 </main>
 
 <script>
 
 // ================= API =================
-const API_URL = "https://script.google.com/macros/s/AKfycbwq-wVNNlqiMoCdvBsuxDc1A9EWWrD58t2Qa0B_wNONRv88WmZGJHFrU-ZoMq8TONvPgQ/exec";
+
+const API_URL =
+"https://script.google.com/macros/s/AKfycbwq-wVNNlqiMoCdvBsuxDc1A9EWWrD58t2Qa0B_wNONRv88WmZGJHFrU-ZoMq8TONvPgQ/exec";
 
 let programsData = {};
 let schedulesData = {};
 let performanceData = [];
 
 async function loadAPI(){
-    try{
-        const res = await fetch(API_URL);
-        const data = await res.json();
 
-        programsData = data.programs || {};
-        schedulesData = data.schedules || {};
-        performanceData = data.performance || [];
+try{
 
-        console.log("API OK:", data);
+const res = await fetch(API_URL);
+const data = await res.json();
 
-    }catch(err){
-        console.error("API ERROR:", err);
-    }
+programsData =
+data.programs || {};
+
+schedulesData =
+data.schedules || {};
+
+performanceData =
+data.performance || [];
+
+console.log("API OK:", data);
+
+}catch(err){
+
+console.error("API ERROR:", err);
+
+}
+
+}
+
+// ================= ACTIVE MENU =================
+
+function setActive(btn){
+
+document.querySelectorAll("nav button")
+.forEach(b =>
+b.classList.remove("active")
+);
+
+if(btn)
+btn.classList.add("active");
+
+}
+
+// ================= LOAD HTML PAGE =================
+
+async function loadPage(page, event){
+
+setActive(event.target);
+
+const content =
+document.getElementById("content");
+
+try{
+
+const res = await fetch(page);
+const html = await res.text();
+
+content.innerHTML = html;
+
+document.getElementById("title")
+.innerText =
+page.replace(".html","")
+.replace("_"," ")
+.toUpperCase();
+
+}catch(err){
+
+content.innerHTML =
+`<div class="text-red-500">
+Gagal memuat halaman ${page}
+</div>`;
+
+console.error(err);
+
+}
+
 }
 
 // ================= VIEW =================
-function openView(view){
 
-    document.getElementById("title").innerText = view.toUpperCase();
-    const content = document.getElementById("content");
+function openView(view, event){
 
-    if(view === "dashboard"){
-        content.innerHTML = `
-        <div class="grid grid-cols-3 gap-4">
-            <div class="bg-white p-5 rounded-xl">Onboarding: ${(programsData.onboarding||[]).length}</div>
-            <div class="bg-white p-5 rounded-xl">Mandatory: ${(programsData.mandatory||[]).length}</div>
-            <div class="bg-white p-5 rounded-xl">TNA: ${(programsData.tna||[]).length}</div>
-        </div>`;
-        return;
-    }
+setActive(event.target);
 
-    if(view === "onboarding") return renderTable(programsData.onboarding);
-    if(view === "mandatory") return renderTable(programsData.mandatory);
-    if(view === "request") return renderTable(programsData.request);
-    if(view === "tna") return renderTable(programsData.tna);
-    if(view === "leadership") return renderTable(programsData.leadership);
+document.getElementById("title")
+.innerText =
+view.toUpperCase();
 
-    if(view === "jadwal_training") return renderTable(schedulesData.training);
-    if(view === "jadwal_genba") return renderTable(schedulesData.genba);
+const content =
+document.getElementById("content");
 
-    if(view === "performance") return renderTable(performanceData);
+// DASHBOARD
+
+if(view === "dashboard"){
+
+content.innerHTML = `
+<div class="grid grid-cols-3 gap-4">
+
+<div class="bg-white p-5 rounded-xl">
+Onboarding:
+${(programsData.onboarding||[]).length}
+</div>
+
+<div class="bg-white p-5 rounded-xl">
+Mandatory:
+${(programsData.mandatory||[]).length}
+</div>
+
+<div class="bg-white p-5 rounded-xl">
+TNA:
+${(programsData.tna||[]).length}
+</div>
+
+</div>`;
+
+return;
+
+}
+
+// PROGRAM
+
+if(view === "mandatory")
+return renderTable(
+programsData.mandatory
+);
+
+if(view === "request")
+return renderTable(
+programsData.request
+);
+
+if(view === "leadership")
+return renderTable(
+programsData.leadership
+);
+
+// JADWAL
+
+if(view === "jadwal_training")
+return renderTable(
+schedulesData.training
+);
+
+if(view === "jadwal_genba")
+return renderTable(
+schedulesData.genba
+);
+
+// PERFORMANCE
+
+if(view === "performance")
+return renderTable(
+performanceData
+);
+
 }
 
 // ================= TABLE =================
+
 function renderTable(data){
 
-    if(!data || !data.length){
-        document.getElementById("content").innerHTML = "No Data";
-        return;
-    }
+if(!data || !data.length){
 
-    const headers = Object.keys(data[0]);
+document.getElementById("content")
+.innerHTML = "No Data";
 
-    let html = `<table class="w-full bg-white rounded-xl text-sm">
-    <thead class="bg-gray-100"><tr>`;
+return;
 
-    headers.forEach(h => html += `<th class="p-3 text-left">${h}</th>`);
-
-    html += `</tr></thead><tbody>`;
-
-    data.forEach(row => {
-        html += `<tr class="border-t">`;
-        headers.forEach(h => html += `<td class="p-3">${row[h]}</td>`);
-        html += `</tr>`;
-    });
-
-    html += `</tbody></table>`;
-
-    document.getElementById("content").innerHTML = html;
 }
 
-// INIT
-window.onload = async function(){
-    await loadAPI();
-    openView('dashboard');
-    lucide.createIcons();
+const headers =
+Object.keys(data[0]);
+
+let html =
+`<table class="w-full bg-white rounded-xl text-sm">
+
+<thead class="bg-gray-100">
+<tr>`;
+
+headers.forEach(h =>
+
+html +=
+`<th class="p-3 text-left">
+${h}
+</th>`
+
+);
+
+html +=
+`</tr>
+</thead>
+
+<tbody>`;
+
+data.forEach(row => {
+
+html +=
+`<tr class="border-t">`;
+
+headers.forEach(h =>
+
+html +=
+`<td class="p-3">
+${row[h]}
+</td>`
+
+);
+
+html +=
+`</tr>`;
+
+});
+
+html +=
+`</tbody>
+</table>`;
+
+document.getElementById("content")
+.innerHTML = html;
+
+}
+
+// ================= INIT =================
+
+window.onload =
+async function(){
+
+await loadAPI();
+
+openView(
+'dashboard',
+document.querySelector(
+"nav button"
+)
+);
+
+lucide.createIcons();
+
 }
 
 </script>

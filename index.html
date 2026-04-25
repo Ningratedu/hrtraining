@@ -1,241 +1,687 @@
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>HR Academy - Monitoring & Evaluasi</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-  <script src="https://unpkg.com/lucide@latest"></script>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
-    body { font-family: 'Plus Jakarta Sans', sans-serif; }
-    .active-menu { background-color: #2563eb; color: white; }
-    .loader { border-top-color: #2563eb; animation: spinner 1.5s linear infinite; }
-    @keyframes spinner { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HR Training Monitoring & Reporting</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .glass-card { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); }
+        .sidebar-item.active { background: #3b82f6; color: white; }
+        /* Fix teks sidebar agar tidak turun baris */
+.sidebar-item {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+        
+        /* Mobile Overlay */
+        #sidebar-overlay {
+            display: none;
+        }
+        @media (max-width: 768px) {
+            #sidebar.open {
+                transform: translateX(0);
+            }
+            #sidebar {
+                transform: translateX(-100%);
+                position: fixed;
+                z-index: 50;
+                height: 100%;
+            }
+            #sidebar-overlay.active {
+                display: block;
+            }
+        }
+    </style>
 </head>
-<body class="bg-gray-50 flex overflow-hidden h-screen">
+<body class="bg-slate-50 text-slate-900 overflow-hidden h-screen flex">
 
-  <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-72 bg-white border-r border-gray-200 transition-transform duration-300 transform lg:translate-x-0 lg:static lg:inset-0 shadow-sm overflow-y-auto">
-    <div class="p-6">
-      <div class="flex items-center gap-3 mb-10 px-2">
-        <div class="bg-blue-600 p-2 rounded-xl text-white shadow-lg shadow-blue-200">
-          <i data-lucide="graduation-cap"></i>
+    <!-- Mobile Overlay -->
+    <div id="sidebar-overlay" onclick="toggleSidebar()" class="fixed inset-0 bg-slate-900/40 z-40"></div>
+
+    <!-- Sidebar -->
+    <aside id="sidebar" class="w-80 bg-white border-r border-slate-200 flex flex-col transition-transform duration-300 ease-in-out shadow-xl md:shadow-none">
+        <div class="p-6 border-b border-slate-100 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="bg-blue-600 p-2 rounded-lg text-white">
+                    <i data-lucide="graduation-cap"></i>
+                </div>
+                <h1 class="font-bold text-xl tracking-tight text-blue-900">HR Academy</h1>
+            </div>
+            <button onclick="toggleSidebar()" class="md:hidden p-2 text-slate-400">
+                <i data-lucide="x"></i>
+            </button>
         </div>
-        <h1 class="text-xl font-bold text-slate-800 tracking-tight">HR Academy</h1>
-      </div>
+        
+        <nav class="flex-1 p-4 space-y-1 overflow-y-auto">
+            <button onclick="handleNavClick('dashboard')" id="btn-dashboard" class="sidebar-item w-full flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-100 transition-all font-medium active">
+                <i data-lucide="layout-dashboard" class="w-5 h-5"></i> Dashboard
+            </button>
+            
+            <div class="pt-4 pb-2 px-4 text-xs font-semibold text-slate-400 uppercase tracking-wider">Program</div>
+            
+            <button onclick="handleNavClick('onboarding')" id="btn-onboarding" class="sidebar-item w-full flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-100 transition-all font-medium">
+                <i data-lucide="user-plus" class="w-5 h-5"></i> Onboarding Training
+            </button>
+            <button onclick="handleNavClick('mandatory')" id="btn-mandatory" class="sidebar-item w-full flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-100 transition-all font-medium">
+                <i data-lucide="shield-check" class="w-5 h-5"></i> Mandatory Training
+            </button>
+            <button onclick="handleNavClick('request')" id="btn-request" class="sidebar-item w-full flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-100 transition-all font-medium">
+                <i data-lucide="send" class="w-5 h-5"></i> Training by Request
+            </button>
+            <button onclick="handleNavClick('tna')" id="btn-tna" class="sidebar-item w-full flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-100 transition-all font-medium">
+                <i data-lucide="target" class="w-5 h-5"></i> Training by TNA
+            </button>
+            <!-- Menu Baru -->
+            <button onclick="handleNavClick('leadership')" id="btn-leadership" class="sidebar-item w-full flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-100 transition-all font-medium">
+                <i data-lucide="users-2" class="w-5 h-5"></i> Leadership Development
+            </button>
 
-      <nav class="space-y-6">
-        <div>
-          <p class="text-xs font-semibold text-slate-400 uppercase tracking-widest px-4 mb-3">Program & Data</p>
-          <div class="space-y-1">
-            <button onclick="switchTab('Data Karyawan')" class="menu-item active-menu w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all font-medium">
-              <i data-lucide="users" class="w-5"></i> Data Karyawan
+            <div class="pt-4 pb-2 px-4 text-xs font-semibold text-slate-400 uppercase tracking-wider">Jadwal</div>
+            
+            <button onclick="handleNavClick('jadwal-training')" id="btn-jadwal-training" class="sidebar-item w-full flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-100 transition-all font-medium">
+                <i data-lucide="calendar-days" class="w-5 h-5"></i> Jadwal Training
             </button>
-            <button onclick="switchTab('Data Matrix Materi Training')" class="menu-item w-full flex items-center gap-3 px-4 py-3 text-slate-600 hover:bg-slate-100 rounded-xl transition-all font-medium">
-              <i data-lucide="book-open" class="w-5"></i> Matrix Training
+            <button onclick="handleNavClick('jadwal-genba')" id="btn-jadwal-genba" class="sidebar-item w-full flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-100 transition-all font-medium">
+                <i data-lucide="factory" class="w-5 h-5"></i> Jadwal Genba
             </button>
-            <button onclick="switchTab('Data Penyelesaian Training')" class="menu-item w-full flex items-center gap-3 px-4 py-3 text-slate-600 hover:bg-slate-100 rounded-xl transition-all font-medium">
-              <i data-lucide="check-circle" class="w-5"></i> Penyelesaian
-            </button>
-            <button onclick="switchTab('Performance')" class="menu-item w-full flex items-center gap-3 px-4 py-3 text-slate-600 hover:bg-slate-100 rounded-xl transition-all font-medium">
-              <i data-lucide="bar-chart-3" class="w-5"></i> Performance
-            </button>
-          </div>
+        </nav>
+
+        <div class="p-4 border-t border-slate-100">
+            <div class="flex items-center gap-3 p-2 bg-slate-50 rounded-lg">
+                <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold">HR</div>
+                <div>
+                    <p class="text-sm font-semibold">Admin HR</p>
+                    <p class="text-xs text-slate-500">Learning & Dev</p>
+                </div>
+            </div>
         </div>
+    </aside>
 
-        <div>
-          <p class="text-xs font-semibold text-slate-400 uppercase tracking-widest px-4 mb-3">Jadwal & Agenda</p>
-          <div class="space-y-1">
-            <button onclick="switchTab('Jadwal Training')" class="menu-item w-full flex items-center gap-3 px-4 py-3 text-slate-600 hover:bg-slate-100 rounded-xl transition-all font-medium">
-              <i data-lucide="calendar" class="w-5"></i> Jadwal Training
-            </button>
-            <button onclick="switchTab('Jadwal Genba')" class="menu-item w-full flex items-center gap-3 px-4 py-3 text-slate-600 hover:bg-slate-100 rounded-xl transition-all font-medium">
-              <i data-lucide="map" class="w-5"></i> Jadwal Genba
-            </button>
-          </div>
+    <!-- Main Content -->
+    <main class="flex-1 flex flex-col overflow-hidden">
+        <!-- Header -->
+        <header class="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-4 md:px-8 z-10">
+            <div class="flex items-center gap-4">
+                <button onclick="toggleSidebar()" class="md:hidden p-2 text-slate-600 hover:bg-slate-100 rounded-lg">
+                    <i data-lucide="menu"></i>
+                </button>
+                <h2 id="current-tab-title" class="text-lg md:text-xl font-bold text-slate-800">Dashboard</h2>
+            </div>
+            <div class="flex items-center gap-2 md:gap-4">
+                <button class="p-2 text-slate-400 hover:text-blue-600 transition-colors hidden sm:block"><i data-lucide="search"></i></button>
+                <button class="p-2 text-slate-400 hover:text-blue-600 transition-colors"><i data-lucide="bell"></i></button>
+                <button class="bg-blue-600 text-white px-3 py-2 md:px-4 md:py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition-all shadow-sm flex items-center gap-2">
+                    <i data-lucide="plus" class="w-4 h-4"></i> <span class="hidden xs:inline">Data Baru</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- Dynamic Content Area -->
+        <div id="content-area" class="flex-1 overflow-y-auto p-4 md:p-8 bg-slate-50">
+            <!-- Dashboard Content (Default) -->
+            <div id="tab-dashboard" class="tab-content space-y-6">
+                <!-- Stats Grid -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+                    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+                        <div class="flex justify-between items-start mb-4">
+                            <div class="bg-blue-100 p-2 rounded-lg text-blue-600"><i data-lucide="users"></i></div>
+                            <span class="text-xs font-semibold text-emerald-600 bg-emerald-50 px-2 py-1 rounded">+12%</span>
+                        </div>
+                        <h3 class="text-slate-500 text-sm font-medium">Total Peserta</h3>
+                        <p class="text-2xl font-bold mt-1">1,284</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+                        <div class="flex justify-between items-start mb-4">
+                            <div class="bg-purple-100 p-2 rounded-lg text-purple-600"><i data-lucide="book-open"></i></div>
+                            <span class="text-xs font-semibold text-emerald-600 bg-emerald-50 px-2 py-1 rounded">+5%</span>
+                        </div>
+                        <h3 class="text-slate-500 text-sm font-medium">Training Selesai</h3>
+                        <p class="text-2xl font-bold mt-1">42</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+                        <div class="flex justify-between items-start mb-4">
+                            <div class="bg-amber-100 p-2 rounded-lg text-amber-600"><i data-lucide="clock"></i></div>
+                            <span class="text-xs font-semibold text-amber-600 bg-amber-50 px-2 py-1 rounded">Pending</span>
+                        </div>
+                        <h3 class="text-slate-500 text-sm font-medium">Sesi Mendatang</h3>
+                        <p class="text-2xl font-bold mt-1">18</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+                        <div class="flex justify-between items-start mb-4">
+                            <div class="bg-emerald-100 p-2 rounded-lg text-emerald-600"><i data-lucide="trending-up"></i></div>
+                            <span class="text-xs font-semibold text-emerald-600 bg-emerald-50 px-2 py-1 rounded">89%</span>
+                        </div>
+                        <h3 class="text-slate-500 text-sm font-medium">Completion Rate</h3>
+                        <p class="text-2xl font-bold mt-1">89%</p>
+                    </div>
+                </div>
+
+                <!-- Charts Placeholder & Recent Activity -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <div class="lg:col-span-2 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+                        <div class="flex justify-between items-center mb-6">
+                            <h3 class="font-bold text-slate-800">Progress Pelatihan Bulanan</h3>
+                            <select class="text-sm bg-slate-50 border-none rounded-lg p-2 outline-none">
+                                <option>Tahun 2024</option>
+                                <option>Tahun 2023</option>
+                            </select>
+                        </div>
+                        <div class="h-64 bg-slate-50 rounded-xl border border-dashed border-slate-300 flex items-center justify-center text-slate-400">
+                            [ Grafik Perkembangan Pelatihan ]
+                        </div>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+                        <h3 class="font-bold text-slate-800 mb-6">Aktivitas Terbaru</h3>
+                        <div class="space-y-4">
+                            <div class="flex gap-3">
+                                <div class="w-8 h-8 rounded-full bg-blue-100 flex-shrink-0 flex items-center justify-center text-blue-600">
+                                    <i data-lucide="check-circle" class="w-4 h-4"></i>
+                                </div>
+                                <div>
+                                    <p class="text-sm font-medium">Budi Santoso telah menyelesaikan Mandatory Safety Training</p>
+                                    <p class="text-xs text-slate-400">2 jam yang lalu</p>
+                                </div>
+                            </div>
+                            <div class="flex gap-3">
+                                <div class="w-8 h-8 rounded-full bg-amber-100 flex-shrink-0 flex items-center justify-center text-amber-600">
+                                    <i data-lucide="calendar" class="w-4 h-4"></i>
+                                </div>
+                                <div>
+                                    <p class="text-sm font-medium">Jadwal Genba Area Produksi A telah diperbarui</p>
+                                    <p class="text-xs text-slate-400">5 jam yang lalu</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Program Table Template -->
+            <div id="tab-generic" class="tab-content hidden">
+                <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+                    <div class="p-6 border-b border-slate-100 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                        <div class="flex items-center gap-3">
+                            <div class="relative w-full">
+                                <i data-lucide="search" class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                                <input type="text" placeholder="Cari data..." class="pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none w-full md:w-64">
+                            </div>
+                            <button class="flex items-center gap-2 px-4 py-2 border border-slate-200 rounded-xl text-sm hover:bg-slate-50">
+                                <i data-lucide="filter" class="w-4 h-4"></i> Filter
+                            </button>
+                        </div>
+                        <button class="text-blue-600 text-sm font-semibold hover:underline">Ekspor CSV</button>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse min-w-[700px]">
+                            <thead>
+                                <tr class="bg-slate-50/50">
+                                    <th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Nama Program</th>
+                                    <th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Departemen</th>
+                                    <th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Peserta</th>
+                                    <th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Status</th>
+                                    <th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Progress</th>
+                                    <th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider text-right">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="table-body" class="divide-y divide-slate-100">
+                                <!-- Data will be injected here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Schedule Template -->
+            <div id="tab-schedule" class="tab-content hidden">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="schedule-grid">
+                    <!-- Schedule cards injected here -->
+                </div>
+            </div>
         </div>
-      </nav>
-    </div>
+    </main>
 
-    <div class="absolute bottom-0 w-full p-6 border-t border-slate-100 bg-slate-50/50">
-      <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold">HR</div>
-        <div>
-          <p class="text-sm font-bold text-slate-800">Admin HR</p>
-          <p class="text-[10px] text-slate-500 uppercase tracking-wider">Learning & Development</p>
-        </div>
-      </div>
-    </div>
-  </aside>
+    <script>
+        // Data Mockup
+        const programsData = {
+            onboarding: [
+                { name: "Induksi Karyawan Baru Batch 12", dept: "HR / GA", participants: 24, status: "Berjalan", progress: 65 },
+                { name: "Pengenalan Budaya Perusahaan", dept: "Corporate", participants: 12, status: "Selesai", progress: 100 },
+            ],
+            mandatory: [
+                { name: "K3 Dasar Pemadam Kebakaran", dept: "Safety", participants: 50, status: "Berjalan", progress: 40 },
+                { name: "Sertifikasi Operator Forklift", dept: "Logistics", participants: 5, status: "Tertunda", progress: 0 },
+            ],
+            request: [
+                { name: "Advanced Excel for Finance", dept: "Finance", participants: 8, status: "Berjalan", progress: 80 },
+            ],
+            tna: [
+                { name: "Leadership for Supervisors", dept: "Production", participants: 15, status: "Berjalan", progress: 20 },
+            ],
+            leadership: [
+                { name: "Executive Leadership Program", dept: "Management", participants: 10, status: "Berjalan", progress: 45 },
+                { name: "Conflict Resolution Workshop", dept: "Operations", participants: 20, status: "Selesai", progress: 100 },
+            ]
+        };
 
-  <main class="flex-1 flex flex-col h-screen overflow-hidden">
-    <header class="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-8 shadow-sm">
-      <div class="flex items-center gap-4">
-        <button onclick="toggleSidebar()" class="lg:hidden p-2 text-slate-600 hover:bg-slate-100 rounded-lg">
-          <i data-lucide="menu"></i>
-        </button>
-        <h2 id="current-title" class="text-lg font-bold text-slate-800 uppercase tracking-tight">Data Karyawan</h2>
-      </div>
-      <div class="flex gap-3">
-         <button onclick="openUploadModal()" class="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm font-semibold transition shadow-md shadow-green-100">
-           <i data-lucide="file-up" class="w-4"></i> Upload Excel
-         </button>
-         <button onclick="openAddModal()" class="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-semibold transition shadow-md shadow-blue-100">
-           <i data-lucide="plus" class="w-4"></i> Tambah Data
-         </button>
-      </div>
-    </header>
+        const schedulesData = {
+            training: [
+                { title: "Training ISO 9001:2015", date: "15 April 2024", time: "09:00 - 12:00", loc: "R. Meeting Utama", type: "Internal" },
+                { title: "Soft Skill Communication", date: "17 April 2024", time: "13:00 - 16:00", loc: "R. Serbaguna", type: "Internal" },
+            ],
+            genba: [
+                { title: "Genba Area Gudang Bahan Baku", date: "12 April 2024", time: "08:00 - 10:00", loc: "Warehouse", type: "Weekly" },
+                { title: "Genba Area Produksi Lini 2", date: "13 April 2024", time: "10:00 - 12:00", loc: "Plant A", type: "Monthly" },
+            ]
+        };
 
-    <section class="flex-1 overflow-auto p-8" id="main-content">
-      <div id="loading-state" class="hidden flex flex-col items-center justify-center h-full">
-        <div class="loader ease-linear rounded-full border-4 border-t-4 border-gray-200 h-12 w-12 mb-4"></div>
-        <p class="text-slate-500 font-medium">Sedang mengambil data...</p>
-      </div>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
+            sidebar.classList.toggle('open');
+            overlay.classList.toggle('active');
+        }
 
-      <div id="table-wrapper" class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
-        <table class="w-full text-left border-collapse">
-          <thead id="table-head" class="bg-slate-50 border-b border-gray-200"></thead>
-          <tbody id="table-body" class="divide-y divide-gray-100 text-slate-600"></tbody>
-        </table>
-      </div>
-    </section>
-  </main>
+        // Buka sidebar otomatis jika layar kecil (Permintaan User)
+        window.onload = function() {
+            if (window.innerWidth <= 768) {
+                toggleSidebar();
+            }
+            lucide.createIcons();
+        }
 
-  <div id="uploadModal" class="hidden fixed inset-0 z-[60] bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="bg-white rounded-3xl w-full max-w-md p-8 shadow-2xl">
-      <div class="flex justify-between items-center mb-6">
-        <h3 class="text-xl font-bold text-slate-800">Bulk Import Excel</h3>
-        <button onclick="closeModal('uploadModal')" class="text-slate-400 hover:text-slate-600"><i data-lucide="x"></i></button>
-      </div>
-      <div class="space-y-4">
-        <div class="border-2 border-dashed border-slate-200 rounded-2xl p-8 text-center bg-slate-50">
-          <input type="file" id="excelFile" class="hidden" accept=".xlsx, .xls">
-          <label for="excelFile" class="cursor-pointer">
-            <i data-lucide="upload-cloud" class="w-12 h-12 text-blue-500 mx-auto mb-4"></i>
-            <p class="text-sm font-medium text-slate-700">Klik untuk upload file Excel</p>
-            <p class="text-xs text-slate-400 mt-1">Hanya mendukung format .xlsx</p>
-          </label>
-        </div>
-        <button onclick="handleExcelUpload()" id="btnDoUpload" class="w-full bg-blue-600 text-white py-3 rounded-xl font-bold">Proses & Simpan</button>
-      </div>
-    </div>
-  </div>
+        function handleNavClick(tabId) {
+            switchTab(tabId);
+            if (window.innerWidth <= 768) {
+                toggleSidebar();
+            }
+        }
 
-  <script>
-    lucide.createIcons();
-    let currentSheet = 'Data Karyawan';
+        function switchTab(tabId) {
+            document.querySelectorAll('.sidebar-item').forEach(btn => btn.classList.remove('active'));
+            const activeBtn = document.getElementById(`btn-${tabId}`);
+            if(activeBtn) activeBtn.classList.add('active');
 
-    // Inisialisasi awal
-    window.onload = () => { loadSheetData(currentSheet); };
+            const titles = {
+                'dashboard': 'Dashboard',
+                'onboarding': 'Onboarding Training',
+                'mandatory': 'Mandatory Training',
+                'request': 'Training by Request',
+                'tna': 'Training by TNA',
+                'leadership': 'Leadership Development',
+                'jadwal-training': 'Jadwal Training',
+                'jadwal-genba': 'Jadwal Genba'
+            };
+            document.getElementById('current-tab-title').innerText = titles[tabId];
 
-    function toggleSidebar() {
-      document.getElementById('sidebar').classList.toggle('-translate-x-full');
-    }
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.add('hidden'));
 
-    function switchTab(sheetName) {
-      currentSheet = sheetName;
-      document.getElementById('current-title').innerText = sheetName;
-      
-      // Update Menu UI
-      document.querySelectorAll('.menu-item').forEach(btn => {
-        btn.classList.remove('active-menu');
-        if(btn.innerText.includes(sheetName) || sheetName.includes(btn.innerText)) btn.classList.add('active-menu');
-      });
+            if (tabId === 'dashboard') {
+                document.getElementById('tab-dashboard').classList.remove('hidden');
+            } else if (tabId.includes('jadwal')) {
+                const scheduleType = tabId === 'jadwal-training' ? 'training' : 'genba';
+                renderSchedule(scheduleType);
+                document.getElementById('tab-schedule').classList.remove('hidden');
+            } else {
+                renderTable(tabId);
+                document.getElementById('tab-generic').classList.remove('hidden');
+            }
+        }
 
-      loadSheetData(sheetName);
-    }
+        function renderTable(programKey) {
+            const tbody = document.getElementById('table-body');
+            tbody.innerHTML = '';
+            
+            const data = programsData[programKey] || [];
+            data.forEach(item => {
+                const statusColor = item.status === 'Selesai' ? 'text-emerald-600 bg-emerald-50' : 
+                                    item.status === 'Berjalan' ? 'text-blue-600 bg-blue-50' : 'text-slate-500 bg-slate-50';
+                
+                tbody.innerHTML += `
+                    <tr class="hover:bg-slate-50/50 transition-colors">
+                        <td class="px-6 py-4 font-medium text-slate-800">${item.name}</td>
+                        <td class="px-6 py-4 text-slate-500">${item.dept}</td>
+                        <td class="px-6 py-4 text-slate-700">${item.participants} Orang</td>
+                        <td class="px-6 py-4">
+                            <span class="px-3 py-1 rounded-full text-xs font-semibold ${statusColor}">${item.status}</span>
+                        </td>
+                        <td class="px-6 py-4">
+                            <div class="flex items-center gap-3">
+                                <div class="w-24 h-2 bg-slate-100 rounded-full overflow-hidden">
+                                    <div class="h-full bg-blue-600" style="width: ${item.progress}%"></div>
+                                </div>
+                                <span class="text-xs font-medium text-slate-600">${item.progress}%</span>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 text-right">
+                            <button class="text-slate-400 hover:text-blue-600 p-1"><i data-lucide="more-vertical" class="w-5 h-5"></i></button>
+                        </td>
+                    </tr>
+                `;
+            });
+            lucide.createIcons();
+        }
 
-    function loadSheetData(sheetName) {
-      const wrapper = document.getElementById('table-wrapper');
-      const loader = document.getElementById('loading-state');
-      wrapper.classList.add('hidden');
-      loader.classList.remove('hidden');
+        function renderSchedule(type) {
+            const grid = document.getElementById('schedule-grid');
+            grid.innerHTML = '';
+            const data = schedulesData[type] || [];
 
-      google.script.run
-        .withSuccessHandler(response => {
-          renderTable(response);
-          loader.classList.add('hidden');
-          wrapper.classList.remove('hidden');
-        })
-        .readDataSheet(sheetName);
-    }
+            data.forEach(item => {
+                grid.innerHTML += `
+                    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:border-blue-300 transition-all group">
+                        <div class="flex justify-between items-start mb-4">
+                            <div class="bg-blue-50 p-3 rounded-xl text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                                <i data-lucide="${type === 'training' ? 'book-marked' : 'map'}"></i>
+                            </div>
+                            <span class="text-[10px] uppercase font-bold tracking-widest text-slate-400">${item.type}</span>
+                        </div>
+                        <h4 class="font-bold text-slate-800 mb-2">${item.title}</h4>
+                        <div class="space-y-2 mb-6">
+                            <div class="flex items-center gap-2 text-sm text-slate-500">
+                                <i data-lucide="calendar" class="w-4 h-4"></i> ${item.date}
+                            </div>
+                            <div class="flex items-center gap-2 text-sm text-slate-500">
+                                <i data-lucide="clock" class="w-4 h-4"></i> ${item.time}
+                            </div>
+                            <div class="flex items-center gap-2 text-sm text-slate-500">
+                                <i data-lucide="map-pin" class="w-4 h-4"></i> ${item.loc}
+                            </div>
+                        </div>
+                        <button class="w-full py-2 bg-slate-50 text-slate-600 rounded-xl text-sm font-semibold hover:bg-slate-100 transition-all">
+                            Lihat Detail
+                        </button>
+                    </div>
+                `;
+            });
+            lucide.createIcons();
+        }
+    </script>
 
-    function renderTable(res) {
-      const head = document.getElementById('table-head');
-      const body = document.getElementById('table-body');
-      
-      // Header
-      let headHtml = '<tr>';
-      res.headers.forEach(h => headHtml += `<th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">${h}</th>`);
-      headHtml += '<th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider text-center">Aksi</th></tr>';
-      head.innerHTML = headHtml;
+    <!-- ===================================== -->
+<!-- PERFORMANCE MANAGEMENT - FINAL FIX -->
+<!-- SEKALI COPY → LANGSUNG NYAMBUNG -->
+<!-- ===================================== -->
 
-      // Body
-      let bodyHtml = '';
-      res.data.forEach((row, rowIndex) => {
-        bodyHtml += `<tr class="hover:bg-slate-50 transition">`;
-        row.forEach(cell => bodyHtml += `<td class="px-6 py-4 text-sm">${cell || '-'}</td>`);
-        bodyHtml += `
-          <td class="px-6 py-4 text-center space-x-2">
-            <button onclick="editRow(${rowIndex})" class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition"><i data-lucide="edit-2" class="w-4 h-4"></i></button>
-            <button onclick="deleteRow(${rowIndex})" class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
-          </td>
-        </tr>`;
-      });
-      body.innerHTML = bodyHtml;
-      lucide.createIcons();
-    }
+<script>
 
-    // FUNGSI UPLOAD EXCEL
-    function openUploadModal() { document.getElementById('uploadModal').classList.remove('hidden'); }
-    function closeModal(id) { document.getElementById('uploadModal').classList.add('hidden'); }
+// ===============================
+// KPI SHEET CONFIG
+// ===============================
 
-    function handleExcelUpload() {
-      const fileInput = document.getElementById('excelFile');
-      const btn = document.getElementById('btnDoUpload');
-      if (!fileInput.files[0]) return alert('Pilih file dulu!');
+const KPI_SHEET_URL =
+"https://docs.google.com/spreadsheets/d/e/2PACX-1vQIkiw03OjCokfdb-bsgfm3hKWjU3OVH3r_VOKOElma-3jbXQsn5AebuC3eTH8BqdAiGC8Tss-0rKLb/pub?gid=361653718&single=true&output=csv";
 
-      btn.disabled = true;
-      btn.innerText = 'Memproses...';
 
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        const data = new Uint8Array(e.target.result);
-        const workbook = XLSX.read(data, {type: 'array'});
-        const rawData = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]], {header: 1, range: 1});
+// ===============================
+// AUTO TAMBAH MENU PERFORMANCE
+// ===============================
 
-        google.script.run
-          .withSuccessHandler(res => {
-            alert(res);
-            closeModal('uploadModal');
-            loadSheetData(currentSheet);
-            btn.disabled = false;
-            btn.innerText = 'Proses & Simpan';
-          })
-          .importExcelDinamis(rawData, currentSheet);
-      };
-      reader.readAsArrayBuffer(fileInput.files[0]);
-    }
+function injectPerformanceMenu() {
 
-    function deleteRow(index) {
-      if(confirm('Yakin mau hapus data ini?')) {
-        google.script.run.withSuccessHandler(res => {
-          alert(res);
-          loadSheetData(currentSheet);
-        }).deleteRowData(currentSheet, index);
-      }
-    }
+const nav =
+document.querySelector("nav");
 
-    // Edit & Add (Bisa dikembangkan dengan modal form dinamis)
-    function editRow(index) {
-      alert('Fitur Edit Row ' + index + ' sedang disiapkan. Data akan ditarik ke form otomatis.');
-    }
+if (!nav) return;
 
-    function openAddModal() {
-      alert('Silahkan gunakan form input manual yang akan muncul sesuai sheet ' + currentSheet);
-    }
-  </script>
+const btn =
+document.createElement("button");
+
+btn.onclick = () =>
+handleNavClick("performance");
+
+btn.id = "btn-performance";
+
+btn.className =
+"sidebar-item w-full flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-100 transition-all font-medium";
+
+btn.innerHTML = `
+<i data-lucide="bar-chart-3" class="w-5 h-5"></i>
+Performance Management
+`;
+
+nav.appendChild(btn);
+
+lucide.createIcons();
+
+}
+
+
+// ===============================
+// BUAT TAB PERFORMANCE
+// ===============================
+
+function injectPerformanceTab() {
+
+const content =
+document.getElementById("content-area");
+
+if (!content) return;
+
+if (document.getElementById("tab-performance"))
+return;
+
+const div =
+document.createElement("div");
+
+div.id = "tab-performance";
+
+div.className =
+"tab-content hidden";
+
+div.innerHTML = `
+
+<div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+
+<div class="p-6 border-b border-slate-100">
+
+<h3 class="font-bold text-slate-800">
+
+📊 Performance KPI
+
+</h3>
+
+</div>
+
+<div class="overflow-x-auto">
+
+<table class="w-full text-left border-collapse min-w-[900px]">
+
+<thead>
+
+<tr class="bg-slate-50">
+
+<th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase">Username</th>
+<th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase">Nama</th>
+<th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase">Divisi</th>
+<th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase">Departemen</th>
+<th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase">Bulan</th>
+<th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase">KPI</th>
+<th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase">Target</th>
+<th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase">Actual</th>
+
+</tr>
+
+</thead>
+
+<tbody id="performance-body">
+
+<tr>
+
+<td colspan="8"
+class="text-center text-slate-400 py-6">
+
+Loading KPI...
+
+</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+`;
+
+content.appendChild(div);
+
+}
+
+
+// ===============================
+// LOAD KPI DATA
+// ===============================
+
+async function loadPerformanceData() {
+
+const tbody =
+document.getElementById("performance-body");
+
+if (!tbody) return;
+
+try {
+
+const res =
+await fetch(KPI_SHEET_URL);
+
+const text =
+await res.text();
+
+const rows =
+text.split("\n")
+.map(r => r.split(","));
+
+const headers = rows[0];
+
+const map = {};
+
+headers.forEach((h,i)=>{
+map[h.trim()] = i;
+});
+
+let html = "";
+
+for (let i=1;i<rows.length;i++){
+
+const r = rows[i];
+
+if (!r[0]) continue;
+
+html += `
+
+<tr class="border-b">
+
+<td class="px-6 py-3">
+${r[map["Username"]]||""}
+</td>
+
+<td class="px-6 py-3">
+${r[map["Nama"]]||""}
+</td>
+
+<td class="px-6 py-3">
+${r[map["Divisi"]]||""}
+</td>
+
+<td class="px-6 py-3">
+${r[map["Departemen"]]||""}
+</td>
+
+<td class="px-6 py-3">
+${r[map["Bulan"]]||""}
+</td>
+
+<td class="px-6 py-3">
+${r[map["Indikator_KPI"]]||""}
+</td>
+
+<td class="px-6 py-3">
+${r[map["Target"]]||""}
+</td>
+
+<td class="px-6 py-3">
+${r[map["Actual"]]||""}
+</td>
+
+</tr>
+
+`;
+
+}
+
+tbody.innerHTML = html;
+
+}
+
+catch(err){
+
+tbody.innerHTML = `
+
+<tr>
+
+<td colspan="8"
+class="text-red-500 text-center py-6">
+
+Gagal load data KPI
+
+</td>
+
+</tr>
+
+`;
+
+}
+
+}
+
+
+// ===============================
+// PATCH switchTab OTOMATIS
+// ===============================
+
+const originalSwitchTab =
+switchTab;
+
+switchTab = function(tabId){
+
+originalSwitchTab(tabId);
+
+if (tabId === "performance") {
+
+document
+.getElementById("tab-performance")
+.classList.remove("hidden");
+
+loadPerformanceData();
+
+}
+
+};
+
+
+// ===============================
+// AUTO RUN
+// ===============================
+
+window.addEventListener("load", () => {
+
+injectPerformanceMenu();
+
+injectPerformanceTab();
+
+});
+
+</script>
 </body>
 </html>
+
+```

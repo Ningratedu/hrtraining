@@ -253,142 +253,132 @@ MOBILE UI IMPROVEMENT
             </div>
 
             <!-- ONBOARDING TRAINING -->
-<div id="tab-onboarding-page" class="tab-content hidden space-y-6">
+<div id="tab-onboarding-page" class="tab-content hidden space-y-4">
 
-    <!-- Funnel -->
-    <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
-        <div class="flex justify-between items-center mb-6">
+    <!-- FUNNEL -->
+    <div class="bg-white rounded-[28px] border border-slate-200 p-4 md:p-6 shadow-sm">
+
+        <div class="flex justify-between items-center mb-4">
             <div>
-                <h3 class="text-lg font-bold text-slate-800">
+                <h3 class="text-base md:text-lg font-bold text-slate-800">
                     Onboarding Funnel
                 </h3>
-                <p class="text-sm text-slate-500">
+
+                <p class="text-xs md:text-sm text-slate-500">
                     Monitoring keterlaksanaan onboarding training
                 </p>
             </div>
         </div>
 
-        <div class="grid grid-cols-2 lg:grid-cols-5 gap-4">
+        <!-- CARD -->
+        <div class="grid grid-cols-2 lg:grid-cols-5 gap-3">
 
-    <!-- RECRUITMENT -->
-    <div
-        class="funnel-card bg-gradient-to-br from-blue-50 to-white rounded-[28px] p-4 md:p-5 border border-blue-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer relative overflow-hidden"
-        onclick="filterByStage('Recruitment')"
-    >
+            <!-- RECRUITMENT -->
+            <div
+                class="funnel-card bg-gradient-to-br from-blue-50 to-white rounded-[24px] p-4 border border-blue-100 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 cursor-pointer relative overflow-hidden"
+                onclick="filterByStage('Recruitment')"
+            >
+                <div class="absolute top-0 right-0 w-24 h-24 bg-blue-100/40 blur-3xl rounded-full"></div>
 
-        <div class="absolute top-0 right-0 w-24 h-24 bg-blue-100/30 blur-3xl rounded-full"></div>
+                <p class="text-[11px] md:text-xs font-medium text-slate-500 relative z-10">
+                    Recruitment
+                </p>
 
-        <p class="text-xs md:text-sm font-medium text-slate-500 relative z-10">
-            Recruitment
-        </p>
+                <h2
+                    id="countRecruitment"
+                    class="text-2xl md:text-3xl font-extrabold tracking-tight text-blue-700 mt-1 relative z-10"
+                >
+                    0
+                </h2>
+            </div>
 
-        <h2
-            id="countRecruitment"
-            class="text-2xl md:text-4xl font-extrabold tracking-tight text-blue-700 mt-2 relative z-10"
-        >
-            0
-        </h2>
+            <!-- IN CLASS -->
+            <div
+                class="funnel-card bg-gradient-to-br from-amber-50 to-white rounded-[24px] p-4 border border-amber-100 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 cursor-pointer relative overflow-hidden"
+                onclick="filterByStage('In Class Training')"
+            >
+                <div class="absolute top-0 right-0 w-24 h-24 bg-amber-100/40 blur-3xl rounded-full"></div>
 
+                <p class="text-[11px] md:text-xs font-medium text-slate-500 relative z-10">
+                    In Class Training
+                </p>
+
+                <h2
+                    id="countInClass"
+                    class="text-2xl md:text-3xl font-extrabold tracking-tight text-amber-700 mt-1 relative z-10"
+                >
+                    0
+                </h2>
+            </div>
+
+            <!-- ASSIGNMENT -->
+            <div
+                class="funnel-card bg-gradient-to-br from-purple-50 to-white rounded-[24px] p-4 border border-purple-100 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 cursor-pointer relative overflow-hidden"
+                onclick="filterByStage('Assignment')"
+            >
+                <div class="absolute top-0 right-0 w-24 h-24 bg-purple-100/40 blur-3xl rounded-full"></div>
+
+                <p class="text-[11px] md:text-xs font-medium text-slate-500 relative z-10">
+                    Assignment
+                </p>
+
+                <h2
+                    id="countAssignment"
+                    class="text-2xl md:text-3xl font-extrabold tracking-tight text-purple-700 mt-1 relative z-10"
+                >
+                    0
+                </h2>
+            </div>
+
+            <!-- SERAH TERIMA -->
+            <div
+                class="funnel-card bg-gradient-to-br from-emerald-50 to-white rounded-[24px] p-4 border border-emerald-100 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 cursor-pointer relative overflow-hidden"
+                onclick="filterByStage('Serah Terima User')"
+            >
+                <div class="absolute top-0 right-0 w-24 h-24 bg-emerald-100/40 blur-3xl rounded-full"></div>
+
+                <p class="text-[11px] md:text-xs font-medium text-slate-500 relative z-10">
+                    Serah Terima User
+                </p>
+
+                <h2
+                    id="countUser"
+                    class="text-2xl md:text-3xl font-extrabold tracking-tight text-emerald-700 mt-1 relative z-10"
+                >
+                    0
+                </h2>
+            </div>
+
+            <!-- COMPLETED -->
+            <div
+                class="funnel-card bg-gradient-to-br from-slate-50 to-white rounded-[24px] p-4 border border-slate-200 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 cursor-pointer relative overflow-hidden col-span-2 lg:col-span-1"
+                onclick="filterByStage('Completed')"
+            >
+                <div class="absolute top-0 right-0 w-24 h-24 bg-slate-200/40 blur-3xl rounded-full"></div>
+
+                <p class="text-[11px] md:text-xs font-medium text-slate-500 relative z-10">
+                    Onboarding Completed
+                </p>
+
+                <h2
+                    id="countCompleted"
+                    class="text-2xl md:text-3xl font-extrabold tracking-tight text-slate-700 mt-1 relative z-10"
+                >
+                    0
+                </h2>
+            </div>
+
+        </div>
     </div>
 
 
-    <!-- IN CLASS -->
-    <div
-        class="funnel-card bg-gradient-to-br from-amber-50 to-white rounded-[28px] p-4 md:p-5 border border-amber-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer relative overflow-hidden"
-        onclick="filterByStage('In Class Training')"
-    >
-
-        <div class="absolute top-0 right-0 w-24 h-24 bg-amber-100/30 blur-3xl rounded-full"></div>
-
-        <p class="text-xs md:text-sm font-medium text-slate-500 relative z-10">
-            In Class Training
-        </p>
-
-        <h2
-            id="countInClass"
-            class="text-2xl md:text-4xl font-extrabold tracking-tight text-amber-700 mt-2 relative z-10"
-        >
-            0
-        </h2>
-
-    </div>
-
-
-    <!-- ASSIGNMENT -->
-    <div
-        class="funnel-card bg-gradient-to-br from-purple-50 to-white rounded-[28px] p-4 md:p-5 border border-purple-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer relative overflow-hidden"
-        onclick="filterByStage('Assignment')"
-    >
-
-        <div class="absolute top-0 right-0 w-24 h-24 bg-purple-100/30 blur-3xl rounded-full"></div>
-
-        <p class="text-xs md:text-sm font-medium text-slate-500 relative z-10">
-            Assignment
-        </p>
-
-        <h2
-            id="countAssignment"
-            class="text-2xl md:text-4xl font-extrabold tracking-tight text-purple-700 mt-2 relative z-10"
-        >
-            0
-        </h2>
-
-    </div>
-
-
-    <!-- SERAH TERIMA -->
-    <div
-        class="funnel-card bg-gradient-to-br from-emerald-50 to-white rounded-[28px] p-4 md:p-5 border border-emerald-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer relative overflow-hidden"
-        onclick="filterByStage('Serah Terima User')"
-    >
-
-        <div class="absolute top-0 right-0 w-24 h-24 bg-emerald-100/30 blur-3xl rounded-full"></div>
-
-        <p class="text-xs md:text-sm font-medium text-slate-500 relative z-10">
-            Serah Terima User
-        </p>
-
-        <h2
-            id="countUser"
-            class="text-2xl md:text-4xl font-extrabold tracking-tight text-emerald-700 mt-2 relative z-10"
-        >
-            0
-        </h2>
-
-    </div>
-
-
-    <!-- COMPLETED -->
-    <div
-        class="funnel-card bg-gradient-to-br from-slate-50 to-white rounded-[28px] p-4 md:p-5 border border-slate-200 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer relative overflow-hidden col-span-2 lg:col-span-1"
-        onclick="filterByStage('Completed')"
-    >
-
-        <div class="absolute top-0 right-0 w-24 h-24 bg-slate-200/30 blur-3xl rounded-full"></div>
-
-        <p class="text-xs md:text-sm font-medium text-slate-500 relative z-10">
-            Onboarding Completed
-        </p>
-
-        <h2
-            id="countCompleted"
-            class="text-2xl md:text-4xl font-extrabold tracking-tight text-slate-700 mt-2 relative z-10"
-        >
-            0
-        </h2>
-
-    </div>
-
-</div>
-
-
-    <!-- TABLE -->
-    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+    <!-- TABLE SECTION -->
+    <div class="bg-white rounded-[28px] border border-slate-200 shadow-sm overflow-hidden">
 
         <!-- HEADER -->
-        <div class="p-6 border-b border-slate-200 flex flex-col lg:flex-row gap-4 justify-between">
+        <div class="p-4 border-b border-slate-200 flex flex-col lg:flex-row gap-3 justify-between">
 
-            <div class="flex flex-col md:flex-row gap-3">
+            <div class="flex flex-col md:flex-row gap-2">
 
                 <!-- SEARCH -->
                 <div class="relative">
@@ -396,57 +386,59 @@ MOBILE UI IMPROVEMENT
                         id="searchRecruitment"
                         type="text"
                         placeholder="Cari data..."
-                        class="w-72 pl-10 pr-4 py-2 border rounded-xl bg-slate-50"
+                        class="w-56 pl-9 pr-3 py-1.5 text-xs border border-slate-200 rounded-xl bg-slate-50 outline-none focus:ring-2 focus:ring-blue-500"
                     />
 
-                    <i data-lucide="search"
-                       class="w-4 h-4 absolute left-3 top-3 text-slate-400">
-                    </i>
+                    <i
+                        data-lucide="search"
+                        class="w-3.5 h-3.5 absolute left-3 top-[11px] text-slate-400"
+                    ></i>
                 </div>
 
-                <!-- CUSTOM FILTER -->
-<div class="relative">
 
-    <button
-        id="filterButton"
-        onclick="toggleFilterDropdown()"
-        class="border rounded-xl px-4 py-2 bg-white min-w-[220px] text-left flex items-center justify-between"
-    >
-        <span id="filterLabel">
-            Filter Department
-        </span>
+                <!-- FILTER -->
+                <div class="relative">
 
-        <i data-lucide="chevron-down" class="w-4 h-4"></i>
-    </button>
+                    <button
+                        id="filterButton"
+                        onclick="toggleFilterDropdown()"
+                        class="border border-slate-200 rounded-xl px-3 py-1.5 bg-white min-w-[180px] text-xs text-left flex items-center justify-between"
+                    >
+                        <span id="filterLabel">
+                            Filter Department
+                        </span>
 
-    <!-- DROPDOWN -->
-    <div
-        id="filterDropdown"
-        class="hidden absolute mt-2 w-72 bg-white border border-slate-200 rounded-2xl shadow-xl z-50"
-    >
+                        <i data-lucide="chevron-down" class="w-3.5 h-3.5"></i>
+                    </button>
 
-        <div
-            id="filterOptions"
-            class="max-h-72 overflow-auto p-2"
-        >
-        </div>
+                    <!-- DROPDOWN -->
+                    <div
+                        id="filterDropdown"
+                        class="hidden absolute mt-2 w-72 bg-white border border-slate-200 rounded-2xl shadow-xl z-50"
+                    >
 
-        <div class="p-3 border-t border-slate-200">
+                        <div
+                            id="filterOptions"
+                            class="max-h-72 overflow-auto p-2 text-xs"
+                        >
+                        </div>
 
-            <button
-                onclick="applyDepartmentFilter()"
-                class="w-full bg-blue-600 text-white py-2 rounded-xl font-medium"
-            >
-                Done
-            </button>
+                        <div class="p-3 border-t border-slate-200">
 
-        </div>
+                            <button
+                                onclick="applyDepartmentFilter()"
+                                class="w-full bg-blue-600 text-white py-2 rounded-xl text-xs font-medium"
+                            >
+                                Done
+                            </button>
 
-    </div>
+                        </div>
 
-</div>
+                    </div>
 
+                </div>
             </div>
+
 
             <!-- UPLOAD -->
             <div>
@@ -460,7 +452,7 @@ MOBILE UI IMPROVEMENT
 
                 <button
                     onclick="document.getElementById('excelUpload').click()"
-                    class="bg-blue-600 text-white px-4 py-2 rounded-xl text-sm font-medium"
+                    class="bg-blue-600 text-white px-3 py-1.5 rounded-xl text-xs font-medium shadow-sm hover:shadow transition-all"
                 >
                     Upload Excel
                 </button>
@@ -468,95 +460,74 @@ MOBILE UI IMPROVEMENT
             </div>
         </div>
 
+
         <!-- TABLE -->
-<div class="bg-white rounded-[28px] border border-slate-200 shadow-sm overflow-hidden">
+        <div class="overflow-auto max-h-[65vh] mobile-table">
 
-    <!-- TABLE CONTAINER -->
-    <div
-        class="overflow-auto max-h-[65vh] mobile-table scrollbar-thin"
-    >
-
-        <table
-            class="w-full min-w-[980px] lg:min-w-[1400px] border-collapse text-sm"
-        >
-
-            <!-- HEADER -->
-            <thead
-                class="sticky top-0 bg-white shadow-sm z-30 border-b border-slate-200"
+            <table
+                class="w-full min-w-[980px] lg:min-w-[1250px] border-collapse text-xs"
             >
 
-                <tr>
+                <!-- HEADER -->
+                <thead
+                    class="sticky top-0 bg-white shadow-sm z-30 border-b border-slate-200"
+                >
+                    <tr>
 
-                    <th
-                        class="px-4 py-4 text-left text-xs uppercase tracking-wider font-semibold text-slate-500 min-w-[70px]"
-                    >
-                        No
-                    </th>
+                        <!-- FREEZE NO -->
+                        <th
+                            class="sticky left-0 bg-white z-40 px-3 py-3 text-left text-[11px] uppercase tracking-wider font-semibold text-slate-500 min-w-[65px] shadow-[4px_0_10px_rgba(0,0,0,0.03)]"
+                        >
+                            No
+                        </th>
 
-                    <!-- STICKY NAME -->
-                    <th
-                        class="sticky left-0 bg-white z-40 px-4 py-4 min-w-[220px] text-left text-xs uppercase tracking-wider font-semibold text-slate-500 shadow-[6px_0_10px_rgba(0,0,0,0.04)]"
-                    >
-                        Name
-                    </th>
+                        <th class="px-3 py-3 text-left text-[11px] uppercase tracking-wider font-semibold text-slate-500 min-w-[200px]">
+                            Name
+                        </th>
 
-                    <th
-                        class="px-4 py-4 text-left text-xs uppercase tracking-wider font-semibold text-slate-500 min-w-[160px]"
-                    >
-                        Company
-                    </th>
+                        <th class="px-3 py-3 text-left text-[11px] uppercase tracking-wider font-semibold text-slate-500 min-w-[150px]">
+                            Company
+                        </th>
 
-                    <th
-                        class="px-4 py-4 text-left text-xs uppercase tracking-wider font-semibold text-slate-500 min-w-[180px]"
-                    >
-                        Departement
-                    </th>
+                        <th class="px-3 py-3 text-left text-[11px] uppercase tracking-wider font-semibold text-slate-500 min-w-[160px]">
+                            Department
+                        </th>
 
-                    <th
-                        class="px-4 py-4 text-left text-xs uppercase tracking-wider font-semibold text-slate-500 min-w-[180px]"
-                    >
-                        Designation
-                    </th>
+                        <th class="px-3 py-3 text-left text-[11px] uppercase tracking-wider font-semibold text-slate-500 min-w-[160px]">
+                            Designation
+                        </th>
 
-                    <th
-                        class="px-4 py-4 text-left text-xs uppercase tracking-wider font-semibold text-slate-500 min-w-[180px]"
-                    >
-                        Location
-                    </th>
+                        <th class="px-3 py-3 text-left text-[11px] uppercase tracking-wider font-semibold text-slate-500 min-w-[150px]">
+                            Location
+                        </th>
 
-                    <th
-                        class="px-4 py-4 text-left text-xs uppercase tracking-wider font-semibold text-slate-500 min-w-[170px]"
-                    >
-                        Date Join
-                    </th>
+                        <th class="px-3 py-3 text-left text-[11px] uppercase tracking-wider font-semibold text-slate-500 min-w-[150px]">
+                            Date Join
+                        </th>
 
-                    <th
-                        class="px-4 py-4 text-left text-xs uppercase tracking-wider font-semibold text-slate-500 min-w-[160px]"
-                    >
-                        Contact
-                    </th>
+                        <th class="px-3 py-3 text-left text-[11px] uppercase tracking-wider font-semibold text-slate-500 min-w-[150px]">
+                            Contact
+                        </th>
 
-                    <th
-                        class="px-4 py-4 text-center text-xs uppercase tracking-wider font-semibold text-slate-500 min-w-[120px]"
-                    >
-                        Action
-                    </th>
+                        <th class="px-3 py-3 text-center text-[11px] uppercase tracking-wider font-semibold text-slate-500 min-w-[100px]">
+                            Action
+                        </th>
 
-                </tr>
+                    </tr>
+                </thead>
 
-            </thead>
+                <!-- BODY -->
+                <tbody
+                    id="recruitmentBody"
+                    class="divide-y divide-slate-100"
+                >
+                </tbody>
 
-            <!-- BODY -->
-            <tbody
-                id="recruitmentBody"
-                class="divide-y divide-slate-100"
-            >
-            </tbody>
+            </table>
 
-        </table>
+        </div>
 
     </div>
-
 </div>
             <!-- Program Table Template -->
             <div id="tab-generic" class="tab-content hidden">

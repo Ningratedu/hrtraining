@@ -11,6 +11,55 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
         body { font-family: 'Inter', sans-serif; }
+        /* ======================
+MOBILE UI IMPROVEMENT
+====================== */
+
+.mobile-table{
+    -webkit-overflow-scrolling: touch;
+}
+
+.funnel-card{
+    position: relative;
+    overflow: hidden;
+}
+
+.funnel-card::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:
+    linear-gradient(
+        135deg,
+        rgba(255,255,255,.7),
+        transparent
+    );
+    pointer-events:none;
+}
+
+@media(max-width:768px){
+
+    #tab-onboarding-page{
+        padding-bottom:120px;
+    }
+
+    .funnel-card{
+        padding:18px;
+        border-radius:24px;
+    }
+
+    .funnel-card h2{
+        font-size:28px;
+    }
+
+    table th,
+    table td{
+        white-space: nowrap;
+        font-size:13px;
+        padding:12px;
+    }
+
+}
         .glass-card { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); }
         .sidebar-item.active { background: #3b82f6; color: white; }
         /* Fix teks sidebar agar tidak turun baris */

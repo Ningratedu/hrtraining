@@ -7,6 +7,7 @@
     <title>HR Training Monitoring & Reporting</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
         body { font-family: 'Inter', sans-serif; }
@@ -202,6 +203,155 @@
                 </div>
             </div>
 
+            <!-- ONBOARDING TRAINING -->
+<div id="tab-onboarding-page" class="tab-content hidden space-y-6">
+
+    <!-- Funnel -->
+    <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+        <div class="flex justify-between items-center mb-6">
+            <div>
+                <h3 class="text-lg font-bold text-slate-800">
+                    Onboarding Funnel
+                </h3>
+                <p class="text-sm text-slate-500">
+                    Monitoring keterlaksanaan onboarding training
+                </p>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
+
+            <div class="funnel-card bg-blue-50 rounded-2xl p-5 border border-blue-200 cursor-pointer"
+                 onclick="filterByStage('Recruitment')">
+                <p class="text-sm text-slate-500">Recruitment</p>
+                <h2 id="countRecruitment" class="text-3xl font-bold text-blue-700">
+                    0
+                </h2>
+            </div>
+
+            <div class="funnel-card bg-amber-50 rounded-2xl p-5 border border-amber-200 cursor-pointer"
+                 onclick="filterByStage('In Class Training')">
+                <p class="text-sm text-slate-500">In Class Training</p>
+                <h2 id="countInClass" class="text-3xl font-bold text-amber-700">
+                    0
+                </h2>
+            </div>
+
+            <div class="funnel-card bg-purple-50 rounded-2xl p-5 border border-purple-200 cursor-pointer"
+                 onclick="filterByStage('Assignment')">
+                <p class="text-sm text-slate-500">Assignment</p>
+                <h2 id="countAssignment" class="text-3xl font-bold text-purple-700">
+                    0
+                </h2>
+            </div>
+
+            <div class="funnel-card bg-emerald-50 rounded-2xl p-5 border border-emerald-200 cursor-pointer"
+                 onclick="filterByStage('Serah Terima User')">
+                <p class="text-sm text-slate-500">Serah Terima User</p>
+                <h2 id="countUser" class="text-3xl font-bold text-emerald-700">
+                    0
+                </h2>
+            </div>
+
+            <div class="funnel-card bg-slate-100 rounded-2xl p-5 border border-slate-200 cursor-pointer"
+                 onclick="filterByStage('Completed')">
+                <p class="text-sm text-slate-500">
+                    Onboarding Completed
+                </p>
+                <h2 id="countCompleted" class="text-3xl font-bold text-slate-700">
+                    0
+                </h2>
+            </div>
+
+        </div>
+    </div>
+
+
+    <!-- TABLE -->
+    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+
+        <!-- HEADER -->
+        <div class="p-6 border-b border-slate-200 flex flex-col lg:flex-row gap-4 justify-between">
+
+            <div class="flex flex-col md:flex-row gap-3">
+
+                <!-- SEARCH -->
+                <div class="relative">
+                    <input
+                        id="searchRecruitment"
+                        type="text"
+                        placeholder="Cari data..."
+                        class="w-72 pl-10 pr-4 py-2 border rounded-xl bg-slate-50"
+                    />
+
+                    <i data-lucide="search"
+                       class="w-4 h-4 absolute left-3 top-3 text-slate-400">
+                    </i>
+                </div>
+
+                <!-- FILTER -->
+                <select
+                    id="departmentFilter"
+                    multiple
+                    class="border rounded-xl p-2 h-[42px] min-w-[220px]"
+                >
+                </select>
+
+            </div>
+
+            <!-- UPLOAD -->
+            <div>
+
+                <input
+                    type="file"
+                    id="excelUpload"
+                    accept=".xlsx,.xls"
+                    class="hidden"
+                />
+
+                <button
+                    onclick="document.getElementById('excelUpload').click()"
+                    class="bg-blue-600 text-white px-4 py-2 rounded-xl text-sm font-medium"
+                >
+                    Upload Excel
+                </button>
+
+            </div>
+        </div>
+
+        <!-- TABLE -->
+        <div class="overflow-auto max-h-[500px]">
+
+            <table class="w-full min-w-[1400px] border-collapse">
+
+                <thead class="sticky top-0 bg-slate-100 z-20">
+
+                    <tr>
+
+                        <th class="px-4 py-4 text-left">No</th>
+
+                        <th class="sticky left-0 bg-slate-100 px-4 py-4 z-30">
+                            Nama
+                        </th>
+
+                        <th class="px-4 py-4 text-left">Company</th>
+                        <th class="px-4 py-4 text-left">Departement</th>
+                        <th class="px-4 py-4 text-left">Designation</th>
+                        <th class="px-4 py-4 text-left">Location</th>
+                        <th class="px-4 py-4 text-left">Date Join</th>
+                        <th class="px-4 py-4 text-left">Kontak</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody id="recruitmentBody"></tbody>
+
+            </table>
+
+        </div>
+    </div>
+</div>
             <!-- Program Table Template -->
             <div id="tab-generic" class="tab-content hidden">
                 <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
@@ -327,10 +477,22 @@
                 const scheduleType = tabId === 'jadwal-training' ? 'training' : 'genba';
                 renderSchedule(scheduleType);
                 document.getElementById('tab-schedule').classList.remove('hidden');
-            } else {
-                renderTable(tabId);
-                document.getElementById('tab-generic').classList.remove('hidden');
-            }
+            } else if (tabId === 'onboarding') {
+
+    document
+        .getElementById('tab-onboarding-page')
+        .classList.remove('hidden');
+
+    renderRecruitmentTable();
+
+} else {
+
+    renderTable(tabId);
+
+    document
+        .getElementById('tab-generic')
+        .classList.remove('hidden');
+}
         }
 
         function renderTable(programKey) {
@@ -679,6 +841,241 @@ injectPerformanceMenu();
 injectPerformanceTab();
 
 });
+
+</script>
+    <script>
+
+let recruitmentData =
+JSON.parse(localStorage.getItem("recruitmentData"))
+|| [];
+
+let selectedDepartments = [];
+let selectedStage = "";
+
+function renderRecruitmentTable() {
+
+    const tbody =
+    document.getElementById("recruitmentBody");
+
+    if (!tbody) return;
+
+    let data = [...recruitmentData];
+
+    // SEARCH
+    const keyword =
+    document
+    .getElementById("searchRecruitment")
+    ?.value
+    ?.toLowerCase() || "";
+
+    if (keyword) {
+
+        data =
+        data.filter(item =>
+            Object.values(item)
+            .join(" ")
+            .toLowerCase()
+            .includes(keyword)
+        );
+    }
+
+    // FILTER DEPT
+    if (selectedDepartments.length) {
+
+        data =
+        data.filter(item =>
+            selectedDepartments
+            .includes(item.departement)
+        );
+    }
+
+    tbody.innerHTML = "";
+
+    data.forEach((item,index)=>{
+
+        tbody.innerHTML += `
+        <tr class="border-b hover:bg-slate-50">
+
+            <td class="px-4 py-4">
+                ${index+1}
+            </td>
+
+            <td class="sticky left-0 bg-white px-4 py-4 font-medium">
+                ${item.nama || ""}
+            </td>
+
+            <td class="px-4 py-4">
+                ${item.company || ""}
+            </td>
+
+            <td class="px-4 py-4">
+                ${item.departement || ""}
+            </td>
+
+            <td class="px-4 py-4">
+                ${item.designation || ""}
+            </td>
+
+            <td class="px-4 py-4">
+                ${item.location || ""}
+            </td>
+
+            <td class="px-4 py-4">
+                ${item.date_join || ""}
+            </td>
+
+            <td class="px-4 py-4">
+                ${item.kontak || ""}
+            </td>
+
+        </tr>
+        `;
+    });
+
+    updateDepartmentFilter();
+    updateFunnel();
+    lucide.createIcons();
+}
+
+
+// SEARCH REALTIME
+document.addEventListener("input", function(e){
+
+    if(e.target.id === "searchRecruitment"){
+        renderRecruitmentTable();
+    }
+
+});
+
+
+// FILTER
+function updateDepartmentFilter(){
+
+    const select =
+    document.getElementById("departmentFilter");
+
+    if(!select) return;
+
+    const uniqueDept =
+    [...new Set(
+        recruitmentData
+        .map(x=>x.departement)
+        .filter(Boolean)
+    )];
+
+    select.innerHTML =
+    uniqueDept
+    .map(dept =>
+        `<option value="${dept}">
+            ${dept}
+        </option>`
+    )
+    .join("");
+
+    select.onchange = function(){
+
+        selectedDepartments =
+        [...this.selectedOptions]
+        .map(opt=>opt.value);
+
+        renderRecruitmentTable();
+    };
+}
+
+
+// EXCEL UPLOAD
+document.addEventListener("change", function(e){
+
+    if(e.target.id !== "excelUpload")
+    return;
+
+    const file =
+    e.target.files[0];
+
+    const reader =
+    new FileReader();
+
+    reader.onload = function(evt){
+
+        const workbook =
+        XLSX.read(evt.target.result,{
+            type:'binary'
+        });
+
+        const sheet =
+        workbook.Sheets[
+            workbook.SheetNames[0]
+        ];
+
+        const json =
+        XLSX.utils.sheet_to_json(sheet);
+
+        json.forEach(row=>{
+
+            const nama =
+            row["Nama"]?.trim();
+
+            const exists =
+            recruitmentData.some(
+                x => x.nama === nama
+            );
+
+            if(!exists){
+
+                recruitmentData.push({
+                    nama: row["Nama"] || "",
+                    company: row["Company"] || "",
+                    departement: row["Departement"] || "",
+                    designation: row["Designation"] || "",
+                    location: row["Location"] || "",
+                    date_join: row["Date Join"] || "",
+                    kontak: row["Kontak"] || "",
+                    stage: "Recruitment"
+                });
+
+            }
+
+        });
+
+        localStorage.setItem(
+            "recruitmentData",
+            JSON.stringify(recruitmentData)
+        );
+
+        renderRecruitmentTable();
+
+        alert("Upload berhasil!");
+    };
+
+    reader.readAsBinaryString(file);
+
+});
+
+
+// FUNNEL
+function updateFunnel(){
+
+    const count =
+    stage =>
+    recruitmentData
+    .filter(x=>x.stage===stage)
+    .length;
+
+    document.getElementById("countRecruitment")
+    .innerText = count("Recruitment");
+
+    document.getElementById("countInClass")
+    .innerText = count("In Class Training");
+
+    document.getElementById("countAssignment")
+    .innerText = count("Assignment");
+
+    document.getElementById("countUser")
+    .innerText = count("Serah Terima User");
+
+    document.getElementById("countCompleted")
+    .innerText = count("Completed");
+}
 
 </script>
 </body>

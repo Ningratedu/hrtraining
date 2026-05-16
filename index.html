@@ -470,51 +470,74 @@ MOBILE UI IMPROVEMENT
 
                 <!-- HEADER -->
                 <thead
-                    class="sticky top-0 bg-white shadow-sm z-30 border-b border-slate-200"
-                >
-                    <tr>
+    class="sticky top-0 bg-white shadow-sm z-30 border-b border-slate-200"
+>
+<tr>
 
-                        <!-- FREEZE NO -->
-                        <th
-                            class="sticky left-0 bg-white z-40 px-3 py-3 text-left text-[11px] uppercase tracking-wider font-semibold text-slate-500 min-w-[65px] shadow-[4px_0_10px_rgba(0,0,0,0.03)]"
-                        >
-                            No
-                        </th>
+    <th class="sticky left-0 bg-white z-40 px-3 py-3 min-w-[65px] shadow-[4px_0_10px_rgba(0,0,0,0.03)]">
+        <button onclick="sortTable('no')" class="flex items-center gap-1 text-[11px] uppercase tracking-wider font-semibold text-slate-500">
+            No
+            <i data-lucide="arrow-up-down" class="w-3 h-3"></i>
+        </button>
+    </th>
 
-                        <th class="px-3 py-3 text-left text-[11px] uppercase tracking-wider font-semibold text-slate-500 min-w-[200px]">
-                            Name
-                        </th>
+    <th class="px-3 py-3 min-w-[200px]">
+        <button onclick="sortTable('nama')" class="flex items-center gap-1 text-[11px] uppercase tracking-wider font-semibold text-slate-500">
+            Name
+            <i data-lucide="arrow-up-down" class="w-3 h-3"></i>
+        </button>
+    </th>
 
-                        <th class="px-3 py-3 text-left text-[11px] uppercase tracking-wider font-semibold text-slate-500 min-w-[150px]">
-                            Company
-                        </th>
+    <th class="px-3 py-3 min-w-[150px]">
+        <button onclick="sortTable('company')" class="flex items-center gap-1 text-[11px] uppercase tracking-wider font-semibold text-slate-500">
+            Company
+            <i data-lucide="arrow-up-down" class="w-3 h-3"></i>
+        </button>
+    </th>
 
-                        <th class="px-3 py-3 text-left text-[11px] uppercase tracking-wider font-semibold text-slate-500 min-w-[160px]">
-                            Department
-                        </th>
+    <th class="px-3 py-3 min-w-[160px]">
+        <button onclick="sortTable('departement')" class="flex items-center gap-1 text-[11px] uppercase tracking-wider font-semibold text-slate-500">
+            Department
+            <i data-lucide="arrow-up-down" class="w-3 h-3"></i>
+        </button>
+    </th>
 
-                        <th class="px-3 py-3 text-left text-[11px] uppercase tracking-wider font-semibold text-slate-500 min-w-[160px]">
-                            Designation
-                        </th>
+    <th class="px-3 py-3 min-w-[160px]">
+        <button onclick="sortTable('designation')" class="flex items-center gap-1 text-[11px] uppercase tracking-wider font-semibold text-slate-500">
+            Designation
+            <i data-lucide="arrow-up-down" class="w-3 h-3"></i>
+        </button>
+    </th>
 
-                        <th class="px-3 py-3 text-left text-[11px] uppercase tracking-wider font-semibold text-slate-500 min-w-[150px]">
-                            Location
-                        </th>
+    <th class="px-3 py-3 min-w-[150px]">
+        <button onclick="sortTable('location')" class="flex items-center gap-1 text-[11px] uppercase tracking-wider font-semibold text-slate-500">
+            Location
+            <i data-lucide="arrow-up-down" class="w-3 h-3"></i>
+        </button>
+    </th>
 
-                        <th class="px-3 py-3 text-left text-[11px] uppercase tracking-wider font-semibold text-slate-500 min-w-[150px]">
-                            Date Join
-                        </th>
+    <th class="px-3 py-3 min-w-[150px]">
+        <button onclick="sortTable('date_join')" class="flex items-center gap-1 text-[11px] uppercase tracking-wider font-semibold text-slate-500">
+            Date Join
+            <i data-lucide="arrow-up-down" class="w-3 h-3"></i>
+        </button>
+    </th>
 
-                        <th class="px-3 py-3 text-left text-[11px] uppercase tracking-wider font-semibold text-slate-500 min-w-[150px]">
-                            Contact
-                        </th>
+    <th class="px-3 py-3 min-w-[150px]">
+        <button onclick="sortTable('kontak')" class="flex items-center gap-1 text-[11px] uppercase tracking-wider font-semibold text-slate-500">
+            Contact
+            <i data-lucide="arrow-up-down" class="w-3 h-3"></i>
+        </button>
+    </th>
 
-                        <th class="px-3 py-3 text-center text-[11px] uppercase tracking-wider font-semibold text-slate-500 min-w-[100px]">
-                            Action
-                        </th>
+    <th class="px-3 py-3 text-center min-w-[100px]">
+        <span class="text-[11px] uppercase tracking-wider font-semibold text-slate-500">
+            Action
+        </span>
+    </th>
 
-                    </tr>
-                </thead>
+</tr>
+</thead>
 
                 <!-- BODY -->
                 <tbody
@@ -1027,6 +1050,8 @@ JSON.parse(localStorage.getItem("recruitmentData"))
 || [];
 
 let selectedDepartments = [];
+let currentSortField = "date_join";
+let currentSortDirection = "desc";
 let selectedStage = "";
 
 function renderRecruitmentTable() {
@@ -1037,6 +1062,33 @@ function renderRecruitmentTable() {
     if (!tbody) return;
 
     let data = [...recruitmentData];
+    // SORT
+data.sort((a,b)=>{
+
+    let aVal = a[currentSortField] || "";
+    let bVal = b[currentSortField] || "";
+
+    // KHUSUS DATE
+    if(currentSortField === "date_join"){
+
+        aVal = new Date(aVal);
+        bVal = new Date(bVal);
+
+        return currentSortDirection === "asc"
+        ? aVal - bVal
+        : bVal - aVal;
+    }
+
+    // STRING
+    aVal = String(aVal).toLowerCase();
+    bVal = String(bVal).toLowerCase();
+
+    if(currentSortDirection === "asc"){
+        return aVal.localeCompare(bVal);
+    }
+
+    return bVal.localeCompare(aVal);
+});
 
     // SEARCH
     const keyword =
@@ -1562,6 +1614,26 @@ function editRecruitment(index){
         "recruitmentData",
         JSON.stringify(recruitmentData)
     );
+
+    renderRecruitmentTable();
+}
+        // ======================
+// SORT TABLE
+// ======================
+function sortTable(field){
+
+    if(currentSortField === field){
+
+        currentSortDirection =
+        currentSortDirection === "asc"
+        ? "desc"
+        : "asc";
+
+    } else {
+
+        currentSortField = field;
+        currentSortDirection = "asc";
+    }
 
     renderRecruitmentTable();
 }

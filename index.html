@@ -1068,16 +1068,16 @@ data.sort((a,b)=>{
     let aVal = a[currentSortField] || "";
     let bVal = b[currentSortField] || "";
 
-    // DATE JOIN
-if(currentSortField === "date_join"){
+    // KHUSUS DATE
+    if(currentSortField === "date_join"){
 
-    aVal = a.date_join_raw || 0;
-    bVal = b.date_join_raw || 0;
+        aVal = new Date(aVal);
+        bVal = new Date(bVal);
 
-    return currentSortDirection === "asc"
-    ? aVal - bVal
-    : bVal - aVal;
-}
+        return currentSortDirection === "asc"
+        ? aVal - bVal
+        : bVal - aVal;
+    }
 
     // STRING
     aVal = String(aVal).toLowerCase();
@@ -1312,49 +1312,11 @@ XLSX.utils.sheet_to_json(
         row["Location"] ||
         "",
 
-    const rawDate =
+    date_join: formatExcelDate(
     row["Date Join"] ||
     row["Date join"] ||
-    "";
-
-recruitmentData.push({
-
-    nama:
-        row["Nama"] ||
-        row["Name"] ||
-        "",
-
-    company:
-        row["Company"] ||
-        "",
-
-    departement:
-        row["Departement"] ||
-        row["Department"] ||
-        "",
-
-    designation:
-        row["Designation"] ||
-        "",
-
-    location:
-        row["Location"] ||
-        "",
-
-    date_join:
-        formatExcelDate(rawDate),
-
-    // buat sorting
-    date_join_raw:
-        parseExcelDate(rawDate),
-
-    kontak:
-        row["Kontak"] ||
-        row["Contact"] ||
-        "",
-
-    stage: "Recruitment"
-});
+    ""
+),
 
     kontak:
         row["Kontak"] ||
@@ -1416,47 +1378,6 @@ function formatExcelDate(value){
                 );
             }
         }
-        // ======================
-// PARSE DATE FOR SORTING
-// ======================
-function parseExcelDate(value){
-
-    if(!value) return 0;
-
-    try{
-
-        // EXCEL SERIAL
-        if(typeof value === "number"){
-
-            const parsed =
-            XLSX.SSF.parse_date_code(value);
-
-            if(parsed){
-
-                return new Date(
-                    parsed.y,
-                    parsed.m - 1,
-                    parsed.d
-                ).getTime();
-            }
-        }
-
-        // STRING DATE
-        const date =
-        new Date(value);
-
-        if(!isNaN(date)){
-
-            return date.getTime();
-        }
-
-        return 0;
-
-    } catch{
-
-        return 0;
-    }
-}
 
         // STRING DATE
         const parsed =

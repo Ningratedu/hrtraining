@@ -1013,7 +1013,11 @@ document.addEventListener("change", function(e){
         json.forEach(row=>{
 
             const nama =
-            row["Nama"]?.trim();
+(
+    row["Nama"] ||
+    row["Name"] ||
+    ""
+).trim();
 
             const exists =
             recruitmentData.some(
@@ -1023,15 +1027,41 @@ document.addEventListener("change", function(e){
             if(!exists){
 
                 recruitmentData.push({
-                    nama: row["Nama"] || "",
-                    company: row["Company"] || "",
-                    departement: row["Departement"] || "",
-                    designation: row["Designation"] || "",
-                    location: row["Location"] || "",
-                    date_join: row["Date Join"] || "",
-                    kontak: row["Kontak"] || "",
-                    stage: "Recruitment"
-                });
+
+    nama:
+        row["Nama"] ||
+        row["Name"] ||
+        "",
+
+    company:
+        row["Company"] ||
+        "",
+
+    departement:
+        row["Departement"] ||
+        row["Department"] ||
+        "",
+
+    designation:
+        row["Designation"] ||
+        "",
+
+    location:
+        row["Location"] ||
+        "",
+
+    date_join:
+        row["Date Join"] ||
+        row["Date join"] ||
+        "",
+
+    kontak:
+        row["Kontak"] ||
+        row["Contact"] ||
+        "",
+
+    stage: "Recruitment"
+});
 
             }
 

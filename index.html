@@ -374,6 +374,7 @@
                         <th class="px-4 py-4 text-left">Location</th>
                         <th class="px-4 py-4 text-left">Date Join</th>
                         <th class="px-4 py-4 text-left">Contact</th>
+                        <th class="px-4 py-4 text-center">Aksi</th>
 
                     </tr>
 
@@ -961,6 +962,31 @@ function renderRecruitmentTable() {
             <td class="px-4 py-4">
                 ${item.kontak || ""}
             </td>
+            <td class="px-4 py-4">
+
+    <div class="flex items-center justify-center gap-2">
+
+        <!-- EDIT -->
+        <button
+            onclick="editRecruitment(${recruitmentData.indexOf(item)})"
+            class="text-blue-600 hover:text-blue-800"
+            title="Edit"
+        >
+            <i data-lucide="pencil" class="w-4 h-4"></i>
+        </button>
+
+        <!-- DELETE -->
+        <button
+            onclick="deleteRecruitment(${recruitmentData.indexOf(item)})"
+            class="text-red-600 hover:text-red-800"
+            title="Delete"
+        >
+            <i data-lucide="trash-2" class="w-4 h-4"></i>
+        </button>
+
+    </div>
+
+</td>
 
         </tr>
         `;
@@ -1241,6 +1267,98 @@ document.addEventListener("click", function(e){
     }
 
 });
+    // ======================
+// DELETE DATA
+// ======================
+function deleteRecruitment(index){
+
+    const confirmDelete =
+    confirm(
+        "Yakin ingin menghapus data ini?"
+    );
+
+    if(!confirmDelete) return;
+
+    recruitmentData.splice(index,1);
+
+    localStorage.setItem(
+        "recruitmentData",
+        JSON.stringify(recruitmentData)
+    );
+
+    renderRecruitmentTable();
+}
+
+
+
+// ======================
+// EDIT DATA
+// ======================
+function editRecruitment(index){
+
+    const data =
+    recruitmentData[index];
+
+    if(!data) return;
+
+    const nama =
+    prompt("Nama", data.nama);
+
+    if(nama === null) return;
+
+    const company =
+    prompt("Company", data.company);
+
+    const departement =
+    prompt(
+        "Departement",
+        data.departement
+    );
+
+    const designation =
+    prompt(
+        "Designation",
+        data.designation
+    );
+
+    const location =
+    prompt(
+        "Location",
+        data.location
+    );
+
+    const dateJoin =
+    prompt(
+        "Date Join",
+        data.date_join
+    );
+
+    const kontak =
+    prompt(
+        "Kontak",
+        data.kontak
+    );
+
+    recruitmentData[index] = {
+
+        ...data,
+
+        nama,
+        company,
+        departement,
+        designation,
+        location,
+        date_join: dateJoin,
+        kontak
+    };
+
+    localStorage.setItem(
+        "recruitmentData",
+        JSON.stringify(recruitmentData)
+    );
+
+    renderRecruitmentTable();
+}
         
 </script>
 </body>

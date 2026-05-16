@@ -289,13 +289,47 @@
                     </i>
                 </div>
 
-                <!-- FILTER -->
-                <select
-                    id="departmentFilter"
-                    multiple
-                    class="border rounded-xl p-2 h-[42px] min-w-[220px]"
-                >
-                </select>
+                <!-- CUSTOM FILTER -->
+<div class="relative">
+
+    <button
+        id="filterButton"
+        onclick="toggleFilterDropdown()"
+        class="border rounded-xl px-4 py-2 bg-white min-w-[220px] text-left flex items-center justify-between"
+    >
+        <span id="filterLabel">
+            Filter Department
+        </span>
+
+        <i data-lucide="chevron-down" class="w-4 h-4"></i>
+    </button>
+
+    <!-- DROPDOWN -->
+    <div
+        id="filterDropdown"
+        class="hidden absolute mt-2 w-72 bg-white border border-slate-200 rounded-2xl shadow-xl z-50"
+    >
+
+        <div
+            id="filterOptions"
+            class="max-h-72 overflow-auto p-2"
+        >
+        </div>
+
+        <div class="p-3 border-t border-slate-200">
+
+            <button
+                onclick="applyDepartmentFilter()"
+                class="w-full bg-blue-600 text-white py-2 rounded-xl font-medium"
+            >
+                Done
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
 
             </div>
 
@@ -951,10 +985,10 @@ document.addEventListener("input", function(e){
 // FILTER
 function updateDepartmentFilter(){
 
-    const select =
-    document.getElementById("departmentFilter");
+    const container =
+    document.getElementById("filterOptions");
 
-    if(!select) return;
+    if(!container) return;
 
     const uniqueDept =
     [...new Set(
@@ -963,23 +997,26 @@ function updateDepartmentFilter(){
         .filter(Boolean)
     )];
 
-    select.innerHTML =
-    uniqueDept
-    .map(dept =>
-        `<option value="${dept}">
-            ${dept}
-        </option>`
-    )
-    .join("");
+    container.innerHTML =
+    uniqueDept.map(dept => `
 
-    select.onchange = function(){
+        <label class="flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-slate-100 cursor-pointer">
 
-        selectedDepartments =
-        [...this.selectedOptions]
-        .map(opt=>opt.value);
+            <input
+                type="checkbox"
+                value="${dept}"
+                class="department-checkbox w-4 h-4"
+                ${selectedDepartments.includes(dept) ? "checked" : ""}
+            >
 
-        renderRecruitmentTable();
-    };
+            <span class="text-sm">
+                ${dept}
+            </span>
+
+        </label>
+
+    `).join("");
+
 }
 
 
@@ -1085,11 +1122,22 @@ document.addEventListener("change", function(e){
 // FUNNEL
 function updateFunnel(){
 
+    let data = [...recruitmentData];
+
+    // FILTER DEPARTMENT ONLY
+    if(selectedDepartments.length){
+
+        data =
+        data.filter(item =>
+            selectedDepartments.includes(
+                item.departement
+            )
+        );
+    }
+
     const count =
     stage =>
-    recruitmentData
-    .filter(x=>x.stage===stage)
-    .length;
+    data.filter(x=>x.stage===stage).length;
 
     document.getElementById("countRecruitment")
     .innerText = count("Recruitment");
@@ -1106,7 +1154,94 @@ function updateFunnel(){
     document.getElementById("countCompleted")
     .innerText = count("Completed");
 }
+// OPEN / CLOSE FILTER
+function toggleFilterDropdown(){
 
+    document
+    .getElementById("filterDropdown")
+    .classList
+    .toggle("hidden");
+
+}
+
+
+// APPLY FILTER
+function applyDepartmentFilter(){
+
+    const checked =
+    document.querySelectorAll(
+        ".department-checkbox:checked"
+    );
+
+    selectedDepartments =
+    [...checked]
+    .map(x=>x.value);
+
+    // LABEL FILTER
+    const label =
+    document.getElementById("filterLabel");
+
+    if(selectedDepartments.length){
+
+        label.innerText =
+        `${selectedDepartments.length} Department Selected`;
+
+    } else {
+
+        label.innerText =
+        "Filter Department";
+    }
+
+    // TUTUP DROPDOWN
+    document
+    .getElementById("filterDropdown")
+    .classList
+    .add("hidden");
+
+    // RENDER TABLE + CARD
+    renderRecruitmentTable();
+}
+
+
+// AUTO CLOSE JIKA KLIK DI LUAR
+document.addEventListener("click", function(e){
+
+    const dropdown =
+    document.getElementById("filterDropdown");
+
+    const button =
+    document.getElementById("filterButton");
+
+    if(
+        dropdown &&
+        button &&
+        !dropdown.contains(e.target)
+        &&
+        !button.contains(e.target)
+    ){
+        dropdown.classList.add("hidden");
+    }
+
+});
+
+        document.addEventListener("click", function(e){
+
+    const dropdown =
+    document.getElementById("filterDropdown");
+
+    const button =
+    document.getElementById("filterButton");
+
+    if(
+        !dropdown.contains(e.target)
+        &&
+        !button.contains(e.target)
+    ){
+        dropdown.classList.add("hidden");
+    }
+
+});
+        
 </script>
 </body>
 </html>

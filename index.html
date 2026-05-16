@@ -219,52 +219,118 @@
             </div>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
+        <div class="grid grid-cols-2 lg:grid-cols-5 gap-4">
 
-            <div class="funnel-card bg-blue-50 rounded-2xl p-5 border border-blue-200 cursor-pointer"
-                 onclick="filterByStage('Recruitment')">
-                <p class="text-sm text-slate-500">Recruitment</p>
-                <h2 id="countRecruitment" class="text-3xl font-bold text-blue-700">
-                    0
-                </h2>
-            </div>
+    <!-- RECRUITMENT -->
+    <div
+        class="funnel-card bg-gradient-to-br from-blue-50 to-white rounded-[28px] p-4 md:p-5 border border-blue-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer relative overflow-hidden"
+        onclick="filterByStage('Recruitment')"
+    >
 
-            <div class="funnel-card bg-amber-50 rounded-2xl p-5 border border-amber-200 cursor-pointer"
-                 onclick="filterByStage('In Class Training')">
-                <p class="text-sm text-slate-500">In Class Training</p>
-                <h2 id="countInClass" class="text-3xl font-bold text-amber-700">
-                    0
-                </h2>
-            </div>
+        <div class="absolute top-0 right-0 w-24 h-24 bg-blue-100/30 blur-3xl rounded-full"></div>
 
-            <div class="funnel-card bg-purple-50 rounded-2xl p-5 border border-purple-200 cursor-pointer"
-                 onclick="filterByStage('Assignment')">
-                <p class="text-sm text-slate-500">Assignment</p>
-                <h2 id="countAssignment" class="text-3xl font-bold text-purple-700">
-                    0
-                </h2>
-            </div>
+        <p class="text-xs md:text-sm font-medium text-slate-500 relative z-10">
+            Recruitment
+        </p>
 
-            <div class="funnel-card bg-emerald-50 rounded-2xl p-5 border border-emerald-200 cursor-pointer"
-                 onclick="filterByStage('Serah Terima User')">
-                <p class="text-sm text-slate-500">Serah Terima User</p>
-                <h2 id="countUser" class="text-3xl font-bold text-emerald-700">
-                    0
-                </h2>
-            </div>
+        <h2
+            id="countRecruitment"
+            class="text-2xl md:text-4xl font-extrabold tracking-tight text-blue-700 mt-2 relative z-10"
+        >
+            0
+        </h2>
 
-            <div class="funnel-card bg-slate-100 rounded-2xl p-5 border border-slate-200 cursor-pointer"
-                 onclick="filterByStage('Completed')">
-                <p class="text-sm text-slate-500">
-                    Onboarding Completed
-                </p>
-                <h2 id="countCompleted" class="text-3xl font-bold text-slate-700">
-                    0
-                </h2>
-            </div>
-
-        </div>
     </div>
+
+
+    <!-- IN CLASS -->
+    <div
+        class="funnel-card bg-gradient-to-br from-amber-50 to-white rounded-[28px] p-4 md:p-5 border border-amber-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer relative overflow-hidden"
+        onclick="filterByStage('In Class Training')"
+    >
+
+        <div class="absolute top-0 right-0 w-24 h-24 bg-amber-100/30 blur-3xl rounded-full"></div>
+
+        <p class="text-xs md:text-sm font-medium text-slate-500 relative z-10">
+            In Class Training
+        </p>
+
+        <h2
+            id="countInClass"
+            class="text-2xl md:text-4xl font-extrabold tracking-tight text-amber-700 mt-2 relative z-10"
+        >
+            0
+        </h2>
+
+    </div>
+
+
+    <!-- ASSIGNMENT -->
+    <div
+        class="funnel-card bg-gradient-to-br from-purple-50 to-white rounded-[28px] p-4 md:p-5 border border-purple-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer relative overflow-hidden"
+        onclick="filterByStage('Assignment')"
+    >
+
+        <div class="absolute top-0 right-0 w-24 h-24 bg-purple-100/30 blur-3xl rounded-full"></div>
+
+        <p class="text-xs md:text-sm font-medium text-slate-500 relative z-10">
+            Assignment
+        </p>
+
+        <h2
+            id="countAssignment"
+            class="text-2xl md:text-4xl font-extrabold tracking-tight text-purple-700 mt-2 relative z-10"
+        >
+            0
+        </h2>
+
+    </div>
+
+
+    <!-- SERAH TERIMA -->
+    <div
+        class="funnel-card bg-gradient-to-br from-emerald-50 to-white rounded-[28px] p-4 md:p-5 border border-emerald-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer relative overflow-hidden"
+        onclick="filterByStage('Serah Terima User')"
+    >
+
+        <div class="absolute top-0 right-0 w-24 h-24 bg-emerald-100/30 blur-3xl rounded-full"></div>
+
+        <p class="text-xs md:text-sm font-medium text-slate-500 relative z-10">
+            Serah Terima User
+        </p>
+
+        <h2
+            id="countUser"
+            class="text-2xl md:text-4xl font-extrabold tracking-tight text-emerald-700 mt-2 relative z-10"
+        >
+            0
+        </h2>
+
+    </div>
+
+
+    <!-- COMPLETED -->
+    <div
+        class="funnel-card bg-gradient-to-br from-slate-50 to-white rounded-[28px] p-4 md:p-5 border border-slate-200 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer relative overflow-hidden col-span-2 lg:col-span-1"
+        onclick="filterByStage('Completed')"
+    >
+
+        <div class="absolute top-0 right-0 w-24 h-24 bg-slate-200/30 blur-3xl rounded-full"></div>
+
+        <p class="text-xs md:text-sm font-medium text-slate-500 relative z-10">
+            Onboarding Completed
+        </p>
+
+        <h2
+            id="countCompleted"
+            class="text-2xl md:text-4xl font-extrabold tracking-tight text-slate-700 mt-2 relative z-10"
+        >
+            0
+        </h2>
+
+    </div>
+
+</div>
 
 
     <!-- TABLE -->

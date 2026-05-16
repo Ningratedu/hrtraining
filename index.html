@@ -1113,10 +1113,11 @@ document.addEventListener("change", function(e){
         row["Location"] ||
         "",
 
-    date_join:
-        row["Date Join"] ||
-        row["Date join"] ||
-        "",
+    date_join: formatExcelDate(
+    row["Date Join"] ||
+    row["Date join"] ||
+    ""
+),
 
     kontak:
         row["Kontak"] ||
@@ -1144,7 +1145,38 @@ document.addEventListener("change", function(e){
 
 });
 
+// ======================
+// FORMAT TANGGAL EXCEL
+// ======================
+function formatExcelDate(excelDate){
 
+    // kalau kosong
+    if(!excelDate) return "";
+
+    // kalau bentuk angka excel
+    if(typeof excelDate === "number"){
+
+        const date =
+        new Date(
+            (excelDate - 25569)
+            * 86400
+            * 1000
+        );
+
+        return date.toLocaleDateString(
+            "id-ID",
+            {
+                day: "2-digit",
+                month: "long",
+                year: "numeric"
+            }
+        );
+    }
+
+    // kalau udah format tanggal biasa
+    return excelDate;
+}
+        
 // FUNNEL
 function updateFunnel(){
 

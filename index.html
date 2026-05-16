@@ -1242,7 +1242,12 @@ document.addEventListener("change", function(e){
         ];
 
         const json =
-        XLSX.utils.sheet_to_json(sheet);
+XLSX.utils.sheet_to_json(
+    sheet,
+    {
+        raw: false
+    }
+);
 
         json.forEach(row=>{
 
@@ -1319,33 +1324,60 @@ document.addEventListener("change", function(e){
 // ======================
 // FORMAT TANGGAL EXCEL
 // ======================
-function formatExcelDate(excelDate){
+function formatExcelDate(value){
 
-    // kalau kosong
-    if(!excelDate) return "";
+    if(!value) return "";
 
-    // kalau bentuk angka excel
-    if(typeof excelDate === "number"){
+    try{
 
-        const date =
-        new Date(
-            (excelDate - 25569)
-            * 86400
-            * 1000
-        );
+        // EXCEL SERIAL NUMBER
+        if(typeof value === "number"){
 
-        return date.toLocaleDateString(
-            "id-ID",
-            {
-                day: "2-digit",
-                month: "long",
-                year: "numeric"
+            const excelDate =
+            XLSX.SSF.parse_date_code(value);
+
+            if(excelDate){
+
+                const date =
+                new Date(
+                    excelDate.y,
+                    excelDate.m - 1,
+                    excelDate.d
+                );
+
+                return date.toLocaleDateString(
+                    "id-ID",
+                    {
+                        day: "2-digit",
+                        month: "long",
+                        year: "numeric"
+                    }
+                );
             }
-        );
-    }
+        }
 
-    // kalau udah format tanggal biasa
-    return excelDate;
+        // STRING DATE
+        const parsed =
+        new Date(value);
+
+        if(!isNaN(parsed)){
+
+            return parsed.toLocaleDateString(
+                "id-ID",
+                {
+                    day: "2-digit",
+                    month: "long",
+                    year: "numeric"
+                }
+            );
+        }
+
+        return value;
+
+    } catch(err){
+
+        return value;
+    }
 }
         
 // FUNNEL

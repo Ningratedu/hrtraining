@@ -1055,6 +1055,9 @@ let currentSortField = "date_join";
 let currentSortDirection = "desc";
 let selectedStage = "";
 
+// ======================
+// LOAD DATA ONLINE
+// ======================
 async function loadRecruitmentData(){
 
     try{
@@ -1078,68 +1081,90 @@ async function loadRecruitmentData(){
         );
     }
 }
-        
-function renderRecruitmentTable() {
+
+
+// ======================
+// RENDER TABLE
+// ======================
+function renderRecruitmentTable(){
 
     const tbody =
-    document.getElementById("recruitmentBody");
+    document.getElementById(
+        "recruitmentBody"
+    );
 
-    if (!tbody) return;
+    if(!tbody) return;
 
     let data = [...recruitmentData];
+
     // SORT
-data.sort((a,b)=>{
+    data.sort((a,b)=>{
 
-    let aVal = a[currentSortField] || "";
-    let bVal = b[currentSortField] || "";
+        let aVal =
+        a[currentSortField] || "";
 
-    // KHUSUS DATE
-    if(currentSortField === "date_join"){
+        let bVal =
+        b[currentSortField] || "";
 
-        aVal = new Date(aVal);
-        bVal = new Date(bVal);
+        if(
+            currentSortField ===
+            "date_join"
+        ){
+
+            aVal = new Date(aVal);
+            bVal = new Date(bVal);
+
+            return currentSortDirection === "asc"
+            ? aVal - bVal
+            : bVal - aVal;
+        }
+
+        aVal =
+        String(aVal)
+        .toLowerCase();
+
+        bVal =
+        String(bVal)
+        .toLowerCase();
 
         return currentSortDirection === "asc"
-        ? aVal - bVal
-        : bVal - aVal;
-    }
+        ? aVal.localeCompare(bVal)
+        : bVal.localeCompare(aVal);
 
-    // STRING
-    aVal = String(aVal).toLowerCase();
-    bVal = String(bVal).toLowerCase();
-
-    if(currentSortDirection === "asc"){
-        return aVal.localeCompare(bVal);
-    }
-
-    return bVal.localeCompare(aVal);
-});
+    });
 
     // SEARCH
     const keyword =
     document
-    .getElementById("searchRecruitment")
+    .getElementById(
+        "searchRecruitment"
+    )
     ?.value
     ?.toLowerCase() || "";
 
-    if (keyword) {
+    if(keyword){
 
         data =
-        data.filter(item =>
+        data.filter(item=>
+
             Object.values(item)
             .join(" ")
             .toLowerCase()
             .includes(keyword)
+
         );
     }
 
-    // FILTER DEPT
-    if (selectedDepartments.length) {
+    // FILTER DEPARTMENT
+    if(selectedDepartments.length){
 
         data =
-        data.filter(item =>
-            selectedDepartments
-            .includes(item.departement)
+        data.filter(item=>
+
+            selectedDepartments.includes(
+                item.departement
+            )
+
         );
     }
 
@@ -1151,7 +1176,7 @@ data.sort((a,b)=>{
         <tr class="border-b hover:bg-slate-50">
 
             <td class="sticky left-0 bg-white z-20 px-3 py-2 text-xs font-semibold whitespace-nowrap shadow-[4px_0_10px_rgba(0,0,0,0.03)]">
-                ${index+1}
+                ${index + 1}
             </td>
 
             <td class="px-3 py-2 text-xs font-medium whitespace-nowrap">
@@ -1181,31 +1206,28 @@ data.sort((a,b)=>{
             <td class="px-4 py-4">
                 ${item.kontak || ""}
             </td>
+
             <td class="px-4 py-4">
 
-    <div class="flex items-center justify-center gap-2">
+                <div class="flex items-center justify-center gap-2">
 
-        <!-- EDIT -->
-        <button
-            onclick="editRecruitment(${recruitmentData.indexOf(item)})"
-            class="text-blue-600 hover:text-blue-800"
-            title="Edit"
-        >
-            <i data-lucide="pencil" class="w-4 h-4"></i>
-        </button>
+                    <button
+                        onclick="editRecruitment(${recruitmentData.indexOf(item)})"
+                        class="text-blue-600 hover:text-blue-800"
+                    >
+                        <i data-lucide="pencil" class="w-4 h-4"></i>
+                    </button>
 
-        <!-- DELETE -->
-        <button
-            onclick="deleteRecruitment(${recruitmentData.indexOf(item)})"
-            class="text-red-600 hover:text-red-800"
-            title="Delete"
-        >
-            <i data-lucide="trash-2" class="w-4 h-4"></i>
-        </button>
+                    <button
+                        onclick="deleteRecruitment(${recruitmentData.indexOf(item)})"
+                        class="text-red-600 hover:text-red-800"
+                    >
+                        <i data-lucide="trash-2" class="w-4 h-4"></i>
+                    </button>
 
-    </div>
+                </div>
 
-</td>
+            </td>
 
         </tr>
         `;
@@ -1213,161 +1235,153 @@ data.sort((a,b)=>{
 
     updateDepartmentFilter();
     updateFunnel();
+
     lucide.createIcons();
 }
 
 
-// SEARCH REALTIME
-document.addEventListener("input", function(e){
+// ======================
+// SEARCH
+// ======================
+document.addEventListener(
+"input",
+function(e){
 
-    if(e.target.id === "searchRecruitment"){
+    if(
+        e.target.id ===
+        "searchRecruitment"
+    ){
         renderRecruitmentTable();
     }
 
 });
 
 
-// FILTER
-function updateDepartmentFilter(){
-
-    const container =
-    document.getElementById("filterOptions");
-
-    if(!container) return;
-
-    const uniqueDept =
-    [...new Set(
-        recruitmentData
-        .map(x=>x.departement)
-        .filter(Boolean)
-    )];
-
-    container.innerHTML =
-    uniqueDept.map(dept => `
-
-        <label class="flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-slate-100 cursor-pointer">
-
-            <input
-                type="checkbox"
-                value="${dept}"
-                class="department-checkbox w-4 h-4"
-                ${selectedDepartments.includes(dept) ? "checked" : ""}
-            >
-
-            <span class="text-sm">
-                ${dept}
-            </span>
-
-        </label>
-
-    `).join("");
-
-}
-
-
+// ======================
 // EXCEL UPLOAD
-document.addEventListener("change", function(e){
+// ======================
+document.addEventListener(
+"change",
+function(e){
 
-    if(e.target.id !== "excelUpload")
-    return;
+    if(
+        e.target.id !==
+        "excelUpload"
+    ) return;
 
     const file =
     e.target.files[0];
 
+    if(!file) return;
+
     const reader =
     new FileReader();
 
-    reader.onload = async function(evt){
+    reader.onload =
+    async function(evt){
 
-    const workbook =
-    XLSX.read(
-        evt.target.result,
-        { type:'binary' }
+        try{
+
+            const workbook =
+            XLSX.read(
+                evt.target.result,
+                {type:'binary'}
+            );
+
+            const sheet =
+            workbook.Sheets[
+                workbook.SheetNames[0]
+            ];
+
+            const json =
+            XLSX.utils.sheet_to_json(
+                sheet,
+                {raw:false}
+            );
+
+            for(const row of json){
+
+                await fetch(
+                    API_URL,
+                    {
+                        method:"POST",
+
+                        body:
+                        JSON.stringify({
+
+                            sheet:
+                            "onboarding",
+
+                            action:
+                            "create",
+
+                            nama:
+                            row["Nama"] ||
+                            row["Name"] ||
+                            "",
+
+                            company:
+                            row["Company"] ||
+                            "",
+
+                            departement:
+                            row["Departement"] ||
+                            row["Department"] ||
+                            "",
+
+                            designation:
+                            row["Designation"] ||
+                            "",
+
+                            location:
+                            row["Location"] ||
+                            "",
+
+                            date_join:
+                            formatExcelDate(
+                                row["Date Join"] ||
+                                row["Date join"] ||
+                                ""
+                            ),
+
+                            kontak:
+                            row["Kontak"] ||
+                            row["Contact"] ||
+                            "",
+
+                            stage:
+                            "Recruitment"
+
+                        })
+                    }
+                );
+            }
+
+            await loadRecruitmentData();
+
+            alert(
+                "Upload berhasil!"
+            );
+
+        }catch(err){
+
+            console.error(err);
+
+            alert(
+                "Upload gagal"
+            );
+        }
+    };
+
+    reader.readAsBinaryString(
+        file
     );
 
-    const sheet =
-    workbook.Sheets[
-        workbook.SheetNames[0]
-    ];
+});
 
-    const json =
-    XLSX.utils.sheet_to_json(
-        sheet,
-        {
-            raw:false
-        }
-    );
-
-    try{
-
-        for(const row of json){
-
-            const body = {
-
-                sheet:"onboarding",
-                action:"create",
-
-                nama:
-                    row["Nama"] ||
-                    row["Name"] ||
-                    "",
-
-                company:
-                    row["Company"] ||
-                    "",
-
-                departement:
-                    row["Departement"] ||
-                    row["Department"] ||
-                    "",
-
-                designation:
-                    row["Designation"] ||
-                    "",
-
-                location:
-                    row["Location"] ||
-                    "",
-
-                date_join:
-                    formatExcelDate(
-                        row["Date Join"] ||
-                        row["Date join"] ||
-                        ""
-                    ),
-
-                kontak:
-                    row["Kontak"] ||
-                    row["Contact"] ||
-                    "",
-
-                stage:"Recruitment"
-            };
-
-            await fetch(API_URL,{
-                method:"POST",
-                body:JSON.stringify(body)
-            });
-        }
-
-        await loadRecruitmentData();
-
-        alert(
-            "Upload berhasil!"
-        );
-
-    }catch(err){
-
-        console.error(err);
-
-        alert(
-            "Upload gagal"
-        );
-    }
-};
 
 // ======================
-// FORMAT TANGGAL EXCEL
+// FORMAT DATE
 // ======================
 function formatExcelDate(value){
 
@@ -1375,11 +1389,16 @@ function formatExcelDate(value){
 
     try{
 
-        // EXCEL SERIAL NUMBER
-        if(typeof value === "number"){
+        if(
+            typeof value ===
+            "number"
+        ){
 
             const excelDate =
-            XLSX.SSF.parse_date_code(value);
+            XLSX.SSF
+            .parse_date_code(
+                value
+            );
 
             if(excelDate){
 
@@ -1390,189 +1409,65 @@ function formatExcelDate(value){
                     excelDate.d
                 );
 
-                return date.toLocaleDateString(
-                    "id-ID",
-                    {
-                        day: "2-digit",
-                        month: "long",
-                        year: "numeric"
-                    }
+                return date
+                .toLocaleDateString(
+                    "id-ID"
                 );
             }
         }
 
-        // STRING DATE
         const parsed =
         new Date(value);
 
         if(!isNaN(parsed)){
 
-            return parsed.toLocaleDateString(
-                "id-ID",
-                {
-                    day: "2-digit",
-                    month: "long",
-                    year: "numeric"
-                }
+            return parsed
+            .toLocaleDateString(
+                "id-ID"
             );
         }
 
         return value;
 
-    } catch(err){
+    }catch{
 
         return value;
     }
 }
-        
-// FUNNEL
-function updateFunnel(){
-
-    let data = [...recruitmentData];
-
-    // FILTER DEPARTMENT ONLY
-    if(selectedDepartments.length){
-
-        data =
-        data.filter(item =>
-            selectedDepartments.includes(
-                item.departement
-            )
-        );
-    }
-
-    const count =
-    stage =>
-    data.filter(x=>x.stage===stage).length;
-
-    document.getElementById("countRecruitment")
-    .innerText = count("Recruitment");
-
-    document.getElementById("countInClass")
-    .innerText = count("In Class Training");
-
-    document.getElementById("countAssignment")
-    .innerText = count("Assignment");
-
-    document.getElementById("countUser")
-    .innerText = count("Serah Terima User");
-
-    document.getElementById("countCompleted")
-    .innerText = count("Completed");
-}
-// OPEN / CLOSE FILTER
-function toggleFilterDropdown(){
-
-    document
-    .getElementById("filterDropdown")
-    .classList
-    .toggle("hidden");
-
-}
 
 
-// APPLY FILTER
-function applyDepartmentFilter(){
-
-    const checked =
-    document.querySelectorAll(
-        ".department-checkbox:checked"
-    );
-
-    selectedDepartments =
-    [...checked]
-    .map(x=>x.value);
-
-    // LABEL FILTER
-    const label =
-    document.getElementById("filterLabel");
-
-    if(selectedDepartments.length){
-
-        label.innerText =
-        `${selectedDepartments.length} Department Selected`;
-
-    } else {
-
-        label.innerText =
-        "Filter Department";
-    }
-
-    // TUTUP DROPDOWN
-    document
-    .getElementById("filterDropdown")
-    .classList
-    .add("hidden");
-
-    // RENDER TABLE + CARD
-    renderRecruitmentTable();
-}
-
-
-// AUTO CLOSE JIKA KLIK DI LUAR
-document.addEventListener("click", function(e){
-
-    const dropdown =
-    document.getElementById("filterDropdown");
-
-    const button =
-    document.getElementById("filterButton");
-
-    if(
-        dropdown &&
-        button &&
-        !dropdown.contains(e.target)
-        &&
-        !button.contains(e.target)
-    ){
-        dropdown.classList.add("hidden");
-    }
-
-});
-
-        document.addEventListener("click", function(e){
-
-    const dropdown =
-    document.getElementById("filterDropdown");
-
-    const button =
-    document.getElementById("filterButton");
-
-    if(
-        !dropdown.contains(e.target)
-        &&
-        !button.contains(e.target)
-    ){
-        dropdown.classList.add("hidden");
-    }
-
-});
-    // ======================
-// DELETE DATA
+// ======================
+// DELETE
 // ======================
 async function deleteRecruitment(index){
 
-    const confirmDelete =
-    confirm(
-        "Yakin ingin menghapus data ini?"
-    );
-
-    if(!confirmDelete) return;
+    if(
+        !confirm(
+            "Yakin ingin menghapus data ini?"
+        )
+    ) return;
 
     try{
 
-        await fetch(API_URL,{
-            method:"POST",
-            body:JSON.stringify({
+        await fetch(
+            API_URL,
+            {
+                method:"POST",
+                body:
+                JSON.stringify({
 
-                sheet:"onboarding",
-                action:"delete",
+                    sheet:
+                    "onboarding",
 
-                id:
-                recruitmentData[index].id
+                    action:
+                    "delete",
 
-            })
-        });
+                    id:
+                    recruitmentData[index]
+                    .id
+                })
+            }
+        );
 
         await loadRecruitmentData();
 
@@ -1587,9 +1482,8 @@ async function deleteRecruitment(index){
 }
 
 
-
 // ======================
-// EDIT DATA
+// EDIT
 // ======================
 async function editRecruitment(index){
 
@@ -1599,68 +1493,77 @@ async function editRecruitment(index){
     if(!data) return;
 
     const nama =
-    prompt("Nama", data.nama);
-
-    if(nama === null) return;
-
-    const company =
     prompt(
-        "Company",
-        data.company
+        "Nama",
+        data.nama
     );
 
-    const departement =
-    prompt(
-        "Departement",
-        data.departement
-    );
-
-    const designation =
-    prompt(
-        "Designation",
-        data.designation
-    );
-
-    const location =
-    prompt(
-        "Location",
-        data.location
-    );
-
-    const dateJoin =
-    prompt(
-        "Date Join",
-        data.date_join
-    );
-
-    const kontak =
-    prompt(
-        "Kontak",
-        data.kontak
-    );
+    if(nama === null)
+    return;
 
     try{
 
-        await fetch(API_URL,{
-            method:"POST",
-            body:JSON.stringify({
+        await fetch(
+            API_URL,
+            {
+                method:"POST",
 
-                sheet:"onboarding",
-                action:"update",
+                body:
+                JSON.stringify({
 
-                id:data.id,
+                    sheet:
+                    "onboarding",
 
-                nama,
-                company,
-                departement,
-                designation,
-                location,
-                date_join:dateJoin,
-                kontak,
-                stage:data.stage
+                    action:
+                    "update",
 
-            })
-        });
+                    id:
+                    data.id,
+
+                    nama,
+
+                    company:
+                    prompt(
+                        "Company",
+                        data.company
+                    ),
+
+                    departement:
+                    prompt(
+                        "Departement",
+                        data.departement
+                    ),
+
+                    designation:
+                    prompt(
+                        "Designation",
+                        data.designation
+                    ),
+
+                    location:
+                    prompt(
+                        "Location",
+                        data.location
+                    ),
+
+                    date_join:
+                    prompt(
+                        "Date Join",
+                        data.date_join
+                    ),
+
+                    kontak:
+                    prompt(
+                        "Kontak",
+                        data.kontak
+                    ),
+
+                    stage:
+                    data.stage
+
+                })
+            }
+        );
 
         await loadRecruitmentData();
 
@@ -1673,27 +1576,114 @@ async function editRecruitment(index){
         );
     }
 }
-        // ======================
-// SORT TABLE
+
+
+// ======================
+// FILTER
+// ======================
+function updateDepartmentFilter(){
+
+    const container =
+    document.getElementById(
+        "filterOptions"
+    );
+
+    if(!container) return;
+
+    const uniqueDept =
+    [...new Set(
+        recruitmentData
+        .map(x=>x.departement)
+        .filter(Boolean)
+    )];
+
+    container.innerHTML =
+    uniqueDept.map(dept=>`
+
+        <label class="flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-slate-100 cursor-pointer">
+
+            <input
+                type="checkbox"
+                value="${dept}"
+                class="department-checkbox"
+                ${selectedDepartments.includes(dept)
+                ? "checked"
+                : ""}
+
+            >
+
+            <span>
+                ${dept}
+            </span>
+
+        </label>
+
+    `).join("");
+
+}
+
+
+function applyDepartmentFilter(){
+
+    selectedDepartments =
+    [...document.querySelectorAll(
+        ".department-checkbox:checked"
+    )]
+    .map(x=>x.value);
+
+    renderRecruitmentTable();
+}
+
+
+// ======================
+// FUNNEL
+// ======================
+function updateFunnel(){
+
+    const count =
+    stage =>
+    recruitmentData.filter(
+        x=>x.stage===stage
+    ).length;
+
+    document
+    .getElementById(
+        "countRecruitment"
+    )
+    .innerText =
+    count("Recruitment");
+
+}
+
+
+// ======================
+// SORT
 // ======================
 function sortTable(field){
 
-    if(currentSortField === field){
+    if(
+        currentSortField ===
+        field
+    ){
 
         currentSortDirection =
-        currentSortDirection === "asc"
+        currentSortDirection ===
+        "asc"
         ? "desc"
         : "asc";
 
-    } else {
+    }else{
 
-        currentSortField = field;
-        currentSortDirection = "asc";
+        currentSortField =
+        field;
+
+        currentSortDirection =
+        "asc";
     }
 
     renderRecruitmentTable();
 }
-        
+
 </script>
 </body>
 </html>

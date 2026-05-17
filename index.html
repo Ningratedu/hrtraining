@@ -163,13 +163,21 @@ MOBILE UI IMPROVEMENT
                 </button>
                 <h2 id="current-tab-title" class="text-lg md:text-xl font-bold text-slate-800">Dashboard</h2>
             </div>
-            <div class="flex items-center gap-2 md:gap-4">
-                <button class="p-2 text-slate-400 hover:text-blue-600 transition-colors hidden sm:block"><i data-lucide="search"></i></button>
-                <button class="p-2 text-slate-400 hover:text-blue-600 transition-colors"><i data-lucide="bell"></i></button>
-                <button class="bg-blue-600 text-white px-3 py-2 md:px-4 md:py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition-all shadow-sm flex items-center gap-2">
-                    <i data-lucide="plus" class="w-4 h-4"></i> <span class="hidden xs:inline">Data Baru</span>
-                </button>
-            </div>
+            <div class="flex items-center gap-3">
+
+    <select
+        id="globalPeriodeFilter"
+        onchange="renderRecruitmentTable()"
+        class="bg-white border border-slate-200 rounded-xl px-4 py-2 text-sm shadow-sm outline-none focus:ring-2 focus:ring-blue-500 min-w-[220px]"
+    >
+
+        <option value="">
+            Semua Periode
+        </option>
+
+    </select>
+
+</div>
         </header>
 
         <!-- Dynamic Content Area -->
@@ -1095,6 +1103,7 @@ async function loadRecruitmentData(){
 
         }));
 
+        generateGlobalPeriodeFilter();
         renderRecruitmentTable();
 
     }catch(err){
@@ -1121,6 +1130,39 @@ function renderRecruitmentTable(){
     if(!tbody) return;
 
     let data = [...recruitmentData];
+    
+    const selectedPeriode =
+document.getElementById(
+    "globalPeriodeFilter"
+)?.value;
+
+
+
+if(selectedPeriode){
+
+    filteredData =
+    filteredData.filter(item => {
+
+        if(!item.date_join)
+        return false;
+
+        const date =
+        new Date(
+            item.date_join
+        );
+
+        if(isNaN(date))
+        return false;
+
+        const periode =
+        `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,"0")}`;
+
+        return (
+            periode ===
+            selectedPeriode
+        );
+    });
+}
 
     // SORT
     data.sort((a,b)=>{
@@ -1954,6 +1996,91 @@ function(e){
         );
     }
 });
+
+// ======================
+// GLOBAL FILTER PERIODE
+// ======================
+function generateGlobalPeriodeFilter(){
+
+    const select =
+    document.getElementById(
+        "globalPeriodeFilter"
+    );
+
+    if(!select) return;
+
+    select.innerHTML =
+    `
+    <option value="">
+        Semua Periode
+    </option>
+    `;
+
+    const bulanNama = [
+
+        "Januari",
+        "Februari",
+        "Maret",
+        "April",
+        "Mei",
+        "Juni",
+        "Juli",
+        "Agustus",
+        "September",
+        "Oktober",
+        "November",
+        "Desember"
+
+    ];
+
+    const startDate =
+    new Date(
+        2026,
+        0,
+        1
+    );
+
+    const now =
+    new Date();
+
+    const current =
+    new Date(startDate);
+
+    while(current <= now){
+
+        const month =
+        current.getMonth();
+
+        const year =
+        current.getFullYear();
+
+        const value =
+        `${year}-${String(month + 1).padStart(2,"0")}`;
+
+        const label =
+        `${bulanNama[month]} ${year}`;
+
+        const option =
+        document.createElement(
+            "option"
+        );
+
+        option.value =
+        value;
+
+        option.textContent =
+        label;
+
+        select.appendChild(
+            option
+        );
+
+        current.setMonth(
+            current.getMonth() + 1
+        );
+    }
+}
+        
 // ======================
 // FUNNEL
 // ======================

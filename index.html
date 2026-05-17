@@ -1092,6 +1092,7 @@ let currentSortField = "date_join";
 let currentSortDirection = "asc";
 let selectedStage = "";
 
+
 // ======================
 // LOAD DATA ONLINE
 // ======================
@@ -1120,6 +1121,7 @@ async function loadRecruitmentData(){
         }));
 
         generateGlobalPeriodeFilter();
+
         renderRecruitmentTable();
 
     }catch(err){
@@ -1359,21 +1361,22 @@ function renderRecruitmentTable(){
     // FILTER DEPARTMENT
     if(selectedDepartments.length){
 
-    data =
-    data.filter(item =>
+        data =
+        data.filter(item =>
 
-        selectedDepartments.includes(
+            selectedDepartments.includes(
 
-            String(
-                item.departement || ""
+                String(
+                    item.departement || ""
+                )
+                .trim()
+                .toLowerCase()
+
             )
-            .trim()
-            .toLowerCase()
 
-        )
+        );
+    }
 
-    );
-}
     tbody.innerHTML = "";
 
     data.forEach((item,index)=>{
@@ -1444,7 +1447,8 @@ function renderRecruitmentTable(){
     });
 
     updateDepartmentFilter();
-    updateFunnel();
+
+    updateFunnel(data);
 
     lucide.createIcons();
 }
@@ -1915,6 +1919,7 @@ async function editRecruitment(index){
     }
 }
 
+
 // ======================
 // FILTER DEPARTMENT
 // ======================
@@ -2069,6 +2074,7 @@ function(e){
     }
 });
 
+
 // ======================
 // GLOBAL FILTER PERIODE
 // ======================
@@ -2148,28 +2154,29 @@ function generateGlobalPeriodeFilter(){
         );
 
         // default bulan berjalan
-const currentValue =
-`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,"0")}`;
+        const currentValue =
+        `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,"0")}`;
 
-if(value === currentValue){
+        if(value === currentValue){
 
-    option.selected = true;
-}
+            option.selected = true;
+        }
 
         current.setMonth(
             current.getMonth() + 1
         );
     }
 }
-        
+
+
 // ======================
 // FUNNEL
 // ======================
-function updateFunnel(){
+function updateFunnel(filteredData = recruitmentData){
 
     const count =
     stage =>
-    recruitmentData.filter(
+    filteredData.filter(
         x=>x.stage===stage
     ).length;
 

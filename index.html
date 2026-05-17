@@ -1202,32 +1202,35 @@ function renderRecruitmentTable(){
             </td>
 
             <td class="px-4 py-4">
-                ${item.kontak || ""}
-            </td>
+    ${item.kontak || ""}
+</td>
 
-            <td class="px-4 py-4">
+<td class="px-4 py-4">
 
-                <div class="flex items-center justify-center gap-2">
+    <div class="flex items-center justify-center gap-2">
 
-                    <button
-                        onclick="editRecruitment(${recruitmentData.indexOf(item)})"
-                        class="text-blue-600 hover:text-blue-800"
-                    >
-                        <i data-lucide="pencil" class="w-4 h-4"></i>
-                    </button>
+        <!-- EDIT -->
+        <button
+            onclick="editRecruitment(${recruitmentData.indexOf(item)})"
+            class="text-blue-600 hover:text-blue-800 transition"
+        >
+            <i data-lucide="pencil" class="w-4 h-4"></i>
+        </button>
 
-                    <button
-                        onclick="deleteRecruitment(${recruitmentData.indexOf(item)})"
-                        class="text-red-600 hover:text-red-800"
-                    >
-                        <i data-lucide="trash-2" class="w-4 h-4"></i>
-                    </button>
+        <!-- DELETE -->
+        <button
+            onclick="deleteRecruitment(${recruitmentData.indexOf(item)})"
+            class="text-red-600 hover:text-red-800 transition"
+        >
+            <i data-lucide="trash-2" class="w-4 h-4"></i>
+        </button>
 
-                    <button
-    onclick="window.open(
-        'https://wa.me/' + item.contact +
-        '?text=' + encodeURIComponent(
-`Halo ${item.name},
+        <!-- WHATSAPP -->
+        <button
+            onclick="window.open(
+                'https://wa.me/' + (${JSON.stringify(item.kontak || '')}).replace(/^0/, '62') +
+                '?text=' + encodeURIComponent(
+`Halo ${item.name || ''},
 
 Selamat bergabung di Trusmi Group khususnya unit bisnis properti PT Raja Sukses Propertindo dengan brand Rumah Ningrat 🏡
 
@@ -1238,27 +1241,27 @@ https://trusmicorp.com/e-training
 Mohon seluruh materi onboarding diselesaikan maksimal 7 hari sejak tanggal join.
 
 Terima kasih dan selamat bertumbuh bersama Trusmi Group 🚀`
-        ),
-        '_blank'
-    )"
-    class="text-green-600 hover:text-green-800"
->
-    <i data-lucide="message-circle" class="w-4 h-4"></i>
-</button>
+                ),
+                '_blank'
+            )"
+            class="text-green-600 hover:text-green-800 transition"
+        >
+            <i data-lucide="message-circle" class="w-4 h-4"></i>
+        </button>
 
-                </div>
+    </div>
 
-            </td>
+</td>
 
-        </tr>
-        `;
-    });
+</tr>
+`;
+});
 
-    updateDepartmentFilter();
+updateDepartmentFilter();
 
-    updateFunnel(data);
+updateFunnel(data);
 
-    lucide.createIcons();
+lucide.createIcons();
 }
 
 

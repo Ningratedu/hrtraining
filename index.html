@@ -1067,8 +1067,20 @@ async function loadRecruitmentData(){
             `${API_URL}?sheet=onboarding`
         );
 
-        recruitmentData =
+        const result =
         await res.json();
+
+        recruitmentData =
+        result.map(item => ({
+
+            ...item,
+
+            date_join:
+            formatDisplayDate(
+                item.date_join
+            )
+
+        }));
 
         renderRecruitmentTable();
 
@@ -1158,15 +1170,21 @@ function renderRecruitmentTable(){
     // FILTER DEPARTMENT
     if(selectedDepartments.length){
 
-        data =
-        data.filter(item=>
+    data =
+    data.filter(item =>
 
-            selectedDepartments.includes(
-                item.departement
+        selectedDepartments.includes(
+
+            String(
+                item.departement || ""
             )
+            .trim()
+            .toLowerCase()
 
-        );
-    }
+        )
+
+    );
+}
 
     tbody.innerHTML = "";
 
@@ -1435,7 +1453,35 @@ function formatExcelDate(value){
     }
 }
 
+function formatDisplayDate(value){
 
+    if(!value) return "";
+
+    try{
+
+        const date =
+        new Date(value);
+
+        if(!isNaN(date)){
+
+            return date.toLocaleDateString(
+                "id-ID",
+                {
+                    day:"2-digit",
+                    month:"long",
+                    year:"numeric"
+                }
+            );
+        }
+
+        return value;
+
+    }catch{
+
+        return value;
+    }
+}
+        
 // ======================
 // DELETE
 // ======================
@@ -1593,7 +1639,11 @@ function updateDepartmentFilter(){
     const uniqueDept =
     [...new Set(
         recruitmentData
-        .map(x=>x.departement)
+        .map(x=>
+    String(
+        x.departement || ""
+    ).trim()
+)
         .filter(Boolean)
     )];
 
@@ -1625,15 +1675,21 @@ function updateDepartmentFilter(){
 
 function applyDepartmentFilter(){
 
-    selectedDepartments =
-    [...document.querySelectorAll(
+    const checked =
+    document.querySelectorAll(
         ".department-checkbox:checked"
-    )]
-    .map(x=>x.value);
+    );
+
+    selectedDepartments =
+    [...checked]
+    .map(x =>
+        x.value
+        .trim()
+        .toLowerCase()
+    );
 
     renderRecruitmentTable();
 }
-
 
 // ======================
 // FUNNEL

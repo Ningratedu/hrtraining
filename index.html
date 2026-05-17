@@ -1130,39 +1130,99 @@ function renderRecruitmentTable(){
     if(!tbody) return;
 
     let data = [...recruitmentData];
-    
+
+
+
+    // ======================
+    // FILTER PERIODE
+    // ======================
     const selectedPeriode =
-document.getElementById(
-    "globalPeriodeFilter"
-)?.value;
+    document.getElementById(
+        "globalPeriodeFilter"
+    )?.value;
 
 
 
-if(selectedPeriode){
+    if(selectedPeriode){
 
-    filteredData =
-    filteredData.filter(item => {
+        data =
+        data.filter(item => {
 
-        if(!item.date_join)
-        return false;
+            if(!item.date_join)
+            return false;
 
-        const date =
-        new Date(
-            item.date_join
-        );
 
-        if(isNaN(date))
-        return false;
 
-        const periode =
-        `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,"0")}`;
+            const parseIndoDate =
+            (dateStr)=>{
 
-        return (
-            periode ===
-            selectedPeriode
-        );
-    });
-}
+                if(!dateStr)
+                return null;
+
+                // ISO DATE
+                const iso =
+                new Date(dateStr);
+
+                if(!isNaN(iso)){
+                    return iso;
+                }
+
+                // FORMAT INDO
+                const bulan = {
+
+                    januari:0,
+                    februari:1,
+                    maret:2,
+                    april:3,
+                    mei:4,
+                    juni:5,
+                    juli:6,
+                    agustus:7,
+                    september:8,
+                    oktober:9,
+                    november:10,
+                    desember:11
+
+                };
+
+                const parts =
+                String(dateStr)
+                .toLowerCase()
+                .split(" ");
+
+                if(parts.length !== 3)
+                return null;
+
+                return new Date(
+                    parseInt(parts[2]),
+                    bulan[parts[1]],
+                    parseInt(parts[0])
+                );
+            };
+
+
+
+            const d =
+            parseIndoDate(
+                item.date_join
+            );
+
+            if(!d)
+            return false;
+
+
+
+            const periode =
+            `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}`;
+
+            return (
+                periode ===
+                selectedPeriode
+            );
+        });
+    }
+
+
 
     // SORT
     data.sort((a,b)=>{
@@ -1174,75 +1234,75 @@ if(selectedPeriode){
         b[currentSortField] || "";
 
         if(
-    currentSortField ===
-    "date_join"
-){
+            currentSortField ===
+            "date_join"
+        ){
 
-    const parseIndoDate =
-    (dateStr)=>{
+            const parseIndoDate =
+            (dateStr)=>{
 
-        if(!dateStr) return 0;
+                if(!dateStr) return 0;
 
-        // ISO Date dari Google
-        const isoDate =
-        new Date(dateStr);
+                // ISO Date dari Google
+                const isoDate =
+                new Date(dateStr);
 
-        if(!isNaN(isoDate)){
-            return isoDate.getTime();
+                if(!isNaN(isoDate)){
+                    return isoDate.getTime();
+                }
+
+                // Format Indonesia
+                const bulan = {
+                    januari:0,
+                    februari:1,
+                    maret:2,
+                    april:3,
+                    mei:4,
+                    juni:5,
+                    juli:6,
+                    agustus:7,
+                    september:8,
+                    oktober:9,
+                    november:10,
+                    desember:11
+                };
+
+                const parts =
+                String(dateStr)
+                .toLowerCase()
+                .split(" ");
+
+                if(parts.length === 3){
+
+                    const day =
+                    parseInt(parts[0]);
+
+                    const month =
+                    bulan[parts[1]];
+
+                    const year =
+                    parseInt(parts[2]);
+
+                    return new Date(
+                        year,
+                        month,
+                        day
+                    ).getTime();
+                }
+
+                return 0;
+            };
+
+            aVal =
+            parseIndoDate(aVal);
+
+            bVal =
+            parseIndoDate(bVal);
+
+            return currentSortDirection === "asc"
+            ? aVal - bVal
+            : bVal - aVal;
         }
-
-        // Format Indonesia
-        const bulan = {
-            januari:0,
-            februari:1,
-            maret:2,
-            april:3,
-            mei:4,
-            juni:5,
-            juli:6,
-            agustus:7,
-            september:8,
-            oktober:9,
-            november:10,
-            desember:11
-        };
-
-        const parts =
-        String(dateStr)
-        .toLowerCase()
-        .split(" ");
-
-        if(parts.length === 3){
-
-            const day =
-            parseInt(parts[0]);
-
-            const month =
-            bulan[parts[1]];
-
-            const year =
-            parseInt(parts[2]);
-
-            return new Date(
-                year,
-                month,
-                day
-            ).getTime();
-        }
-
-        return 0;
-    };
-
-    aVal =
-    parseIndoDate(aVal);
-
-    bVal =
-    parseIndoDate(bVal);
-
-    return currentSortDirection === "asc"
-    ? aVal - bVal
-    : bVal - aVal;
-}
 
         aVal =
         String(aVal)

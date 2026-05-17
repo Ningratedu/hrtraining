@@ -1225,28 +1225,11 @@ function renderRecruitmentTable(){
             <i data-lucide="trash-2" class="w-4 h-4"></i>
         </button>
 
-        <!-- WHATSAPP -->
-<button
-    onclick="window.open(
-        'https://wa.me/' + String(item.kontak || '').replace(/^0/, '62') +
-        '?text=' + encodeURIComponent(
-            'Halo ' + (item.name || '') + ',%0A%0A' +
-
-            'Selamat bergabung di Trusmi Group khususnya unit bisnis properti PT Raja Sukses Propertindo dengan brand Rumah Ningrat 🏡%0A%0A' +
-
-            'Sebagai bagian dari proses onboarding, silakan mengikuti Onboarding Training melalui platform E-Training Trusmi Group pada link berikut:%0A%0A' +
-
-            'https://trusmicorp.com/e-training%0A%0A' +
-
-            'Mohon seluruh materi onboarding diselesaikan maksimal 7 hari sejak tanggal join.%0A%0A' +
-
-            'Terima kasih dan selamat bertumbuh bersama Trusmi Group 🚀'
-        ),
-        '_blank'
-    )"
+        <button
+    onclick="sendWhatsApp('${item.kontak}', '${item.name}')"
     class="text-green-600 hover:text-green-800 transition"
 >
-    <i data-lucide="message-circle" class="w-4 h-4"></i>
+    <i data-lucide="message-circle-more" class="w-4 h-4"></i>
 </button>
 
     </div>

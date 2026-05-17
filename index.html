@@ -1185,7 +1185,6 @@ function renderRecruitmentTable(){
 
     );
 }
-
     tbody.innerHTML = "";
 
     data.forEach((item,index)=>{
@@ -1627,6 +1626,9 @@ async function editRecruitment(index){
 // ======================
 // FILTER
 // ======================
+// ======================
+// FILTER DEPARTMENT
+// ======================
 function updateDepartmentFilter(){
 
     const container =
@@ -1638,41 +1640,66 @@ function updateDepartmentFilter(){
 
     const uniqueDept =
     [...new Set(
+
         recruitmentData
-        .map(x=>
-    String(
-        x.departement || ""
-    ).trim()
-)
+        .map(x =>
+            String(
+                x.departement || ""
+            ).trim()
+        )
         .filter(Boolean)
+
     )];
 
     container.innerHTML =
-    uniqueDept.map(dept=>`
+    uniqueDept.map(dept => `
 
         <label class="flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-slate-100 cursor-pointer">
 
             <input
                 type="checkbox"
                 value="${dept}"
-                class="department-checkbox"
-                ${selectedDepartments.includes(dept)
-                ? "checked"
-                : ""}
-
+                class="department-checkbox w-4 h-4"
+                ${
+                    selectedDepartments.includes(
+                        dept.toLowerCase()
+                    )
+                    ? "checked"
+                    : ""
+                }
             >
 
-            <span>
+            <span class="text-sm">
                 ${dept}
             </span>
 
         </label>
 
     `).join("");
-
 }
 
 
+// ======================
+// TOGGLE FILTER
+// ======================
+function toggleFilterDropdown(){
+
+    const dropdown =
+    document.getElementById(
+        "filterDropdown"
+    );
+
+    if(!dropdown) return;
+
+    dropdown.classList.toggle(
+        "hidden"
+    );
+}
+
+
+// ======================
+// APPLY FILTER
+// ======================
 function applyDepartmentFilter(){
 
     const checked =
@@ -1688,9 +1715,70 @@ function applyDepartmentFilter(){
         .toLowerCase()
     );
 
+    // UPDATE LABEL
+    const label =
+    document.getElementById(
+        "filterLabel"
+    );
+
+    if(label){
+
+        label.innerText =
+        selectedDepartments.length
+        ? `${selectedDepartments.length} Department Selected`
+        : "Filter Department";
+    }
+
+    // CLOSE DROPDOWN
+    document
+    .getElementById(
+        "filterDropdown"
+    )
+        ?.classList.add(
+            "hidden"
+        );
+
     renderRecruitmentTable();
 }
 
+
+// ======================
+// AUTO CLOSE DROPDOWN
+// ======================
+document.addEventListener(
+"click",
+function(e){
+
+    const dropdown =
+    document.getElementById(
+        "filterDropdown"
+    );
+
+    const button =
+    document.getElementById(
+        "filterButton"
+    );
+
+    if(
+        !dropdown ||
+        !button
+    ) return;
+
+    if(
+        !dropdown.contains(
+            e.target
+        )
+        &&
+        !button.contains(
+            e.target
+        )
+    ){
+
+        dropdown.classList.add(
+            "hidden"
+        );
+    }
+});
 // ======================
 // FUNNEL
 // ======================

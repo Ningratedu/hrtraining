@@ -683,7 +683,7 @@ MOBILE UI IMPROVEMENT
         .getElementById('tab-onboarding-page')
         .classList.remove('hidden');
 
-    renderRecruitmentTable();
+    loadRecruitmentData();
 
 } else {
 
@@ -1045,15 +1045,45 @@ injectPerformanceTab();
 </script>
     <script>
 
-let recruitmentData =
-JSON.parse(localStorage.getItem("recruitmentData"))
-|| [];
+let recruitmentData = [];
+
+const API_URL =
+"https://script.google.com/macros/s/AKfycbwvgQyhqCgQiguKb5uKmJpCFSPkaFylX6ETisaGbAkMmr32p6EKwYAcTPMtcoD4Vk5v/exec";
 
 let selectedDepartments = [];
 let currentSortField = "date_join";
 let currentSortDirection = "desc";
 let selectedStage = "";
 
+let selectedDepartments = [];
+let currentSortField = "date_join";
+let currentSortDirection = "desc";
+let selectedStage = "";
+
+async function loadRecruitmentData(){
+
+    try{
+
+        const res =
+        await fetch(
+            `${API_URL}?sheet=onboarding`
+        );
+
+        recruitmentData =
+        await res.json();
+
+        renderRecruitmentTable();
+
+    }catch(err){
+
+        console.error(err);
+
+        alert(
+            "Gagal mengambil data online"
+        );
+    }
+}
+        
 function renderRecruitmentTable() {
 
     const tbody =
@@ -1252,97 +1282,94 @@ document.addEventListener("change", function(e){
     const reader =
     new FileReader();
 
-    reader.onload = function(evt){
+    reader.onload = async function(evt){
 
-        const workbook =
-        XLSX.read(evt.target.result,{
-            type:'binary'
-        });
+    const workbook =
+    XLSX.read(
+        evt.target.result,
+        { type:'binary' }
+    );
 
-        const sheet =
-        workbook.Sheets[
-            workbook.SheetNames[0]
-        ];
+    const sheet =
+    workbook.Sheets[
+        workbook.SheetNames[0]
+    ];
 
-        const json =
-XLSX.utils.sheet_to_json(
-    sheet,
-    {
-        raw: false
-    }
-);
+    const json =
+    XLSX.utils.sheet_to_json(
+        sheet,
+        {
+            raw:false
+        }
+    );
 
-        json.forEach(row=>{
+    try{
 
-            const nama =
-(
-    row["Nama"] ||
-    row["Name"] ||
-    ""
-).trim();
+        for(const row of json){
 
-            const exists =
-            recruitmentData.some(
-                x => x.nama === nama
-            );
+            const body = {
 
-            if(!exists){
+                sheet:"onboarding",
+                action:"create",
 
-                recruitmentData.push({
+                nama:
+                    row["Nama"] ||
+                    row["Name"] ||
+                    "",
 
-    nama:
-        row["Nama"] ||
-        row["Name"] ||
-        "",
+                company:
+                    row["Company"] ||
+                    "",
 
-    company:
-        row["Company"] ||
-        "",
+                departement:
+                    row["Departement"] ||
+                    row["Department"] ||
+                    "",
 
-    departement:
-        row["Departement"] ||
-        row["Department"] ||
-        "",
+                designation:
+                    row["Designation"] ||
+                    "",
 
-    designation:
-        row["Designation"] ||
-        "",
+                location:
+                    row["Location"] ||
+                    "",
 
-    location:
-        row["Location"] ||
-        "",
+                date_join:
+                    formatExcelDate(
+                        row["Date Join"] ||
+                        row["Date join"] ||
+                        ""
+                    ),
 
-    date_join: formatExcelDate(
-    row["Date Join"] ||
-    row["Date join"] ||
-    ""
-),
+                kontak:
+                    row["Kontak"] ||
+                    row["Contact"] ||
+                    "",
 
-    kontak:
-        row["Kontak"] ||
-        row["Contact"] ||
-        "",
+                stage:"Recruitment"
+            };
 
-    stage: "Recruitment"
-});
+            await fetch(API_URL,{
+                method:"POST",
+                body:JSON.stringify(body)
+            });
+        }
 
-            }
+        await loadRecruitmentData();
 
-        });
-
-        localStorage.setItem(
-            "recruitmentData",
-            JSON.stringify(recruitmentData)
+        alert(
+            "Upload berhasil!"
         );
 
-        renderRecruitmentTable();
+    }catch(err){
 
-        alert("Upload berhasil!");
-    };
+        console.error(err);
 
-    reader.readAsBinaryString(file);
-
-});
+        alert(
+            "Upload gagal"
+        );
+    }
+};
 
 // ======================
 // FORMAT TANGGAL EXCEL
@@ -1528,7 +1555,7 @@ document.addEventListener("click", function(e){
     // ======================
 // DELETE DATA
 // ======================
-function deleteRecruitment(index){
+async function deleteRecruitment(index){
 
     const confirmDelete =
     confirm(
@@ -1537,14 +1564,31 @@ function deleteRecruitment(index){
 
     if(!confirmDelete) return;
 
-    recruitmentData.splice(index,1);
+    try{
 
-    localStorage.setItem(
-        "recruitmentData",
-        JSON.stringify(recruitmentData)
-    );
+        await fetch(API_URL,{
+            method:"POST",
+            body:JSON.stringify({
 
-    renderRecruitmentTable();
+                sheet:"onboarding",
+                action:"delete",
+
+                id:
+                recruitmentData[index].id
+
+            })
+        });
+
+        await loadRecruitmentData();
+
+    }catch(err){
+
+        console.error(err);
+
+        alert(
+            "Gagal menghapus data"
+        );
+    }
 }
 
 
@@ -1552,7 +1596,7 @@ function deleteRecruitment(index){
 // ======================
 // EDIT DATA
 // ======================
-function editRecruitment(index){
+async function editRecruitment(index){
 
     const data =
     recruitmentData[index];
@@ -1565,7 +1609,10 @@ function editRecruitment(index){
     if(nama === null) return;
 
     const company =
-    prompt("Company", data.company);
+    prompt(
+        "Company",
+        data.company
+    );
 
     const departement =
     prompt(
@@ -1597,25 +1644,39 @@ function editRecruitment(index){
         data.kontak
     );
 
-    recruitmentData[index] = {
+    try{
 
-        ...data,
+        await fetch(API_URL,{
+            method:"POST",
+            body:JSON.stringify({
 
-        nama,
-        company,
-        departement,
-        designation,
-        location,
-        date_join: dateJoin,
-        kontak
-    };
+                sheet:"onboarding",
+                action:"update",
 
-    localStorage.setItem(
-        "recruitmentData",
-        JSON.stringify(recruitmentData)
-    );
+                id:data.id,
 
-    renderRecruitmentTable();
+                nama,
+                company,
+                departement,
+                designation,
+                location,
+                date_join:dateJoin,
+                kontak,
+                stage:data.stage
+
+            })
+        });
+
+        await loadRecruitmentData();
+
+    }catch(err){
+
+        console.error(err);
+
+        alert(
+            "Gagal update data"
+        );
+    }
 }
         // ======================
 // SORT TABLE

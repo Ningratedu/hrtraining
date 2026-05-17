@@ -1355,12 +1355,43 @@ function(e){
     reader.onload =
     async function(evt){
 
+        const modal =
+        document.getElementById(
+            "uploadProgressModal"
+        );
+
+        const bar =
+        document.getElementById(
+            "uploadBar"
+        );
+
+        const percent =
+        document.getElementById(
+            "uploadPercent"
+        );
+
+        const text =
+        document.getElementById(
+            "uploadText"
+        );
+
         try{
+
+            // OPEN OVERLAY
+            modal.classList.remove(
+                "hidden"
+            );
+
+            // LOCK SCREEN
+            document.body.style.overflow =
+            "hidden";
 
             const workbook =
             XLSX.read(
                 evt.target.result,
-                {type:'binary'}
+                {
+                    type:'binary'
+                }
             );
 
             const sheet =
@@ -1371,10 +1402,22 @@ function(e){
             const json =
             XLSX.utils.sheet_to_json(
                 sheet,
-                {raw:false}
+                {
+                    raw:false
+                }
             );
 
-            for(const row of json){
+            const total =
+            json.length;
+
+            for(
+                let i = 0;
+                i < total;
+                i++
+            ){
+
+                const row =
+                json[i];
 
                 await fetch(
                     API_URL,
@@ -1430,13 +1473,53 @@ function(e){
                         })
                     }
                 );
+
+                // UPDATE PROGRESS
+                const progress =
+                Math.round(
+                    (
+                        (i + 1)
+                        / total
+                    ) * 100
+                );
+
+                bar.style.width =
+                progress + "%";
+
+                percent.innerText =
+                progress + "%";
+
+                text.innerText =
+                `Uploading ${
+                    i + 1
+                } dari ${
+                    total
+                } data`;
             }
 
+            // REFRESH TABLE
             await loadRecruitmentData();
 
-            alert(
-                "Upload berhasil!"
-            );
+            text.innerText =
+            "Upload selesai";
+
+            // CLOSE MODAL
+            setTimeout(()=>{
+
+                modal.classList.add(
+                    "hidden"
+                );
+
+                document.body.style.overflow =
+                "auto";
+
+                bar.style.width =
+                "0%";
+
+                percent.innerText =
+                "0%";
+
+            },1000);
 
         }catch(err){
 
@@ -1445,13 +1528,19 @@ function(e){
             alert(
                 "Upload gagal"
             );
+
+            modal.classList.add(
+                "hidden"
+            );
+
+            document.body.style.overflow =
+            "auto";
         }
     };
 
     reader.readAsBinaryString(
         file
     );
-
 });
 
 
@@ -1887,6 +1976,82 @@ function sortTable(field){
 }
 
 </script>
+    <!-- UPLOAD PROGRESS OVERLAY -->
+<div
+    id="uploadProgressModal"
+    class="fixed inset-0 hidden z-[99999]"
+    style="
+        background: rgba(15,23,42,0.45);
+        backdrop-filter: blur(4px);
+    "
+>
+
+    <!-- LOCK SCREEN -->
+    <div
+        class="absolute inset-0 cursor-wait"
+    ></div>
+
+    <!-- CARD -->
+    <div
+        class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-white rounded-3xl p-7 w-[400px] shadow-2xl"
+    >
+
+        <div class="flex items-center gap-3 mb-4">
+
+            <div class="relative">
+
+                <div class="w-4 h-4 rounded-full bg-blue-600 animate-ping absolute"></div>
+
+                <div class="w-4 h-4 rounded-full bg-blue-600 relative"></div>
+
+            </div>
+
+            <div>
+
+                <h3 class="font-bold text-slate-800 text-lg">
+                    Upload Data Onboarding
+                </h3>
+
+                <p class="text-sm text-slate-500">
+                    Mohon tunggu, jangan klik apapun
+                </p>
+
+            </div>
+
+        </div>
+
+        <!-- PROGRESS BAR -->
+        <div class="w-full h-3 bg-slate-200 rounded-full overflow-hidden">
+
+            <div
+                id="uploadBar"
+                class="h-full bg-blue-600 transition-all duration-300"
+                style="width:0%"
+            ></div>
+
+        </div>
+
+        <div class="flex justify-between mt-3">
+
+            <span
+                id="uploadText"
+                class="text-sm text-slate-600"
+            >
+                Menyiapkan upload...
+            </span>
+
+            <span
+                id="uploadPercent"
+                class="text-sm font-semibold text-blue-600"
+            >
+                0%
+            </span>
+
+        </div>
+
+    </div>
+
+</div>
 </body>
 </html>
 

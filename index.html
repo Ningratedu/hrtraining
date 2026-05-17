@@ -2012,6 +2012,29 @@ function sortTable(field){
     renderRecruitmentTable();
 }
 
+        function sendWhatsApp(kontak, nama) {
+
+    const nomor = String(kontak || '').replace(/^0/, '62');
+
+    const pesan =
+        'Halo ' + (nama || '') + ',\n\n' +
+
+        'Selamat bergabung di Trusmi Group khususnya unit bisnis properti PT Raja Sukses Propertindo dengan brand Rumah Ningrat 🏡\n\n' +
+
+        'Sebagai bagian dari proses onboarding, silakan mengikuti Onboarding Training melalui platform E-Training Trusmi Group pada link berikut:\n\n' +
+
+        'https://trusmicorp.com/e-training\n\n' +
+
+        'Mohon seluruh materi onboarding diselesaikan maksimal 7 hari sejak tanggal join.\n\n' +
+
+        'Terima kasih dan selamat bertumbuh bersama Trusmi Group 🚀';
+
+    window.open(
+        'https://wa.me/' + nomor + '?text=' + encodeURIComponent(pesan),
+        '_blank'
+    );
+}
+        
 </script>
     <!-- UPLOAD PROGRESS OVERLAY -->
 <div

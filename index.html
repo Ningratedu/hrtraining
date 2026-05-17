@@ -119,7 +119,7 @@ MOBILE UI IMPROVEMENT
                 <i data-lucide="user-plus" class="w-5 h-5"></i> Onboarding Training
             </button>
             <button onclick="handleNavClick('mandatory')" id="btn-mandatory" class="sidebar-item w-full flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-100 transition-all font-medium">
-                <i data-lucide="shield-check" class="w-5 h-5"></i> Mandatory Training
+                <i data-lucide="shield-check" class="w-5 h-5"></i> Job Mandatory Training
             </button>
             <button onclick="handleNavClick('request')" id="btn-request" class="sidebar-item w-full flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-100 transition-all font-medium">
                 <i data-lucide="send" class="w-5 h-5"></i> Training by Request
@@ -696,12 +696,13 @@ MOBILE UI IMPROVEMENT
             const titles = {
                 'dashboard': 'Dashboard',
                 'onboarding': 'Onboarding Training',
-                'mandatory': 'Mandatory Training',
+                'mandatory': 'Job Mandatory Training',
                 'request': 'Training by Request',
                 'tna': 'Training by TNA',
                 'development': 'Development Program',
                 'jadwal-training': 'Jadwal Training',
                 'jadwal-genba': 'Jadwal Genba'
+                'performance': 'Performance Management',
             };
             document.getElementById('current-tab-title').innerText = titles[tabId];
 

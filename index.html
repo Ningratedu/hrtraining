@@ -157,45 +157,41 @@ MOBILE UI IMPROVEMENT
 <main class="flex-1 flex flex-col overflow-hidden">
 
     <!-- Header -->
-    <header class="min-h-16 bg-white border-b border-slate-200 flex items-start justify-between gap-4 px-4 md:px-8 py-3 z-10">
+<header class="min-h-16 bg-white border-b border-slate-200 flex items-center justify-between gap-3 px-4 md:px-8 py-3 z-10">
 
-        <!-- Left Section -->
-        <div class="flex items-start gap-3 flex-1 min-w-0">
+    <!-- Left -->
+    <div class="flex items-center gap-3 flex-1 min-w-0">
 
-            <button
-                onclick="toggleSidebar()"
-                class="md:hidden p-2 text-slate-600 hover:bg-slate-100 rounded-lg flex-shrink-0 transition"
-            >
-                <i data-lucide="menu"></i>
-            </button>
+        <button
+            onclick="toggleSidebar()"
+            class="md:hidden p-2 text-slate-600 hover:bg-slate-100 rounded-lg flex-shrink-0 transition"
+        >
+            <i data-lucide="menu"></i>
+        </button>
 
-            <div class="flex-1 min-w-0">
-                <h2
-                    id="current-tab-title"
-                    class="text-lg md:text-xl font-bold text-slate-800 leading-snug break-words whitespace-normal"
-                >
-                    Onboarding Training
-                </h2>
-            </div>
+        <h2
+            id="current-tab-title"
+            class="text-lg md:text-xl font-bold text-slate-800 leading-snug whitespace-normal line-clamp-2"
+        >
+            Onboarding Training
+        </h2>
 
-        </div>
+    </div>
 
-        <!-- Right Section -->
-        <div class="flex items-center flex-shrink-0 pt-1">
+    <!-- Right -->
+    <div class="flex-shrink-0">
+        <select
+            id="globalPeriodeFilter"
+            onchange="renderRecruitmentTable()"
+            class="bg-white border border-slate-200 rounded-lg px-3 py-1.5 text-xs shadow-sm outline-none focus:ring-2 focus:ring-blue-500 w-[110px]"
+        >
+            <option value="">
+                All Periode
+            </option>
+        </select>
+    </div>
 
-            <select
-                id="globalPeriodeFilter"
-                onchange="renderRecruitmentTable()"
-                class="bg-white border border-slate-200 rounded-lg px-3 py-1.5 text-xs shadow-sm outline-none focus:ring-2 focus:ring-blue-500 w-[110px]"
-            >
-                <option value="">
-                    All Periode
-                </option>
-            </select>
-
-        </div>
-
-    </header>
+</header>
 
 </main>
 

@@ -651,6 +651,83 @@ MOBILE UI IMPROVEMENT
 
     </div>
 </div>
+            <!-- INDUCTION TRAINING -->
+
+<div class="card mt-4">
+
+    <div class="card-header
+    d-flex
+    justify-content-between
+    align-items-center">
+
+        <h3>
+            Induction Training
+        </h3>
+
+        <button
+            class="btn btn-primary"
+            onclick="
+            document
+            .getElementById(
+            'inductionExcelUpload'
+            )
+            .click()">
+
+            Upload Excel
+
+        </button>
+
+        <input
+            type="file"
+            id="inductionExcelUpload"
+            accept=".xlsx,.xls"
+            style="display:none;">
+
+    </div>
+
+    <div class="table-responsive">
+
+        <table
+        class="table">
+
+            <thead>
+
+                <tr>
+
+                    <th>Name</th>
+                    <th>Department</th>
+                    <th>Position</th>
+                    <th>Progress</th>
+                    <th>Avg Score</th>
+                    <th>Status</th>
+                    <th>Detail</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody
+            id="inductionTableBody">
+
+                <tr>
+
+                    <td colspan="7"
+                    style="text-align:center;">
+
+                        Belum ada data
+
+                    </td>
+
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+            
             <!-- Program Table Template -->
             <div id="tab-generic" class="tab-content hidden">
                 <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">

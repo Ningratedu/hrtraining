@@ -650,71 +650,159 @@ MOBILE UI IMPROVEMENT
         </div>
 
     </div>
-</div>
-            <!-- INDUCTION TRAINING -->
 
-<div class="card mt-4">
+    <!-- INDUCTION TRAINING -->
 
-    <div class="card-header
-    d-flex
-    justify-content-between
-    align-items-center">
+<div class="bg-white rounded-[28px] border border-slate-200 shadow-sm overflow-hidden mt-5">
 
-        <h3>
+    <!-- TITLE -->
+    <div class="flex items-center justify-between px-4 pt-4 pb-2">
+
+        <h2 class="text-base md:text-lg font-bold italic text-slate-700">
             Induction Training
-        </h3>
-
-        <button
-            class="btn btn-primary"
-            onclick="
-            document
-            .getElementById(
-            'inductionExcelUpload'
-            )
-            .click()">
-
-            Upload Excel
-
-        </button>
-
-        <input
-            type="file"
-            id="inductionExcelUpload"
-            accept=".xlsx,.xls"
-            style="display:none;">
+        </h2>
 
     </div>
 
-    <div class="table-responsive">
+    <!-- HEADER -->
+    <div class="p-4 border-b border-slate-200 flex flex-col lg:flex-row gap-3 justify-between">
+
+        <div class="flex flex-col md:flex-row gap-2">
+
+            <!-- SEARCH -->
+            <div class="relative">
+
+                <input
+                    id="searchInduction"
+                    type="text"
+                    placeholder="Cari data..."
+                    class="w-56 pl-9 pr-3 py-1.5 text-xs border border-slate-200 rounded-xl bg-slate-50 outline-none focus:ring-2 focus:ring-blue-500"
+                />
+
+                <i
+                    data-lucide="search"
+                    class="w-3.5 h-3.5 absolute left-3 top-[11px] text-slate-400"
+                ></i>
+
+            </div>
+
+
+            <!-- FILTER -->
+            <div class="relative">
+
+                <button
+                    id="filterInductionButton"
+                    class="border border-slate-200 rounded-xl px-3 py-1.5 bg-white min-w-[180px] text-xs text-left flex items-center justify-between"
+                >
+
+                    <span id="filterInductionLabel">
+                        Filter Department
+                    </span>
+
+                    <i
+                        data-lucide="chevron-down"
+                        class="w-3.5 h-3.5"
+                    ></i>
+
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- UPLOAD -->
+        <div>
+
+            <input
+                type="file"
+                id="inductionExcelUpload"
+                accept=".xlsx,.xls"
+                class="hidden"
+            />
+
+            <button
+                onclick="document.getElementById('inductionExcelUpload').click()"
+                class="bg-blue-600 text-white px-3 py-1.5 rounded-xl text-xs font-medium shadow-sm hover:shadow transition-all"
+            >
+
+                Upload Excel
+
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- TABLE -->
+    <div class="overflow-auto max-h-[65vh] mobile-table">
 
         <table
-        class="table">
+            class="w-full min-w-[980px] lg:min-w-[1250px] border-collapse text-xs"
+        >
 
-            <thead>
+            <!-- HEADER -->
+            <thead
+                class="sticky top-0 bg-white shadow-sm z-30 border-b border-slate-200"
+            >
 
                 <tr>
 
-                    <th>Name</th>
-                    <th>Department</th>
-                    <th>Position</th>
-                    <th>Progress</th>
-                    <th>Avg Score</th>
-                    <th>Status</th>
-                    <th>Detail</th>
+                    <th class="sticky left-0 bg-white z-40 px-3 py-3 min-w-[65px] shadow-[4px_0_10px_rgba(0,0,0,0.03)]">
+                        No
+                    </th>
+
+                    <th class="px-3 py-3 min-w-[200px]">
+                        Name
+                    </th>
+
+                    <th class="px-3 py-3 min-w-[180px]">
+                        Username
+                    </th>
+
+                    <th class="px-3 py-3 min-w-[180px]">
+                        Department
+                    </th>
+
+                    <th class="px-3 py-3 min-w-[150px]">
+                        Position
+                    </th>
+
+                    <th class="px-3 py-3 min-w-[150px]">
+                        Progress
+                    </th>
+
+                    <th class="px-3 py-3 min-w-[150px]">
+                        Avg Score
+                    </th>
+
+                    <th class="px-3 py-3 min-w-[150px]">
+                        Status
+                    </th>
+
+                    <th class="px-3 py-3 text-center min-w-[100px]">
+                        Action
+                    </th>
 
                 </tr>
 
             </thead>
 
+            <!-- BODY -->
             <tbody
-            id="inductionTableBody">
+                id="inductionBody"
+                class="divide-y divide-slate-100"
+            >
 
                 <tr>
 
-                    <td colspan="7"
-                    style="text-align:center;">
+                    <td
+                        colspan="9"
+                        class="text-center py-10 text-slate-400"
+                    >
 
-                        Belum ada data
+                        Belum ada data induction training
 
                     </td>
 
@@ -726,6 +814,8 @@ MOBILE UI IMPROVEMENT
 
     </div>
 
+</div>
+    
 </div>
             
             <!-- Program Table Template -->

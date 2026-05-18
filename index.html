@@ -1967,56 +1967,68 @@ async function(e){
                 const row =
                 json[i];
 
-                await fetch(
-                    API_URL,
-                    {
-                        method:"POST",
+                const res =
+await fetch(
+    API_URL,
+    {
+        method:"POST",
 
-                        body:
-                        JSON.stringify({
+        body:
+        JSON.stringify({
 
-                            sheet:
-                            "induction_progress",
+            sheet:
+            "induction_progress",
 
-                            action:
-                            "create",
+            action:
+            "create",
 
-                            username:
-                            row["Username"] ||
-                            row["username"] ||
-                            "",
+            username:
+            row["Username"] ||
+            row["username"] ||
+            "",
 
-                            nama:
-                            row["Nama"] ||
-                            row["Name"] ||
-                            "",
+            nama:
+            row["Nama"] ||
+            row["Name"] ||
+            "",
 
-                            department:
-                            row["Department"] ||
-                            row["Departement"] ||
-                            "",
+            department:
+            row["Department"] ||
+            row["Departement"] ||
+            "",
 
-                            position:
-                            row["Position"] ||
-                            row["Posisi"] ||
-                            row["Designation"] ||
-                            "",
+            position:
+            row["Position"] ||
+            row["Posisi"] ||
+            row["Designation"] ||
+            "",
 
-                            training:
-                            row["Training"] ||
-                            row["Course"] ||
-                            row["Course Name"] ||
-                            "",
+            training:
+            row["Training"] ||
+            row["Course"] ||
+            row["Course Name"] ||
+            "",
 
-                            posttest:
-                            row["Posttest"] ||
-                            row["Post Test"] ||
-                            row["Post Test Score"] ||
-                            row["Score"] ||
-                            0
-                        })
-                    }
-                );
+            posttest:
+            row["Posttest"] ||
+            row["Post Test"] ||
+            row["Post Test Score"] ||
+            row["Score"] ||
+            0
+        })
+    }
+);
+
+const result =
+await res.json();
+
+alert(
+    JSON.stringify(
+        result,
+        null,
+        2
+    )
+);
 
 
                 // UPDATE PROGRESS

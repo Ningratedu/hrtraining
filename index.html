@@ -1974,48 +1974,42 @@ await fetch(
         method:"POST",
 
         body:
-        JSON.stringify({
+JSON.stringify({
 
-            sheet:
-            "induction_progress",
+    sheet:
+    "induction_progress",
 
-            action:
-            "create",
+    action:
+    "create",
 
-            username:
-            row["Username"] ||
-            row["username"] ||
-            "",
+    username:
+    row["Username"] ||
+    "",
 
-            nama:
-            row["Nama"] ||
-            row["Name"] ||
-            "",
+    nama:
+    row["Nama"] ||
+    "",
 
-            department:
-            row["Department"] ||
-            row["Departement"] ||
-            "",
+    department:
+    row["Departement"] ||
+    row["Department"] ||
+    "",
 
-            position:
-            row["Position"] ||
-            row["Posisi"] ||
-            row["Designation"] ||
-            "",
+    position:
+    row["Posisi"] ||
+    row["Designation"] ||
+    row["Position"] ||
+    "",
 
-            training:
-            row["Training"] ||
-            row["Course"] ||
-            row["Course Name"] ||
-            "",
+    training:
+    row["Training"] ||
+    "",
 
-            posttest:
-            row["Posttest"] ||
-            row["Post Test"] ||
-            row["Post Test Score"] ||
-            row["Score"] ||
-            0
-        })
+    posttest:
+    Number(
+        row["Posttest"] || 0
+    )
+})
     }
 );
 

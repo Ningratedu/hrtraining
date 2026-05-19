@@ -1115,43 +1115,71 @@ if(missing.length){
         // LOOP EXCEL
         // =====================================
         for(const row of json){
+            console.log(row);
 
-    if(
-        !row["Username"]
-    ){
-
-        skipped++;
-        continue;
-    }
-
+    // =====================================
+    // FLEXIBLE HEADER
+    // =====================================
     const payload = {
 
-                sheet:
-                "induction_progress",
+        sheet:
+        "induction_progress",
 
-                action:
-                "create",
+        action:
+        "create",
 
-                username:
-                row["Username"] || "",
+        username:
 
-                nama:
-                row["Nama"] || "",
+            row["Username"]
+            || row["USERNAME"]
+            || row["username"]
+            || "",
 
-                department:
-                row["Departement"] || "",
+        nama:
 
-                position:
-                row["Posisi"] || "",
+            row["Nama"]
+            || row["NAMA"]
+            || row["nama"]
+            || "",
 
-                training:
-                row["Training"] || "",
+        department:
 
-                posttest:
-                Number(
-                    row["Posttest"] || 0
-                )
-            };
+            row["Departement"]
+            || row["Department"]
+            || row["DEPARTEMENT"]
+            || row["DEPARTMENT"]
+            || row["department"]
+            || "",
+
+        position:
+
+            row["Posisi"]
+            || row["Position"]
+            || row["POSITION"]
+            || row["position"]
+            || "",
+
+        training:
+
+            row["Training"]
+            || row["TRAINING"]
+            || row["training"]
+            || "",
+
+        posttest:
+
+            Number(
+
+                row["Posttest"]
+                || row["POSTTEST"]
+                || row["Post Test"]
+                || row["POST TEST"]
+                || row["posttest"]
+                || 0
+            )
+    };
+
+    console.log(payload);
 
             try{
 

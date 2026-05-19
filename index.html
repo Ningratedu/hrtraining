@@ -7,6 +7,7 @@
     <title>HR Training Monitoring & Reporting</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
@@ -1031,9 +1032,6 @@ async function(e){
 
     try{
 
-        // =====================================
-        // LOADING
-        // =====================================
         Swal.fire({
 
             title:
@@ -1063,83 +1061,57 @@ async function(e){
         workbook.Sheets[sheetName];
 
         const json =
-XLSX.utils.sheet_to_json(
-    worksheet,
-    {
-        defval:"",
-        raw:false
-    }
-);
+        XLSX.utils.sheet_to_json(
+            worksheet,
+            {
+                defval:"",
+                raw:false,
+                range:1
+            }
+        );
+
         console.log(json);
 
         if(!json.length){
 
-    throw new Error(
-        "Excel kosong"
-    );
-}
-        
+            throw new Error(
+                "Excel kosong"
+            );
+        }
+
         const payload = {
 
-    sheet:
-    "induction_progress",
+            sheet:
+            "induction_progress",
 
-    action:
-    "bulk_create",
+            action:
+            "bulk_create",
 
-    rows:
-    json
-};
+            rows:
+            json
+        };
 
-const res =
-await fetch(
-    API_URL,
-    {
+        const res =
+        await fetch(
+            API_URL,
+            {
 
-        method:"POST",
+                method:"POST",
 
-        body:
-        JSON.stringify(
-            payload
-        )
-    }
-);
+                body:
+                JSON.stringify(
+                    payload
+                )
+            }
+        );
 
-const result =
-await res.json();
+        const result =
+        await res.json();
 
-console.log(result);
+        console.log(result);
 
-Swal.fire({
-
-    icon:"success",
-
-    title:
-    "Upload Selesai",
-
-    html:`
-
-        <div class="text-left text-sm mt-3">
-
-            <div>
-                ✅ Inserted :
-                <b>${result.inserted || 0}</b>
-            </div>
-
-            <div>
-                ⏭️ Skipped :
-                <b>${result.skipped || 0}</b>
-            </div>
-
-        </div>
-
-    `
-});
-
-        // =====================================
-        // REFRESH TABLE
-        // =====================================
         await loadInductionData();
+
         lucide.createIcons();
 
         Swal.fire({
@@ -1154,18 +1126,13 @@ Swal.fire({
                 <div class="text-left text-sm mt-3">
 
                     <div>
-                        ✅ Success :
-                        <b>${success}</b>
+                        ✅ Inserted :
+                        <b>${result.inserted || 0}</b>
                     </div>
 
                     <div>
                         ⏭️ Skipped :
-                        <b>${skipped}</b>
-                    </div>
-
-                    <div>
-                        ❌ Failed :
-                        <b>${failed}</b>
+                        <b>${result.skipped || 0}</b>
                     </div>
 
                 </div>
@@ -1192,10 +1159,6 @@ Swal.fire({
     e.target.value = "";
 
 });
-
-
-
-
 
 // =====================================
 // AUTO LOAD

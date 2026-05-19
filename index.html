@@ -1013,10 +1013,6 @@ data.forEach(item=>{
     });
 }
 
-
-
-
-
 // =====================================
 // UPLOAD INDUCTION EXCEL
 // =====================================
@@ -1067,43 +1063,19 @@ async function(e){
         workbook.Sheets[sheetName];
 
         const json =
-        XLSX.utils.sheet_to_json(
-            worksheet
-        );
+XLSX.utils.sheet_to_json(
+    worksheet,
+    {
+        defval:"",
+        raw:false
+    }
+);
+        console.log(json);
 
         if(!json.length){
 
     throw new Error(
         "Excel kosong"
-    );
-}
-
-const requiredHeaders = [
-
-    "Username",
-    "Nama",
-    "Departement",
-    "Posisi",
-    "Training",
-    "Posttest"
-
-];
-
-const excelHeaders =
-Object.keys(json[0]);
-
-const missing =
-requiredHeaders.filter(h=>
-
-    !excelHeaders.includes(h)
-
-);
-
-if(missing.length){
-
-    throw new Error(
-        "Header tidak lengkap: "
-        + missing.join(", ")
     );
 }
         
@@ -1114,11 +1086,30 @@ if(missing.length){
         // =====================================
         // LOOP EXCEL
         // =====================================
-        for(const row of json){
-            console.log(row);
+        for(const rawRow of json){
 
     // =====================================
-    // FLEXIBLE HEADER
+    // NORMALIZE HEADER
+    // =====================================
+    const row = {};
+
+    Object.keys(rawRow).forEach(key=>{
+
+        const cleanKey =
+        String(key)
+        .trim()
+        .toLowerCase()
+        .replace(/\s+/g,"");
+
+        row[cleanKey] =
+        rawRow[key];
+    });
+
+    console.log("RAW :", rawRow);
+    console.log("NORMALIZED :", row);
+
+    // =====================================
+    // PAYLOAD
     // =====================================
     const payload = {
 
@@ -1129,57 +1120,31 @@ if(missing.length){
         "create",
 
         username:
-
-            row["Username"]
-            || row["USERNAME"]
-            || row["username"]
-            || "",
+        row.username || "",
 
         nama:
-
-            row["Nama"]
-            || row["NAMA"]
-            || row["nama"]
-            || "",
+        row.nama || "",
 
         department:
-
-            row["Departement"]
-            || row["Department"]
-            || row["DEPARTEMENT"]
-            || row["DEPARTMENT"]
-            || row["department"]
-            || "",
+        row.departement
+        || row.department
+        || "",
 
         position:
-
-            row["Posisi"]
-            || row["Position"]
-            || row["POSITION"]
-            || row["position"]
-            || "",
+        row.posisi
+        || row.position
+        || "",
 
         training:
-
-            row["Training"]
-            || row["TRAINING"]
-            || row["training"]
-            || "",
+        row.training || "",
 
         posttest:
-
-            Number(
-
-                row["Posttest"]
-                || row["POSTTEST"]
-                || row["Post Test"]
-                || row["POST TEST"]
-                || row["posttest"]
-                || 0
-            )
+        Number(
+            row.posttest || 0
+        )
     };
 
-    console.log(payload);
+    console.log("PAYLOAD :", payload);
 
             try{
 

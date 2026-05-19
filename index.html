@@ -1116,7 +1116,15 @@ if(missing.length){
         // =====================================
         for(const row of json){
 
-            const payload = {
+    if(
+        !row["Username"]
+    ){
+
+        skipped++;
+        continue;
+    }
+
+    const payload = {
 
                 sheet:
                 "induction_progress",
@@ -1189,6 +1197,7 @@ if(missing.length){
         // REFRESH TABLE
         // =====================================
         await loadInductionData();
+        lucide.createIcons();
 
         Swal.fire({
 
@@ -1254,6 +1263,7 @@ document
 function(){
 
     loadInductionData();
+    lucide.createIcons();
 
 });
 </script>
@@ -2500,6 +2510,7 @@ alert(
 
                 await
                 loadInductionData();
+                lucide.createIcons();
             }
 
             text.innerText =

@@ -896,16 +896,22 @@ function renderInductionTable(data){
     // =====================================
     const grouped = {};
 
-    data.forEach(item=>{
+data.forEach(item=>{
 
-        const key =
-        item.username || "-";
+    const key =
+    item.username || "-";
 
-        if(!grouped[key]){
+    if(
+        !grouped[key]
+        ||
+        Number(item.progress || 0)
+        >
+        Number(grouped[key].progress || 0)
+    ){
 
-            grouped[key] = item;
-        }
-    });
+        grouped[key] = item;
+    }
+});
 
     const rows =
     Object.values(grouped);

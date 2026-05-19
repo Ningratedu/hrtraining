@@ -723,7 +723,7 @@ MOBILE UI IMPROVEMENT
 
             <button
                 onclick="document.getElementById('inductionExcelUpload').click()"
-                class="bg-blue-600 text-white px-3 py-1.5 rounded-xl text-xs font-medium shadow-sm hover:shadow transition-all"
+                class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl text-xs font-semibold transition-all"
             >
 
                 Upload Excel
@@ -734,55 +734,54 @@ MOBILE UI IMPROVEMENT
 
     </div>
 
-
     <!-- TABLE -->
-    <div class="overflow-auto max-h-[65vh] mobile-table">
+    <div class="overflow-auto max-h-[70vh] mobile-table">
 
         <table
-            class="w-full min-w-[980px] lg:min-w-[1250px] border-collapse text-xs"
+            class="w-full min-w-[1200px] border-collapse text-xs"
         >
 
             <!-- HEADER -->
             <thead
-                class="sticky top-0 bg-white shadow-sm z-30 border-b border-slate-200"
+                class="sticky top-0 bg-white z-30 border-b border-slate-200"
             >
 
                 <tr>
 
-                    <th class="sticky left-0 bg-white z-40 px-3 py-3 min-w-[65px] shadow-[4px_0_10px_rgba(0,0,0,0.03)]">
+                    <th class="sticky left-0 bg-white z-40 px-3 py-3 min-w-[70px]">
                         No
                     </th>
 
-                    <th class="px-3 py-3 min-w-[200px]">
+                    <th class="px-3 py-3 min-w-[220px] text-left">
                         Name
                     </th>
 
-                    <th class="px-3 py-3 min-w-[180px]">
+                    <th class="px-3 py-3 min-w-[180px] text-left">
                         Username
                     </th>
 
-                    <th class="px-3 py-3 min-w-[180px]">
+                    <th class="px-3 py-3 min-w-[180px] text-left">
                         Department
                     </th>
 
-                    <th class="px-3 py-3 min-w-[150px]">
+                    <th class="px-3 py-3 min-w-[150px] text-left">
                         Position
                     </th>
 
-                    <th class="px-3 py-3 min-w-[150px]">
+                    <th class="px-3 py-3 min-w-[150px] text-center">
                         Progress
                     </th>
 
-                    <th class="px-3 py-3 min-w-[150px]">
+                    <th class="px-3 py-3 min-w-[150px] text-center">
                         Avg Score
                     </th>
 
-                    <th class="px-3 py-3 min-w-[150px]">
-                        Status
+                    <th class="px-3 py-3 min-w-[150px] text-center">
+                        Completed
                     </th>
 
-                    <th class="px-3 py-3 text-center min-w-[100px]">
-                        Action
+                    <th class="px-3 py-3 min-w-[150px] text-center">
+                        Status
                     </th>
 
                 </tr>
@@ -815,8 +814,407 @@ MOBILE UI IMPROVEMENT
     </div>
 
 </div>
-    
-</div>
+
+
+
+
+
+<!-- ===================================== -->
+<!-- XLSX -->
+<!-- ===================================== -->
+<script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+
+
+
+
+
+<script>
+
+// =====================================
+// LOAD INDUCTION
+// =====================================
+async function loadInductionData(){
+
+    try{
+
+        const res =
+        await fetch(
+            `${API_URL}?sheet=induction_progress`
+        );
+
+        const result =
+        await res.json();
+
+        renderInductionTable(
+            result || []
+        );
+
+    }catch(err){
+
+        console.error(err);
+
+        alert(
+            "Gagal load induction data"
+        );
+    }
+}
+
+
+
+
+
+// =====================================
+// RENDER INDUCTION TABLE
+// =====================================
+function renderInductionTable(data){
+
+    const tbody =
+    document.getElementById(
+        "inductionBody"
+    );
+
+    if(!tbody) return;
+
+    if(!data.length){
+
+        tbody.innerHTML = `
+        <tr>
+            <td
+                colspan="9"
+                class="text-center py-10 text-slate-400"
+            >
+                Belum ada data induction training
+            </td>
+        </tr>
+        `;
+
+        return;
+    }
+
+    // =====================================
+    // GROUP USER
+    // =====================================
+    const grouped = {};
+
+    data.forEach(item=>{
+
+        const key =
+        item.username || "-";
+
+        if(!grouped[key]){
+
+            grouped[key] = item;
+        }
+    });
+
+    const rows =
+    Object.values(grouped);
+
+    tbody.innerHTML = "";
+
+    rows.forEach((item,index)=>{
+
+        const progress =
+        Number(
+            item.progress || 0
+        );
+
+        const avg =
+        Number(
+            item.avg_score || 0
+        );
+
+        const completed =
+        Number(
+            item.completed_training || 0
+        );
+
+        const total =
+        Number(
+            item.total_training || 0
+        );
+
+        let statusBadge = `
+        <span class="px-2 py-1 rounded-lg bg-slate-100 text-slate-600">
+            Pending
+        </span>
+        `;
+
+        if(progress >= 100){
+
+            statusBadge = `
+            <span class="px-2 py-1 rounded-lg bg-green-100 text-green-700 font-semibold">
+                Completed
+            </span>
+            `;
+        }
+
+        tbody.innerHTML += `
+
+        <tr class="hover:bg-slate-50 transition-all">
+
+            <td class="sticky left-0 bg-white px-3 py-3 font-medium">
+                ${index + 1}
+            </td>
+
+            <td class="px-3 py-3">
+                ${item.nama || "-"}
+            </td>
+
+            <td class="px-3 py-3">
+                ${item.username || "-"}
+            </td>
+
+            <td class="px-3 py-3">
+                ${item.department || "-"}
+            </td>
+
+            <td class="px-3 py-3">
+                ${item.position || "-"}
+            </td>
+
+            <td class="px-3 py-3">
+
+                <div class="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
+
+                    <div
+                        class="bg-blue-600 h-2 rounded-full"
+                        style="width:${progress}%"
+                    ></div>
+
+                </div>
+
+                <div class="text-center mt-1 text-[11px] font-medium text-slate-600">
+                    ${progress}%
+                </div>
+
+            </td>
+
+            <td class="px-3 py-3 text-center font-semibold">
+                ${avg}
+            </td>
+
+            <td class="px-3 py-3 text-center">
+                ${completed} / ${total}
+            </td>
+
+            <td class="px-3 py-3 text-center">
+                ${statusBadge}
+            </td>
+
+        </tr>
+        `;
+    });
+}
+
+
+
+
+
+// =====================================
+// UPLOAD INDUCTION EXCEL
+// =====================================
+document
+.getElementById(
+    "inductionExcelUpload"
+)
+.addEventListener(
+"change",
+async function(e){
+
+    const file =
+    e.target.files[0];
+
+    if(!file) return;
+
+    try{
+
+        // =====================================
+        // LOADING
+        // =====================================
+        Swal.fire({
+
+            title:
+            "Uploading...",
+
+            text:
+            "Sedang memproses induction training",
+
+            allowOutsideClick:false,
+
+            didOpen:()=>{
+
+                Swal.showLoading();
+            }
+        });
+
+        const data =
+        await file.arrayBuffer();
+
+        const workbook =
+        XLSX.read(data);
+
+        const sheetName =
+        workbook.SheetNames[0];
+
+        const worksheet =
+        workbook.Sheets[sheetName];
+
+        const json =
+        XLSX.utils.sheet_to_json(
+            worksheet
+        );
+
+        let success = 0;
+        let skipped = 0;
+        let failed = 0;
+
+        // =====================================
+        // LOOP EXCEL
+        // =====================================
+        for(const row of json){
+
+            const payload = {
+
+                sheet:
+                "induction_progress",
+
+                action:
+                "create",
+
+                username:
+                row["Username"] || "",
+
+                nama:
+                row["Nama"] || "",
+
+                department:
+                row["Departement"] || "",
+
+                position:
+                row["Posisi"] || "",
+
+                training:
+                row["Training"] || "",
+
+                posttest:
+                Number(
+                    row["Posttest"] || 0
+                )
+            };
+
+            try{
+
+                const res =
+                await fetch(
+                    API_URL,
+                    {
+
+                        method:"POST",
+
+                        body:
+                        JSON.stringify(
+                            payload
+                        )
+                    }
+                );
+
+                const result =
+                await res.json();
+
+                if(result.skipped){
+
+                    skipped++;
+
+                }else if(result.success){
+
+                    success++;
+
+                }else{
+
+                    failed++;
+                }
+
+            }catch(err){
+
+                console.error(err);
+
+                failed++;
+            }
+        }
+
+        // =====================================
+        // REFRESH TABLE
+        // =====================================
+        await loadInductionData();
+
+        Swal.fire({
+
+            icon:"success",
+
+            title:
+            "Upload Selesai",
+
+            html:`
+
+                <div class="text-left text-sm mt-3">
+
+                    <div>
+                        ✅ Success :
+                        <b>${success}</b>
+                    </div>
+
+                    <div>
+                        ⏭️ Skipped :
+                        <b>${skipped}</b>
+                    </div>
+
+                    <div>
+                        ❌ Failed :
+                        <b>${failed}</b>
+                    </div>
+
+                </div>
+
+            `
+        });
+
+    }catch(err){
+
+        console.error(err);
+
+        Swal.fire({
+
+            icon:"error",
+
+            title:
+            "Upload gagal",
+
+            text:
+            err.toString()
+        });
+    }
+
+    e.target.value = "";
+
+});
+
+
+
+
+
+// =====================================
+// AUTO LOAD
+// =====================================
+document
+.addEventListener(
+"DOMContentLoaded",
+function(){
+
+    loadInductionData();
+
+});
+</script>
             
             <!-- Program Table Template -->
             <div id="tab-generic" class="tab-content hidden">

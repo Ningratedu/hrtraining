@@ -1071,6 +1071,42 @@ async function(e){
             worksheet
         );
 
+        if(!json.length){
+
+    throw new Error(
+        "Excel kosong"
+    );
+}
+
+const requiredHeaders = [
+
+    "Username",
+    "Nama",
+    "Departement",
+    "Posisi",
+    "Training",
+    "Posttest"
+
+];
+
+const excelHeaders =
+Object.keys(json[0]);
+
+const missing =
+requiredHeaders.filter(h=>
+
+    !excelHeaders.includes(h)
+
+);
+
+if(missing.length){
+
+    throw new Error(
+        "Header tidak lengkap: "
+        + missing.join(", ")
+    );
+}
+        
         let success = 0;
         let skipped = 0;
         let failed = 0;

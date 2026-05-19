@@ -1079,112 +1079,62 @@ XLSX.utils.sheet_to_json(
     );
 }
         
-        let success = 0;
-        let skipped = 0;
-        let failed = 0;
+        const payload = {
 
-        // =====================================
-        // LOOP EXCEL
-        // =====================================
-        for(const rawRow of json){
+    sheet:
+    "induction_progress",
 
-    // =====================================
-    // NORMALIZE HEADER
-    // =====================================
-    const row = {};
+    action:
+    "bulk_create",
 
-    Object.keys(rawRow).forEach(key=>{
+    rows:
+    json
+};
 
-        const cleanKey =
-        String(key)
-        .trim()
-        .toLowerCase()
-        .replace(/\s+/g,"");
+const res =
+await fetch(
+    API_URL,
+    {
 
-        row[cleanKey] =
-        rawRow[key];
-    });
+        method:"POST",
 
-    console.log("RAW :", rawRow);
-    console.log("NORMALIZED :", row);
-
-    // =====================================
-    // PAYLOAD
-    // =====================================
-    const payload = {
-
-        sheet:
-        "induction_progress",
-
-        action:
-        "create",
-
-        username:
-        row.username || "",
-
-        nama:
-        row.nama || "",
-
-        department:
-        row.departement
-        || row.department
-        || "",
-
-        position:
-        row.posisi
-        || row.position
-        || "",
-
-        training:
-        row.training || "",
-
-        posttest:
-        Number(
-            row.posttest || 0
+        body:
+        JSON.stringify(
+            payload
         )
-    };
+    }
+);
 
-    console.log("PAYLOAD :", payload);
+const result =
+await res.json();
 
-            try{
+console.log(result);
 
-                const res =
-                await fetch(
-                    API_URL,
-                    {
+Swal.fire({
 
-                        method:"POST",
+    icon:"success",
 
-                        body:
-                        JSON.stringify(
-                            payload
-                        )
-                    }
-                );
+    title:
+    "Upload Selesai",
 
-                const result =
-                await res.json();
+    html:`
 
-                if(result.skipped){
+        <div class="text-left text-sm mt-3">
 
-                    skipped++;
+            <div>
+                ✅ Inserted :
+                <b>${result.inserted || 0}</b>
+            </div>
 
-                }else if(result.success){
+            <div>
+                ⏭️ Skipped :
+                <b>${result.skipped || 0}</b>
+            </div>
 
-                    success++;
+        </div>
 
-                }else{
-
-                    failed++;
-                }
-
-            }catch(err){
-
-                console.error(err);
-
-                failed++;
-            }
-        }
+    `
+});
 
         // =====================================
         // REFRESH TABLE
@@ -2391,12 +2341,14 @@ async function(e){
             ];
 
             const json =
-            XLSX.utils.sheet_to_json(
-                sheet,
-                {
-                    raw:false
-                }
-            );
+XLSX.utils.sheet_to_json(
+    worksheet,
+    {
+        defval:"",
+        raw:false,
+        range:1
+    }
+);
 
             const total =
             json.length;

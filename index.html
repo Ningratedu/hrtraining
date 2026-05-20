@@ -1013,6 +1013,10 @@ data.forEach(item=>{
     });
 }
 
+
+
+
+
 // =====================================
 // UPLOAD INDUCTION EXCEL
 // =====================================
@@ -1063,19 +1067,43 @@ async function(e){
         workbook.Sheets[sheetName];
 
         const json =
-XLSX.utils.sheet_to_json(
-    worksheet,
-    {
-        defval:"",
-        raw:false
-    }
-);
-        console.log(json);
+        XLSX.utils.sheet_to_json(
+            worksheet
+        );
 
         if(!json.length){
 
     throw new Error(
         "Excel kosong"
+    );
+}
+
+const requiredHeaders = [
+
+    "Username",
+    "Nama",
+    "Departement",
+    "Posisi",
+    "Training",
+    "Posttest"
+
+];
+
+const excelHeaders =
+Object.keys(json[0]);
+
+const missing =
+requiredHeaders.filter(h=>
+
+    !excelHeaders.includes(h)
+
+);
+
+if(missing.length){
+
+    throw new Error(
+        "Header tidak lengkap: "
+        + missing.join(", ")
     );
 }
         
@@ -1086,30 +1114,11 @@ XLSX.utils.sheet_to_json(
         // =====================================
         // LOOP EXCEL
         // =====================================
-        for(const rawRow of json){
+        for(const row of json){
+            console.log(row);
 
     // =====================================
-    // NORMALIZE HEADER
-    // =====================================
-    const row = {};
-
-    Object.keys(rawRow).forEach(key=>{
-
-        const cleanKey =
-        String(key)
-        .trim()
-        .toLowerCase()
-        .replace(/\s+/g,"");
-
-        row[cleanKey] =
-        rawRow[key];
-    });
-
-    console.log("RAW :", rawRow);
-    console.log("NORMALIZED :", row);
-
-    // =====================================
-    // PAYLOAD
+    // FLEXIBLE HEADER
     // =====================================
     const payload = {
 
@@ -1120,31 +1129,57 @@ XLSX.utils.sheet_to_json(
         "create",
 
         username:
-        row.username || "",
+
+            row["Username"]
+            || row["USERNAME"]
+            || row["username"]
+            || "",
 
         nama:
-        row.nama || "",
+
+            row["Nama"]
+            || row["NAMA"]
+            || row["nama"]
+            || "",
 
         department:
-        row.departement
-        || row.department
-        || "",
+
+            row["Departement"]
+            || row["Department"]
+            || row["DEPARTEMENT"]
+            || row["DEPARTMENT"]
+            || row["department"]
+            || "",
 
         position:
-        row.posisi
-        || row.position
-        || "",
+
+            row["Posisi"]
+            || row["Position"]
+            || row["POSITION"]
+            || row["position"]
+            || "",
 
         training:
-        row.training || "",
+
+            row["Training"]
+            || row["TRAINING"]
+            || row["training"]
+            || "",
 
         posttest:
-        Number(
-            row.posttest || 0
-        )
+
+            Number(
+
+                row["Posttest"]
+                || row["POSTTEST"]
+                || row["Post Test"]
+                || row["POST TEST"]
+                || row["posttest"]
+                || 0
+            )
     };
 
-    console.log("PAYLOAD :", payload);
+    console.log(payload);
 
             try{
 

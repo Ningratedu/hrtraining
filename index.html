@@ -1606,10 +1606,81 @@ function renderRecruitmentTable(){
         "recruitmentBody"
     );
 
-    if(!tbody) return;
+    if(!tbody)
+    return;
 
-    let data = [...recruitmentData];
+    let data =
+    [...recruitmentData];
 
+    // ======================
+    // EMPTY STATE
+    // ======================
+    if(!data.length){
+
+        tbody.innerHTML = `
+        <tr>
+            <td
+                colspan="99"
+                class="text-center py-10 text-slate-400"
+            >
+                Belum ada data recruitment
+            </td>
+        </tr>
+        `;
+
+        return;
+    }
+
+    // ======================
+    // HTML BUILDER
+    // ======================
+    let html = "";
+
+    data.forEach(
+    (item,index)=>{
+
+        html += `
+
+        <tr class="border-b border-slate-100 hover:bg-slate-50 transition-all">
+
+            <td class="px-3 py-3 text-center font-medium">
+                ${index + 1}
+            </td>
+
+            <td class="px-3 py-3">
+                ${item.nama || "-"}
+            </td>
+
+            <td class="px-3 py-3">
+                ${item.posisi || item.position || "-"}
+            </td>
+
+            <td class="px-3 py-3">
+                ${item.department || "-"}
+            </td>
+
+            <td class="px-3 py-3">
+                ${item.status || "-"}
+            </td>
+
+            <td class="px-3 py-3">
+                ${item.pic || "-"}
+            </td>
+
+            <td class="px-3 py-3 text-center">
+                ${item.progress || 0}%
+            </td>
+
+        </tr>
+        `;
+    });
+
+    // ======================
+    // RENDER SEKALI
+    // ======================
+    tbody.innerHTML =
+    html;
+}
 
 
     // ======================

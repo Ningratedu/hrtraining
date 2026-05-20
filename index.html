@@ -825,50 +825,11 @@ MOBILE UI IMPROVEMENT
 <!-- ===================================== -->
 <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
 
+
+
+
+
 <script>
-
-// =====================================
-// NORMALIZE KEY
-// =====================================
-function normalizeKey(key){
-
-    return String(key || "")
-
-    .normalize("NFKC")
-
-    .replace(
-        /[\u200B-\u200D\uFEFF]/g,
-        ""
-    )
-
-    .trim()
-
-    .toLowerCase()
-
-    .replace(
-        /[^\w]/g,
-        ""
-    );
-}
-
-// =====================================
-// NORMALIZE OBJECT
-// =====================================
-function normalizeObject(obj){
-
-    const result = {};
-
-    Object.keys(obj || {})
-    .forEach(key=>{
-
-        result[
-            normalizeKey(key)
-        ] =
-        obj[key];
-    });
-
-    return result;
-}
 
 // =====================================
 // LOAD INDUCTION
@@ -882,51 +843,29 @@ async function loadInductionData(){
             `${API_URL}?sheet=induction_progress`
         );
 
-        const raw =
+        const result =
         await res.json();
 
-        if(
-    raw.success === false
-){
-
-    throw new Error(
-        raw.message
-        ||
-        raw.error
-        ||
-        "API Error"
-    );
-}
-
-const normalized =
-(raw || [])
-.map(item=>
-    normalizeObject(item)
-);
-
         renderInductionTable(
-            normalized
+            result || []
         );
 
     }catch(err){
 
         console.error(err);
 
-        Swal.fire({
-
-            icon:"error",
-
-            title:
-            "Error",
-
-            text:
+        alert(
             "Gagal load induction data"
-        });
+        );
     }
 }
 
+
+
+
+
 // =====================================
-// RENDER TABLE
+// RENDER INDUCTION TABLE
 // =====================================
 function renderInductionTable(data){
 
@@ -935,8 +874,7 @@ function renderInductionTable(data){
         "inductionBody"
     );
 
-    if(!tbody)
-    return;
+    if(!tbody) return;
 
     if(!data.length){
 
@@ -957,129 +895,76 @@ function renderInductionTable(data){
     // =====================================
     // GROUP USER
     // =====================================
-    function safeNumber(v){
-
-    return Number(
-        String(v || 0)
-        .replace("%","")
-        .trim()
-    ) || 0;
-}
     const grouped = {};
 
-    data.forEach(item=>{
+data.forEach(item=>{
 
-        const username =
-String(
-    item.username || "-"
-)
-.trim()
-.toLowerCase();
+    const key =
+    item.username || "-";
 
-        if(
+    if(
+        !grouped[key]
+        ||
+        Number(item.progress || 0)
+        >
+        Number(grouped[key].progress || 0)
+    ){
 
-            !grouped[
-                username
-            ]
-
-            ||
-
-            Number(
-                item.progress || 0
-            )
-
-            >
-
-            Number(
-                grouped[
-                    username
-                ]
-                .progress || 0
-            )
-
-        ){
-
-            grouped[
-                username
-            ] = item;
-        }
-    });
+        grouped[key] = item;
+    }
+});
 
     const rows =
-    Object.values(
-        grouped
-    );
+    Object.values(grouped);
 
-    let html = "";
+    tbody.innerHTML = "";
 
-rows.forEach(
-(item,index)=>{
+    rows.forEach((item,index)=>{
 
         const progress =
-safeNumber(
-    item.progress
-);
+        Number(
+            item.progress || 0
+        );
 
         const avg =
-safeNumber(
-
-    item.avgscore
-
-    ||
-
-    item.avg_score
-);
+        Number(
+            item.avg_score || 0
+        );
 
         const completed =
-safeNumber(
-
-            item.completedtraining
-
-            ||
-
-            item.completed_training
-
-            ||
-
-            0
+        Number(
+            item.completed_training || 0
         );
 
         const total =
-safeNumber(
-
-            item.totaltraining
-
-            ||
-
-            item.total_training
-
-            ||
-
-            0
+        Number(
+            item.total_training || 0
         );
 
-        const status =
-        progress >= 100
-        ? `
-        <span class="px-3 py-1 rounded-xl bg-green-100 text-green-700 font-semibold text-xs">
-            Completed
-        </span>
-        `
-        : `
-        <span class="px-3 py-1 rounded-xl bg-amber-100 text-amber-700 font-semibold text-xs">
+        let statusBadge = `
+        <span class="px-2 py-1 rounded-lg bg-slate-100 text-slate-600">
             Pending
         </span>
         `;
 
+        if(progress >= 100){
+
+            statusBadge = `
+            <span class="px-2 py-1 rounded-lg bg-green-100 text-green-700 font-semibold">
+                Completed
+            </span>
+            `;
+        }
+
         tbody.innerHTML += `
 
-        <tr class="border-b border-slate-100 hover:bg-slate-50 transition-all">
+        <tr class="hover:bg-slate-50 transition-all">
 
-            <td class="sticky left-0 bg-white px-3 py-3 font-medium z-10">
+            <td class="sticky left-0 bg-white px-3 py-3 font-medium">
                 ${index + 1}
             </td>
 
-            <td class="px-3 py-3 font-medium">
+            <td class="px-3 py-3">
                 ${item.nama || "-"}
             </td>
 
@@ -1100,7 +985,7 @@ safeNumber(
                 <div class="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
 
                     <div
-                        class="bg-blue-600 h-2 rounded-full transition-all"
+                        class="bg-blue-600 h-2 rounded-full"
                         style="width:${progress}%"
                     ></div>
 
@@ -1121,20 +1006,16 @@ safeNumber(
             </td>
 
             <td class="px-3 py-3 text-center">
-                ${status}
+                ${statusBadge}
             </td>
 
         </tr>
         `;
     });
-// =====================================
-// RENDER SEKALI
-// =====================================
-    tbody.innerHTML = html;
-}    
+}
 
 // =====================================
-// UPLOAD EXCEL
+// UPLOAD INDUCTION EXCEL
 // =====================================
 document
 .getElementById(
@@ -1147,8 +1028,7 @@ async function(e){
     const file =
     e.target.files[0];
 
-    if(!file)
-    return;
+    if(!file) return;
 
     try{
 
@@ -1168,24 +1048,17 @@ async function(e){
             }
         });
 
-        const buffer =
+        const data =
         await file.arrayBuffer();
 
         const workbook =
-        XLSX.read(
-            buffer,
-            {
-                type:"array"
-            }
-        );
+        XLSX.read(data);
 
         const sheetName =
         workbook.SheetNames[0];
 
         const worksheet =
-        workbook.Sheets[
-            sheetName
-        ];
+        workbook.Sheets[sheetName];
 
         const json =
         XLSX.utils.sheet_to_json(
@@ -1197,9 +1070,9 @@ async function(e){
             }
         );
 
-        if(
-            !json.length
-        ){
+        console.log(json);
+
+        if(!json.length){
 
             throw new Error(
                 "Excel kosong"
@@ -1225,11 +1098,6 @@ async function(e){
 
                 method:"POST",
 
-                headers:{
-                    "Content-Type":
-                    "application/json"
-                },
-
                 body:
                 JSON.stringify(
                     payload
@@ -1238,20 +1106,9 @@ async function(e){
         );
 
         const result =
-await res.json();
+        await res.json();
 
-if(
-    result.success === false
-){
-
-    throw new Error(
-        result.message
-        ||
-        result.error
-        ||
-        "Upload gagal"
-    );
-}
+        console.log(result);
 
         await loadInductionData();
 
@@ -1266,30 +1123,20 @@ if(
 
             html:`
 
-            <div class="text-left text-sm space-y-2 mt-3">
+                <div class="text-left text-sm mt-3">
 
-                <div>
-                    ✅ Inserted :
-                    <b>
-                        ${result.inserted || 0}
-                    </b>
+                    <div>
+                        ✅ Inserted :
+                        <b>${result.inserted || 0}</b>
+                    </div>
+
+                    <div>
+                        ⏭️ Skipped :
+                        <b>${result.skipped || 0}</b>
+                    </div>
+
                 </div>
 
-                <div>
-                    🔄 Updated :
-                    <b>
-                        ${result.updated || 0}
-                    </b>
-                </div>
-
-                <div>
-                    ⏭️ Skipped :
-                    <b>
-                        ${result.skipped || 0}
-                    </b>
-                </div>
-
-            </div>
             `
         });
 
@@ -1310,6 +1157,7 @@ if(
     }
 
     e.target.value = "";
+
 });
 
 // =====================================
@@ -1318,13 +1166,12 @@ if(
 document
 .addEventListener(
 "DOMContentLoaded",
-()=>{
+function(){
 
     loadInductionData();
-
     lucide.createIcons();
-});
 
+});
 </script>
             
             <!-- Program Table Template -->
@@ -1606,81 +1453,10 @@ function renderRecruitmentTable(){
         "recruitmentBody"
     );
 
-    if(!tbody)
-    return;
+    if(!tbody) return;
 
-    let data =
-    [...recruitmentData];
+    let data = [...recruitmentData];
 
-    // ======================
-    // EMPTY STATE
-    // ======================
-    if(!data.length){
-
-        tbody.innerHTML = `
-        <tr>
-            <td
-                colspan="99"
-                class="text-center py-10 text-slate-400"
-            >
-                Belum ada data recruitment
-            </td>
-        </tr>
-        `;
-
-        return;
-    }
-
-    // ======================
-    // HTML BUILDER
-    // ======================
-    let html = "";
-
-    data.forEach(
-    (item,index)=>{
-
-        html += `
-
-        <tr class="border-b border-slate-100 hover:bg-slate-50 transition-all">
-
-            <td class="px-3 py-3 text-center font-medium">
-                ${index + 1}
-            </td>
-
-            <td class="px-3 py-3">
-                ${item.nama || "-"}
-            </td>
-
-            <td class="px-3 py-3">
-                ${item.posisi || item.position || "-"}
-            </td>
-
-            <td class="px-3 py-3">
-                ${item.department || "-"}
-            </td>
-
-            <td class="px-3 py-3">
-                ${item.status || "-"}
-            </td>
-
-            <td class="px-3 py-3">
-                ${item.pic || "-"}
-            </td>
-
-            <td class="px-3 py-3 text-center">
-                ${item.progress || 0}%
-            </td>
-
-        </tr>
-        `;
-    });
-
-    // ======================
-    // RENDER SEKALI
-    // ======================
-    tbody.innerHTML =
-    html;
-}
 
 
     // ======================
@@ -1913,7 +1689,7 @@ function renderRecruitmentTable(){
 
     data.forEach((item,index)=>{
 
-        html += `
+        tbody.innerHTML += `
         <tr class="border-b hover:bg-slate-50">
 
             <td class="sticky left-0 bg-white z-20 px-3 py-2 text-xs font-semibold whitespace-nowrap shadow-[4px_0_10px_rgba(0,0,0,0.03)]">

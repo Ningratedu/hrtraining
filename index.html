@@ -7,7 +7,6 @@
     <title>HR Training Monitoring & Reporting</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
@@ -1032,6 +1031,9 @@ async function(e){
 
     try{
 
+        // =====================================
+        // LOADING
+        // =====================================
         Swal.fire({
 
             title:
@@ -1061,57 +1063,133 @@ async function(e){
         workbook.Sheets[sheetName];
 
         const json =
-        XLSX.utils.sheet_to_json(
-            worksheet,
-            {
-                defval:"",
-                raw:false,
-                range:1
-            }
-        );
-
+XLSX.utils.sheet_to_json(
+    worksheet,
+    {
+        defval:"",
+        raw:false
+    }
+);
         console.log(json);
 
         if(!json.length){
 
-            throw new Error(
-                "Excel kosong"
-            );
+    throw new Error(
+        "Excel kosong"
+    );
+}
+        
+        let success = 0;
+        let skipped = 0;
+        let failed = 0;
+
+        // =====================================
+        // LOOP EXCEL
+        // =====================================
+        for(const rawRow of json){
+
+    // =====================================
+    // NORMALIZE HEADER
+    // =====================================
+    const row = {};
+
+    Object.keys(rawRow).forEach(key=>{
+
+        const cleanKey =
+        String(key)
+        .trim()
+        .toLowerCase()
+        .replace(/\s+/g,"");
+
+        row[cleanKey] =
+        rawRow[key];
+    });
+
+    console.log("RAW :", rawRow);
+    console.log("NORMALIZED :", row);
+
+    // =====================================
+    // PAYLOAD
+    // =====================================
+    const payload = {
+
+        sheet:
+        "induction_progress",
+
+        action:
+        "create",
+
+        username:
+        row.username || "",
+
+        nama:
+        row.nama || "",
+
+        department:
+        row.departement
+        || row.department
+        || "",
+
+        position:
+        row.posisi
+        || row.position
+        || "",
+
+        training:
+        row.training || "",
+
+        posttest:
+        Number(
+            row.posttest || 0
+        )
+    };
+
+    console.log("PAYLOAD :", payload);
+
+            try{
+
+                const res =
+                await fetch(
+                    API_URL,
+                    {
+
+                        method:"POST",
+
+                        body:
+                        JSON.stringify(
+                            payload
+                        )
+                    }
+                );
+
+                const result =
+                await res.json();
+
+                if(result.skipped){
+
+                    skipped++;
+
+                }else if(result.success){
+
+                    success++;
+
+                }else{
+
+                    failed++;
+                }
+
+            }catch(err){
+
+                console.error(err);
+
+                failed++;
+            }
         }
 
-        const payload = {
-
-            sheet:
-            "induction_progress",
-
-            action:
-            "bulk_create",
-
-            rows:
-            json
-        };
-
-        const res =
-        await fetch(
-            API_URL,
-            {
-
-                method:"POST",
-
-                body:
-                JSON.stringify(
-                    payload
-                )
-            }
-        );
-
-        const result =
-        await res.json();
-
-        console.log(result);
-
+        // =====================================
+        // REFRESH TABLE
+        // =====================================
         await loadInductionData();
-
         lucide.createIcons();
 
         Swal.fire({
@@ -1126,13 +1204,18 @@ async function(e){
                 <div class="text-left text-sm mt-3">
 
                     <div>
-                        ✅ Inserted :
-                        <b>${result.inserted || 0}</b>
+                        ✅ Success :
+                        <b>${success}</b>
                     </div>
 
                     <div>
                         ⏭️ Skipped :
-                        <b>${result.skipped || 0}</b>
+                        <b>${skipped}</b>
+                    </div>
+
+                    <div>
+                        ❌ Failed :
+                        <b>${failed}</b>
                     </div>
 
                 </div>
@@ -1159,6 +1242,10 @@ async function(e){
     e.target.value = "";
 
 });
+
+
+
+
 
 // =====================================
 // AUTO LOAD
@@ -2304,14 +2391,12 @@ async function(e){
             ];
 
             const json =
-XLSX.utils.sheet_to_json(
-    worksheet,
-    {
-        defval:"",
-        raw:false,
-        range:1
-    }
-);
+            XLSX.utils.sheet_to_json(
+                sheet,
+                {
+                    raw:false
+                }
+            );
 
             const total =
             json.length;

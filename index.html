@@ -1128,13 +1128,35 @@ const rows = json.map(row=>({
         || row["username"]
         || "",
 
-    join_date:
+    join_date:(()=>{
+
+    const raw =
 
         row["Join Date"]
         || row["JOIN DATE"]
         || row["JoinDate"]
         || row["Tanggal Join"]
-        || "",
+        || "";
+
+    // =====================================
+    // EXCEL SERIAL DATE
+    // =====================================
+    if(typeof raw === "number"){
+
+        const excelDate =
+        new Date(
+            (raw - 25569) * 86400 * 1000
+        );
+
+        return excelDate
+        .toLocaleDateString(
+            "id-ID"
+        );
+    }
+
+    return raw;
+
+})(),
 
     nama:
 

@@ -1930,9 +1930,12 @@ function(e){
 // ======================
 // EXCEL UPLOAD
 // ======================
+// ======================
+// BULK EXCEL UPLOAD
+// ======================
 document.addEventListener(
 "change",
-function(e){
+async function(e){
 
     if(
         e.target.id !==
@@ -1944,190 +1947,184 @@ function(e){
 
     if(!file) return;
 
-    const reader =
-    new FileReader();
+    const modal =
+    document.getElementById(
+        "uploadProgressModal"
+    );
 
-    reader.onload =
-    async function(evt){
+    const bar =
+    document.getElementById(
+        "uploadBar"
+    );
 
-        const modal =
-        document.getElementById(
-            "uploadProgressModal"
+    const percent =
+    document.getElementById(
+        "uploadPercent"
+    );
+
+    const text =
+    document.getElementById(
+        "uploadText"
+    );
+
+    try{
+
+        modal.classList.remove(
+            "hidden"
         );
 
-        const bar =
-        document.getElementById(
-            "uploadBar"
-        );
+        document.body.style.overflow =
+        "hidden";
 
-        const percent =
-        document.getElementById(
-            "uploadPercent"
-        );
+        const data =
+        await file.arrayBuffer();
 
-        const text =
-        document.getElementById(
-            "uploadText"
-        );
+        const workbook =
+        XLSX.read(data);
 
-        try{
+        const sheet =
+        workbook.Sheets[
+            workbook.SheetNames[0]
+        ];
 
-            // OPEN OVERLAY
-            modal.classList.remove(
-                "hidden"
-            );
-
-            // LOCK SCREEN
-            document.body.style.overflow =
-            "hidden";
-
-            const workbook =
-            XLSX.read(
-                evt.target.result,
-                {
-                    type:'binary'
-                }
-            );
-
-            const sheet =
-            workbook.Sheets[
-                workbook.SheetNames[0]
-            ];
-
-            const json =
-            XLSX.utils.sheet_to_json(
-                sheet,
-                {
-                    raw:false
-                }
-            );
-
-            const total =
-            json.length;
-
-            for(
-                let i = 0;
-                i < total;
-                i++
-            ){
-
-                const row =
-                json[i];
-
-                await fetch(
-                    API_URL,
-                    {
-                        method:"POST",
-
-                        body:
-                        JSON.stringify({
-
-                            sheet:
-                            "onboarding",
-
-                            action:
-                            "create",
-
-                            nama:
-                            row["Nama"] ||
-                            row["Name"] ||
-                            "",
-
-                            username:
-                            row["Username"] ||
-                            row["username"] ||
-                            "",
-
-                            company:
-                            row["Company"] ||
-                            "",
-
-                            departement:
-                            row["Departement"] ||
-                            row["Department"] ||
-                            "",
-
-                            designation:
-                            row["Designation"] ||
-                            "",
-
-                            location:
-                            row["Location"] ||
-                            "",
-
-                            date_join:
-                            formatExcelDate(
-                                row["Date Join"] ||
-                                row["Date join"] ||
-                                ""
-                            ),
-
-                            kontak:
-                            row["Kontak"] ||
-                            row["Contact"] ||
-                            "",
-
-                            stage:
-                            "Recruitment"
-
-                        })
-                    }
-                );
-
-                // UPDATE PROGRESS
-                const progress =
-                Math.round(
-                    (
-                        (i + 1)
-                        / total
-                    ) * 100
-                );
-
-                bar.style.width =
-                progress + "%";
-
-                percent.innerText =
-                progress + "%";
-
-                text.innerText =
-                `Uploading ${
-                    i + 1
-                } dari ${
-                    total
-                } data`;
+        const json =
+        XLSX.utils.sheet_to_json(
+            sheet,
+            {
+                raw:true
             }
+        );
 
-            // REFRESH TABLE
-            await loadRecruitmentData();
+        // =====================================
+        // PREPARE BULK ROWS
+        // =====================================
+        const rows =
+        json.map(row=>({
 
-            text.innerText =
-            "Upload selesai";
+            nama:
+            row["Nama"]
+            || row["Name"]
+            || "",
 
-            // CLOSE MODAL
-            setTimeout(()=>{
+            username:
+            row["Username"]
+            || row["username"]
+            || "",
 
-                modal.classList.add(
-                    "hidden"
-                );
+            company:
+            row["Company"]
+            || "",
 
-                document.body.style.overflow =
-                "auto";
+            departement:
+            row["Departement"]
+            || row["Department"]
+            || "",
 
-                bar.style.width =
-                "0%";
+            designation:
+            row["Designation"]
+            || "",
 
-                percent.innerText =
-                "0%";
+            location:
+            row["Location"]
+            || "",
 
-            },1000);
+            date_join:(()=>{
 
-        }catch(err){
+                const raw =
 
-            console.error(err);
+                    row["Date Join"]
+                    || row["Date join"]
+                    || "";
 
-            alert(
-                "Upload gagal"
-            );
+                // =====================================
+                // EXCEL SERIAL DATE
+                // =====================================
+                if(typeof raw === "number"){
+
+                    const excelDate =
+                    new Date(
+                        (raw - 25569)
+                        * 86400
+                        * 1000
+                    );
+
+                    return excelDate
+                    .toLocaleDateString(
+                        "id-ID"
+                    );
+                }
+
+                return raw;
+
+            })(),
+
+            kontak:
+            row["Kontak"]
+            || row["Contact"]
+            || "",
+
+            stage:
+            "Recruitment"
+
+        }));
+
+        // =====================================
+        // UI PROGRESS
+        // =====================================
+        bar.style.width =
+        "70%";
+
+        percent.innerText =
+        "70%";
+
+        text.innerText =
+        "Uploading data recruitment...";
+
+        // =====================================
+        // BULK API
+        // =====================================
+        const res =
+        await fetch(
+            API_URL,
+            {
+
+                method:"POST",
+
+                body:
+                JSON.stringify({
+
+                    sheet:
+                    "onboarding",
+
+                    action:
+                    "bulk_create",
+
+                    rows
+                })
+            }
+        );
+
+        const result =
+        await res.json();
+
+        // =====================================
+        // COMPLETE
+        // =====================================
+        bar.style.width =
+        "100%";
+
+        percent.innerText =
+        "100%";
+
+        text.innerText =
+        "Upload selesai";
+
+        // =====================================
+        // REFRESH TABLE
+        // =====================================
+        await loadRecruitmentData();
+
+        setTimeout(()=>{
 
             modal.classList.add(
                 "hidden"
@@ -2135,12 +2132,65 @@ function(e){
 
             document.body.style.overflow =
             "auto";
-        }
-    };
 
-    reader.readAsBinaryString(
-        file
-    );
+            bar.style.width =
+            "0%";
+
+            percent.innerText =
+            "0%";
+
+        },1000);
+
+        Swal.fire({
+
+            icon:"success",
+
+            title:
+            "Upload Selesai",
+
+            html:`
+
+<div class="text-left text-sm mt-3">
+
+    <div>
+        ✅ Inserted :
+        <b>${result.inserted || 0}</b>
+    </div>
+
+    <div>
+        ⏭️ Skipped :
+        <b>${result.skipped || 0}</b>
+    </div>
+
+</div>
+`
+        });
+
+    }catch(err){
+
+        console.error(err);
+
+        Swal.fire({
+
+            icon:"error",
+
+            title:
+            "Upload gagal",
+
+            text:
+            err.toString()
+        });
+
+        modal.classList.add(
+            "hidden"
+        );
+
+        document.body.style.overflow =
+        "auto";
+    }
+
+    e.target.value = "";
+
 });
 
 

@@ -760,6 +760,10 @@ MOBILE UI IMPROVEMENT
                         Username
                     </th>
 
+                    <th class="px-3 py-3 min-w-[150px] text-left">
+                        Join Date
+                    </th>
+
                     <th class="px-3 py-3 min-w-[180px] text-left">
                         Department
                     </th>
@@ -797,7 +801,7 @@ MOBILE UI IMPROVEMENT
                 <tr>
 
                     <td
-                        colspan="9"
+                        colspan="10"
                         class="text-center py-10 text-slate-400"
                     >
 
@@ -880,7 +884,7 @@ function renderInductionTable(data){
         tbody.innerHTML = `
         <tr>
             <td
-                colspan="9"
+                colspan="10"
                 class="text-center py-10 text-slate-400"
             >
                 Belum ada data induction training
@@ -969,6 +973,10 @@ data.forEach(item=>{
 
             <td class="px-3 py-3">
                 ${item.username || "-"}
+            </td>
+
+            <td class="px-3 py-3">
+                ${item.join_date || "-"}
             </td>
 
             <td class="px-3 py-3">
@@ -1107,120 +1115,99 @@ if(missing.length){
     );
 }
         
-        let success = 0;
-        let skipped = 0;
-        let failed = 0;
-
         // =====================================
-        // LOOP EXCEL
-        // =====================================
-        for(const row of json){
-            console.log(row);
+// PREPARE BULK ROWS
+// =====================================
+const rows = json.map(row=>({
 
-    // =====================================
-    // FLEXIBLE HEADER
-    // =====================================
-    const payload = {
+    username:
 
-        sheet:
-        "induction_progress",
+        row["Username"]
+        || row["USERNAME"]
+        || row["username"]
+        || "",
 
-        action:
-        "create",
+    join_date:
 
-        username:
+        row["Join Date"]
+        || row["JOIN DATE"]
+        || row["JoinDate"]
+        || row["Tanggal Join"]
+        || "",
 
-            row["Username"]
-            || row["USERNAME"]
-            || row["username"]
-            || "",
+    nama:
 
-        nama:
+        row["Nama"]
+        || row["NAMA"]
+        || row["nama"]
+        || "",
 
-            row["Nama"]
-            || row["NAMA"]
-            || row["nama"]
-            || "",
+    departement:
 
-        department:
+        row["Departement"]
+        || row["Department"]
+        || row["DEPARTEMENT"]
+        || row["DEPARTMENT"]
+        || row["department"]
+        || "",
 
-            row["Departement"]
-            || row["Department"]
-            || row["DEPARTEMENT"]
-            || row["DEPARTMENT"]
-            || row["department"]
-            || "",
+    posisi:
 
-        position:
+        row["Posisi"]
+        || row["Position"]
+        || row["POSITION"]
+        || row["position"]
+        || "",
 
-            row["Posisi"]
-            || row["Position"]
-            || row["POSITION"]
-            || row["position"]
-            || "",
+    training:
 
-        training:
+        row["Training"]
+        || row["TRAINING"]
+        || row["training"]
+        || "",
 
-            row["Training"]
-            || row["TRAINING"]
-            || row["training"]
-            || "",
+    posttest:
 
-        posttest:
+        Number(
 
-            Number(
+            row["Posttest"]
+            || row["POSTTEST"]
+            || row["Post Test"]
+            || row["POST TEST"]
+            || row["posttest"]
+            || 0
+        )
 
-                row["Posttest"]
-                || row["POSTTEST"]
-                || row["Post Test"]
-                || row["POST TEST"]
-                || row["posttest"]
-                || 0
-            )
-    };
+}));
 
-    console.log(payload);
+console.log(rows);
 
-            try{
+// =====================================
+// BULK API
+// =====================================
+const res =
+await fetch(
+    API_URL,
+    {
 
-                const res =
-                await fetch(
-                    API_URL,
-                    {
+        method:"POST",
 
-                        method:"POST",
+        body:
+        JSON.stringify({
 
-                        body:
-                        JSON.stringify(
-                            payload
-                        )
-                    }
-                );
+            sheet:
+            "induction_progress",
 
-                const result =
-                await res.json();
+            action:
+            "bulk_create",
 
-                if(result.skipped){
+            rows
+        })
+    }
+);
 
-                    skipped++;
-
-                }else if(result.success){
-
-                    success++;
-
-                }else{
-
-                    failed++;
-                }
-
-            }catch(err){
-
-                console.error(err);
-
-                failed++;
-            }
-        }
-
+const result =
+await res.json();
         // =====================================
         // REFRESH TABLE
         // =====================================
@@ -1236,26 +1223,20 @@ if(missing.length){
 
             html:`
 
-                <div class="text-left text-sm mt-3">
+<div class="text-left text-sm mt-3">
 
-                    <div>
-                        ✅ Success :
-                        <b>${success}</b>
-                    </div>
+    <div>
+        ✅ Inserted :
+        <b>${result.inserted || 0}</b>
+    </div>
 
-                    <div>
-                        ⏭️ Skipped :
-                        <b>${skipped}</b>
-                    </div>
+    <div>
+        ⏭️ Skipped :
+        <b>${result.skipped || 0}</b>
+    </div>
 
-                    <div>
-                        ❌ Failed :
-                        <b>${failed}</b>
-                    </div>
-
-                </div>
-
-            `
+</div>
+`
         });
 
     }catch(err){
@@ -2357,233 +2338,6 @@ async function editRecruitment(index){
         );
     }
 }
-
-        // ======================
-// INDUCTION EXCEL UPLOAD
-// ======================
-document.addEventListener(
-"change",
-async function(e){
-
-    if(
-        e.target.id !==
-        "inductionExcelUpload"
-    ) return;
-
-    const file =
-    e.target.files[0];
-
-    if(!file) return;
-
-    const reader =
-    new FileReader();
-
-    reader.onload =
-    async function(evt){
-
-        const modal =
-        document.getElementById(
-            "uploadProgressModal"
-        );
-
-        const bar =
-        document.getElementById(
-            "uploadBar"
-        );
-
-        const percent =
-        document.getElementById(
-            "uploadPercent"
-        );
-
-        const text =
-        document.getElementById(
-            "uploadText"
-        );
-
-        try{
-
-            // OPEN OVERLAY
-            modal.classList.remove(
-                "hidden"
-            );
-
-            // LOCK SCREEN
-            document.body.style.overflow =
-            "hidden";
-
-            const workbook =
-            XLSX.read(
-                evt.target.result,
-                {
-                    type:'binary'
-                }
-            );
-
-            const sheet =
-            workbook.Sheets[
-                workbook.SheetNames[0]
-            ];
-
-            const json =
-            XLSX.utils.sheet_to_json(
-                sheet,
-                {
-                    raw:false
-                }
-            );
-
-            const total =
-            json.length;
-
-            for(
-                let i = 0;
-                i < total;
-                i++
-            ){
-
-                const row =
-                json[i];
-
-                const res =
-await fetch(
-    API_URL,
-    {
-        method:"POST",
-
-        body:
-JSON.stringify({
-
-    sheet:
-    "induction_progress",
-
-    action:
-    "create",
-
-    username:
-    row["Username"] ||
-    "",
-
-    nama:
-    row["Nama"] ||
-    "",
-
-    department:
-    row["Departement"] ||
-    row["Department"] ||
-    "",
-
-    position:
-    row["Posisi"] ||
-    row["Designation"] ||
-    row["Position"] ||
-    "",
-
-    training:
-    row["Training"] ||
-    "",
-
-    posttest:
-    Number(
-        row["Posttest"] || 0
-    )
-})
-    }
-);
-
-const result =
-await res.json();
-
-alert(
-    JSON.stringify(
-        result,
-        null,
-        2
-    )
-);
-
-
-                // UPDATE PROGRESS
-                const progress =
-                Math.round(
-                    (
-                        (i + 1)
-                        / total
-                    ) * 100
-                );
-
-                bar.style.width =
-                progress + "%";
-
-                percent.innerText =
-                progress + "%";
-
-                text.innerText =
-                `Uploading ${
-                    i + 1
-                } dari ${
-                    total
-                } data induction`;
-            }
-
-
-            // OPTIONAL:
-            // reload induction table
-            if(
-                typeof
-                loadInductionData
-                ===
-                "function"
-            ){
-
-                await
-                loadInductionData();
-                lucide.createIcons();
-            }
-
-            text.innerText =
-            "Upload induction selesai";
-
-
-            // CLOSE MODAL
-            setTimeout(()=>{
-
-                modal.classList.add(
-                    "hidden"
-                );
-
-                document.body.style.overflow =
-                "auto";
-
-                bar.style.width =
-                "0%";
-
-                percent.innerText =
-                "0%";
-
-            },1000);
-
-        }catch(err){
-
-            console.error(err);
-
-            alert(
-                "Upload induction gagal"
-            );
-
-            modal.classList.add(
-                "hidden"
-            );
-
-            document.body.style.overflow =
-            "auto";
-        }
-    };
-
-    reader.readAsBinaryString(
-        file
-    );
-});
 
 // ======================
 // FILTER DEPARTMENT

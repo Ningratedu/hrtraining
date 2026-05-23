@@ -1655,7 +1655,76 @@ function applyInductionDepartmentFilter(){
     renderInductionTable();
 }
 
+function updateInductionCount(){
 
+    let data =
+    [...inductionData];
+
+    // =====================================
+    // GROUP USER
+    // =====================================
+    const grouped = {};
+
+    data.forEach(item=>{
+
+        const key =
+        item.username || "-";
+
+        if(
+            !grouped[key]
+            ||
+            Number(item.progress || 0)
+            >
+            Number(
+                grouped[key]
+                .progress || 0
+            )
+        ){
+
+            grouped[key] =
+            item;
+        }
+    });
+
+    data =
+    Object.values(grouped);
+
+    // =====================================
+    // FILTER DEPARTMENT ONLY
+    // =====================================
+    if(
+        selectedInductionDepartments
+        .length
+    ){
+
+        data =
+        data.filter(item =>
+
+            selectedInductionDepartments
+            .includes(
+
+                String(
+                    item.department || ""
+                )
+                .trim()
+                .toLowerCase()
+
+            )
+        );
+    }
+
+    const el =
+    document.getElementById(
+        "countInduction"
+    );
+
+    if(el){
+
+        el.innerText =
+        data.length;
+    }
+}
+    
 // =====================================
 // AUTO LOAD
 // =====================================

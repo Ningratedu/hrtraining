@@ -850,9 +850,12 @@ async function loadInductionData(){
         const result =
         await res.json();
 
-        renderInductionTable(
-            result || []
-        );
+        inductionData =
+        result || [];
+
+        updateInductionDepartmentFilter();
+
+        renderInductionTable();
 
     }catch(err){
 
@@ -864,14 +867,10 @@ async function loadInductionData(){
     }
 }
 
-
-
-
-
 // =====================================
 // RENDER INDUCTION TABLE
 // =====================================
-function renderInductionTable(data){
+function renderInductionTable(){
 
     const tbody =
     document.getElementById(
@@ -879,6 +878,156 @@ function renderInductionTable(data){
     );
 
     if(!tbody) return;
+
+    let data =
+    [...inductionData];
+
+    // ======================
+    // GROUP USER
+    // ======================
+    const grouped = {};
+
+    data.forEach(item=>{
+
+        const key =
+        item.username || "-";
+
+        if(
+            !grouped[key]
+            ||
+            Number(item.progress || 0)
+            >
+            Number(grouped[key].progress || 0)
+        ){
+
+            grouped[key] = item;
+        }
+    });
+
+    data =
+    Object.values(grouped);
+
+    // ======================
+    // SEARCH
+    // ======================
+    const keyword =
+    document
+    .getElementById(
+        "searchInduction"
+    )
+    ?.value
+    ?.toLowerCase()
+    || "";
+
+    if(keyword){
+
+        data =
+        data.filter(item =>
+
+            Object.values(item)
+            .join(" ")
+            .toLowerCase()
+            .includes(keyword)
+
+        );
+    }
+
+    // ======================
+    // FILTER DEPARTMENT
+    // ======================
+    if(
+        selectedInductionDepartments
+        .length
+    ){
+
+        data =
+        data.filter(item =>
+
+            selectedInductionDepartments
+            .includes(
+
+                String(
+                    item.department || ""
+                )
+                .trim()
+                .toLowerCase()
+
+            )
+        );
+    }
+
+    // ======================
+    // SORT
+    // ======================
+    data.sort((a,b)=>{
+
+        let aVal =
+        a[inductionSortField];
+
+        let bVal =
+        b[inductionSortField];
+
+        // NUMERIC SORT
+        if([
+            "progress",
+            "avg_score",
+            "completed_training",
+            "total_training"
+        ].includes(
+            inductionSortField
+        )){
+
+            aVal =
+            Number(aVal || 0);
+
+            bVal =
+            Number(bVal || 0);
+
+            return inductionSortDirection
+            === "asc"
+            ? aVal - bVal
+            : bVal - aVal;
+        }
+
+        // DATE SORT
+        if(
+            inductionSortField
+            === "join_date"
+        ){
+
+            aVal =
+            new Date(
+                aVal || 0
+            ).getTime();
+
+            bVal =
+            new Date(
+                bVal || 0
+            ).getTime();
+
+            return inductionSortDirection
+            === "asc"
+            ? aVal - bVal
+            : bVal - aVal;
+        }
+
+        // TEXT SORT
+        aVal =
+        String(
+            aVal || ""
+        ).toLowerCase();
+
+        bVal =
+        String(
+            bVal || ""
+        ).toLowerCase();
+
+        return inductionSortDirection
+        === "asc"
+        ? aVal.localeCompare(bVal)
+        : bVal.localeCompare(aVal);
+
+    });
 
     if(!data.length){
 
@@ -888,7 +1037,7 @@ function renderInductionTable(data){
                 colspan="10"
                 class="text-center py-10 text-slate-400"
             >
-                Belum ada data induction training
+                Tidak ada data
             </td>
         </tr>
         `;
@@ -896,34 +1045,9 @@ function renderInductionTable(data){
         return;
     }
 
-    // =====================================
-    // GROUP USER
-    // =====================================
-    const grouped = {};
-
-data.forEach(item=>{
-
-    const key =
-    item.username || "-";
-
-    if(
-        !grouped[key]
-        ||
-        Number(item.progress || 0)
-        >
-        Number(grouped[key].progress || 0)
-    ){
-
-        grouped[key] = item;
-    }
-});
-
-    const rows =
-    Object.values(grouped);
-
     tbody.innerHTML = "";
 
-    rows.forEach((item,index)=>{
+    data.forEach((item,index)=>{
 
         const progress =
         Number(
@@ -977,21 +1101,22 @@ data.forEach(item=>{
             </td>
 
             <td class="px-3 py-3">
-
-${
-    item.join_date
-    ? new Intl.DateTimeFormat(
-        "id-ID",
-        {
-            timeZone:"Asia/Jakarta"
-        }
-      ).format(
-        new Date(item.join_date)
-      )
-    : "-"
-}
-
-</td>
+                ${
+                    item.join_date
+                    ? new Intl.DateTimeFormat(
+                        "id-ID",
+                        {
+                            timeZone:
+                            "Asia/Jakarta"
+                        }
+                    ).format(
+                        new Date(
+                            item.join_date
+                        )
+                    )
+                    : "-"
+                }
+            </td>
 
             <td class="px-3 py-3">
                 ${item.department || "-"}
@@ -1023,7 +1148,7 @@ ${
             </td>
 
             <td class="px-3 py-3 text-center">
-                ${completed} / ${total}
+                ${completed}/${total}
             </td>
 
             <td class="px-3 py-3 text-center">
@@ -1033,11 +1158,9 @@ ${
         </tr>
         `;
     });
+
+    lucide.createIcons();
 }
-
-
-
-
 
 // =====================================
 // UPLOAD INDUCTION EXCEL
@@ -1296,7 +1419,145 @@ await res.json();
 });
 
 
+function sortInduction(field){
 
+    if(
+        inductionSortField
+        === field
+    ){
+
+        inductionSortDirection =
+        inductionSortDirection
+        === "asc"
+        ? "desc"
+        : "asc";
+
+    }else{
+
+        inductionSortField =
+        field;
+
+        inductionSortDirection =
+        "asc";
+    }
+
+    renderInductionTable();
+}
+
+function updateInductionDepartmentFilter(){
+
+    const uniqueDept =
+    [...new Set(
+
+        inductionData
+        .map(x =>
+            String(
+                x.department || ""
+            ).trim()
+        )
+        .filter(Boolean)
+
+    )];
+
+    const html =
+    uniqueDept.map(dept => `
+
+    <label class="flex items-center gap-2 px-3 py-2 hover:bg-slate-50 rounded-lg cursor-pointer">
+
+        <input
+            type="checkbox"
+            class="induction-department-checkbox"
+            value="${dept}"
+            ${
+                selectedInductionDepartments
+                .includes(
+                    dept.toLowerCase()
+                )
+                ? "checked"
+                : ""
+            }
+        >
+
+        <span>${dept}</span>
+
+    </label>
+
+    `).join("");
+
+    const old =
+    document.getElementById(
+        "inductionDropdown"
+    );
+
+    if(old) old.remove();
+
+    document
+    .querySelector(
+        "#filterInductionButton"
+    )
+    .insertAdjacentHTML(
+        "afterend",
+        `
+        <div
+            id="inductionDropdown"
+            class="hidden absolute mt-2 w-72 bg-white border border-slate-200 rounded-2xl shadow-xl z-50"
+        >
+
+            <div class="max-h-72 overflow-auto p-2 text-xs">
+                ${html}
+            </div>
+
+            <div class="p-3 border-t border-slate-200">
+
+                <button
+                    onclick="applyInductionDepartmentFilter()"
+                    class="w-full bg-blue-600 text-white py-2 rounded-xl text-xs"
+                >
+                    Done
+                </button>
+
+            </div>
+
+        </div>
+        `
+    );
+}
+
+function applyInductionDepartmentFilter(){
+
+    const checked =
+    document.querySelectorAll(
+        ".induction-department-checkbox:checked"
+    );
+
+    selectedInductionDepartments =
+    [...checked]
+    .map(x =>
+        x.value
+        .trim()
+        .toLowerCase()
+    );
+
+    document
+    .getElementById(
+        "filterInductionLabel"
+    )
+    .innerText =
+    selectedInductionDepartments
+    .length
+    ? `${selectedInductionDepartments.length} Department Selected`
+    : "Filter Department";
+
+    document
+    .getElementById(
+        "inductionDropdown"
+    )
+    ?.classList.add(
+        "hidden"
+    );
+
+    renderInductionTable();
+}
 
 
 // =====================================
@@ -1309,7 +1570,32 @@ function(){
 
     loadInductionData();
     lucide.createIcons();
+document
+.getElementById(
+    "searchInduction"
+)
+?.addEventListener(
+    "input",
+    renderInductionTable
+);
 
+document
+.getElementById(
+    "filterInductionButton"
+)
+?.addEventListener(
+    "click",
+    function(){
+
+        document
+        .getElementById(
+            "inductionDropdown"
+        )
+        ?.classList.toggle(
+            "hidden"
+        );
+    }
+);
 });
 </script>
             
@@ -1538,6 +1824,14 @@ let selectedDepartments = [];
 let currentSortField = "date_join";
 let currentSortDirection = "asc";
 let selectedStage = "";
+
+// ======================
+// INDUCTION STATE
+// ======================
+let inductionData = [];
+let selectedInductionDepartments = [];
+let inductionSortField = "nama";
+let inductionSortDirection = "asc";
 
 
 // ======================

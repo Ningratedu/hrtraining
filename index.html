@@ -687,31 +687,6 @@ MOBILE UI IMPROVEMENT
 
             </div>
 
-
-            <!-- FILTER -->
-            <div class="relative">
-
-                <button
-                    id="filterInductionButton"
-                    class="border border-slate-200 rounded-xl px-3 py-1.5 bg-white min-w-[180px] text-xs text-left flex items-center justify-between"
-                >
-
-                    <span id="filterInductionLabel">
-                        Filter Department
-                    </span>
-
-                    <i
-                        data-lucide="chevron-down"
-                        class="w-3.5 h-3.5"
-                    ></i>
-
-                </button>
-
-            </div>
-
-        </div>
-
-
         <!-- UPLOAD -->
         <div>
 
@@ -948,9 +923,6 @@ async function loadInductionData(){
 
         inductionData =
 result || [];
-
-updateInductionDepartmentFilter();
-
 renderInductionTable();
 updateInductionCount();
         
@@ -1033,14 +1005,14 @@ function renderInductionTable(){
     // FILTER DEPARTMENT
     // ======================
     if(
-        selectedInductionDepartments
+        selectedDepartments
         .length
     ){
 
         data =
         data.filter(item =>
 
-            selectedInductionDepartments
+            selectedDepartments
             .includes(
 
                 String(
@@ -1541,121 +1513,6 @@ function sortInduction(field){
     renderInductionTable();
 }
 
-function updateInductionDepartmentFilter(){
-
-    const uniqueDept =
-    [...new Set(
-
-        inductionData
-        .map(x =>
-            String(
-                x.department || ""
-            ).trim()
-        )
-        .filter(Boolean)
-
-    )];
-
-    const html =
-    uniqueDept.map(dept => `
-
-    <label class="flex items-center gap-2 px-3 py-2 hover:bg-slate-50 rounded-lg cursor-pointer">
-
-        <input
-            type="checkbox"
-            class="induction-department-checkbox"
-            value="${dept}"
-            ${
-                selectedInductionDepartments
-                .includes(
-                    dept.toLowerCase()
-                )
-                ? "checked"
-                : ""
-            }
-        >
-
-        <span>${dept}</span>
-
-    </label>
-
-    `).join("");
-
-    const old =
-    document.getElementById(
-        "inductionDropdown"
-    );
-
-    if(old) old.remove();
-
-    document
-    .querySelector(
-        "#filterInductionButton"
-    )
-    .insertAdjacentHTML(
-        "afterend",
-        `
-        <div
-            id="inductionDropdown"
-            class="hidden absolute mt-2 w-72 bg-white border border-slate-200 rounded-2xl shadow-xl z-50"
-        >
-
-            <div class="max-h-72 overflow-auto p-2 text-xs">
-                ${html}
-            </div>
-
-            <div class="p-3 border-t border-slate-200">
-
-                <button
-                    onclick="applyInductionDepartmentFilter()"
-                    class="w-full bg-blue-600 text-white py-2 rounded-xl text-xs"
-                >
-                    Done
-                </button>
-
-            </div>
-
-        </div>
-        `
-    );
-}
-
-function applyInductionDepartmentFilter(){
-
-    const checked =
-    document.querySelectorAll(
-        ".induction-department-checkbox:checked"
-    );
-
-    selectedInductionDepartments =
-    [...checked]
-    .map(x =>
-        x.value
-        .trim()
-        .toLowerCase()
-    );
-
-    document
-    .getElementById(
-        "filterInductionLabel"
-    )
-    .innerText =
-    selectedInductionDepartments
-    .length
-    ? `${selectedInductionDepartments.length} Department Selected`
-    : "Filter Department";
-
-    document
-    .getElementById(
-        "inductionDropdown"
-    )
-    ?.classList.add(
-        "hidden"
-    );
-
-    renderInductionTable();
-}
-
 function updateInductionCount(){
 
     let data =
@@ -1691,17 +1548,18 @@ function updateInductionCount(){
     Object.values(grouped);
 
     // =====================================
-    // FILTER DEPARTMENT ONLY
+    // FILTER DEPARTMENT
+    // GLOBAL HEADER
     // =====================================
     if(
-        selectedInductionDepartments
+        selectedDepartments
         .length
     ){
 
         data =
         data.filter(item =>
 
-            selectedInductionDepartments
+            selectedDepartments
             .includes(
 
                 String(
@@ -1725,44 +1583,31 @@ function updateInductionCount(){
         data.length;
     }
 }
-    
+
+
 // =====================================
 // AUTO LOAD
 // =====================================
 document
 .addEventListener(
-"DOMContentLoaded",
-function(){
-
-    loadInductionData();
-    lucide.createIcons();
-document
-.getElementById(
-    "searchInduction"
-)
-?.addEventListener(
-    "input",
-    renderInductionTable
-);
-
-document
-.getElementById(
-    "filterInductionButton"
-)
-?.addEventListener(
-    "click",
+    "DOMContentLoaded",
     function(){
+
+        loadInductionData();
+
+        lucide.createIcons();
 
         document
         .getElementById(
-            "inductionDropdown"
+            "searchInduction"
         )
-        ?.classList.toggle(
-            "hidden"
+        ?.addEventListener(
+            "input",
+            renderInductionTable
         );
+
     }
 );
-});
 </script>
             
             <!-- Program Table Template -->
@@ -1995,7 +1840,6 @@ let selectedStage = "";
 // INDUCTION STATE
 // ======================
 let inductionData = [];
-let selectedInductionDepartments = [];
 let inductionSortField = "nama";
 let inductionSortDirection = "asc";
 
@@ -2998,6 +2842,8 @@ function applyDepartmentFilter(){
         );
 
     renderRecruitmentTable();
+    renderInductionTable();
+    updateInductionCount();
 }
 
 

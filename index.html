@@ -947,12 +947,13 @@ async function loadInductionData(){
         await res.json();
 
         inductionData =
-        result || [];
+result || [];
 
-        updateInductionDepartmentFilter();
+updateInductionDepartmentFilter();
 
-        renderInductionTable();
-
+renderInductionTable();
+updateInductionCount();
+        
     }catch(err){
 
         console.error(err);

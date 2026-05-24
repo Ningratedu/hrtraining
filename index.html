@@ -1399,33 +1399,31 @@ if(
                 ${item.position || "-"}
             </td>
 
-           <td class="px-3 py-3">
+           <td
+    class="px-3 py-3 cursor-pointer hover:bg-blue-50 transition"
+    onclick="showInductionDetail('${item.username}')"
+>
 
-    <button
-        onclick="
-            showInductionDetail(
-                '${item.username}'
-            )
-        "
-        class="w-full hover:scale-[1.02] transition-all"
-    >
+    <div class="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
 
-        <div class="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
+        <div
+            class="bg-blue-600 h-2 rounded-full"
+            style="width:${progress}%"
+        ></div>
 
-            <div
-                class="bg-blue-600 h-2 rounded-full"
-                style="width:${progress}%"
-            ></div>
+    </div>
 
-        </div>
+    <div class="text-center mt-1">
 
-        <div class="text-center mt-1 text-[11px] font-medium text-blue-600 hover:underline">
-
+        <div class="text-[11px] font-semibold text-slate-700">
             ${progress}%
-
         </div>
 
-    </button>
+        <div class="text-[10px] text-blue-600 font-medium leading-none">
+            Lihat Detail
+        </div>
+
+    </div>
 
 </td>
 

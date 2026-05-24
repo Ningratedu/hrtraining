@@ -3278,6 +3278,42 @@ function sortTable(field){
         '_blank'
     );
 }
+        function filterByStage(stage){
+
+    // FILTER RECRUITMENT
+    if(stage === "Recruitment"){
+
+        const recruitmentTable =
+        document
+        .querySelector(
+            "#recruitmentBody"
+        );
+
+        recruitmentTable
+        ?.closest(".bg-white")
+        ?.scrollIntoView({
+            behavior:"smooth",
+            block:"start"
+        });
+    }
+
+    // FILTER INDUCTION
+    if(stage === "In Class Training"){
+
+        const inductionTable =
+        document
+        .querySelector(
+            "#inductionBody"
+        );
+
+        inductionTable
+        ?.closest(".bg-white")
+        ?.scrollIntoView({
+            behavior:"smooth",
+            block:"start"
+        });
+    }
+}
         
 </script>
     <!-- UPLOAD PROGRESS OVERLAY -->

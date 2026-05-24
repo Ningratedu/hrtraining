@@ -244,7 +244,7 @@ MOBILE UI IMPROVEMENT
         </div>
 
         <!-- Right Side -->
-        <div class="flex items-center gap-2 flex-shrink-0 ml-3">
+        <div class="flex flex-col items-end gap-2 flex-shrink-0 ml-3 relative">
 
             <!-- PERIODE -->
             <select
@@ -262,12 +262,13 @@ MOBILE UI IMPROVEMENT
             </select>
 
             <!-- DEPARTMENT FILTER -->
-            <div class="relative">
+            <div class="relative w-full">
 
                 <button
-                    id="filterButton"
-                    class="bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs shadow-sm hover:bg-slate-50 transition-all flex items-center gap-2"
-                >
+    id="filterButton"
+    onclick="toggleFilterDropdown()"
+    class="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs shadow-sm hover:bg-slate-50 transition-all flex items-center justify-center gap-2"
+>
 
                     <i
                         data-lucide="building-2"
@@ -929,6 +930,7 @@ async function loadInductionData(){
 
         inductionData =
 result || [];
+updateDepartmentFilter();
 renderInductionTable();
 updateInductionCount();
         
@@ -1061,7 +1063,8 @@ if(
             .includes(
 
                 String(
-                    item.department || ""
+                    item.department ||
+                    item.departement || ""
                 )
                 .trim()
                 .toLowerCase()
@@ -1608,7 +1611,8 @@ function updateInductionCount(){
             .includes(
 
                 String(
-                    item.department || ""
+                    item.department ||
+                    item.departement || ""
                 )
                 .trim()
                 .toLowerCase()
@@ -1918,6 +1922,7 @@ async function loadRecruitmentData(){
 
         generateGlobalPeriodeFilter();
 
+        updateDepartmentFilter();
         renderRecruitmentTable();
 
     }catch(err){
@@ -2784,18 +2789,38 @@ function updateDepartmentFilter(){
 
     if(!container) return;
 
+    // ======================
+    // GABUNGKAN SEMUA SOURCE
+    // RECRUITMENT + INDUCTION
+    // ======================
+    const allDepartments = [
+
+        ...recruitmentData.map(
+            x =>
+            x.departement
+        ),
+
+        ...inductionData.map(
+            x =>
+            x.department
+            ||
+            x.departement
+        )
+
+    ];
+
     const uniqueDept =
     [...new Set(
 
-        recruitmentData
+        allDepartments
         .map(x =>
-            String(
-                x.departement || ""
-            ).trim()
+            String(x || "")
+            .trim()
         )
         .filter(Boolean)
 
-    )];
+    )]
+    .sort();
 
     container.innerHTML =
     uniqueDept.map(dept => `
@@ -2823,8 +2848,7 @@ function updateDepartmentFilter(){
 
     `).join("");
 }
-
-
+        
 // ======================
 // TOGGLE FILTER
 // ======================

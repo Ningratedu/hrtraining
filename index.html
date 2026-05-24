@@ -1399,22 +1399,35 @@ if(
                 ${item.position || "-"}
             </td>
 
-            <td class="px-3 py-3">
+           <td class="px-3 py-3">
 
-                <div class="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
+    <button
+        onclick="
+            showInductionDetail(
+                '${item.username}'
+            )
+        "
+        class="w-full hover:scale-[1.02] transition-all"
+    >
 
-                    <div
-                        class="bg-blue-600 h-2 rounded-full"
-                        style="width:${progress}%"
-                    ></div>
+        <div class="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
 
-                </div>
+            <div
+                class="bg-blue-600 h-2 rounded-full"
+                style="width:${progress}%"
+            ></div>
 
-                <div class="text-center mt-1 text-[11px] font-medium text-slate-600">
-                    ${progress}%
-                </div>
+        </div>
 
-            </td>
+        <div class="text-center mt-1 text-[11px] font-medium text-blue-600 hover:underline">
+
+            ${progress}%
+
+        </div>
+
+    </button>
+
+</td>
 
             <td class="px-3 py-3 text-center font-semibold">
                 ${avg}
@@ -1503,7 +1516,8 @@ const requiredHeaders = [
     "Departement",
     "Posisi",
     "Training",
-    "Posttest"
+    "Posttest",
+    "Training Date"
 
 ];
 
@@ -1593,10 +1607,38 @@ const rows = json.map(row=>({
 
     training:
 
-        row["Training"]
-        || row["TRAINING"]
-        || row["training"]
-        || "",
+    row["Training"]
+    || row["TRAINING"]
+    || row["training"]
+    || "",
+
+training_date:(()=>{
+
+    const raw =
+
+        row["Tgl. Training"]
+        || row["Training Date"]
+        || row["TRAINING DATE"]
+        || row["training_date"]
+        || "";
+
+    // EXCEL SERIAL DATE
+    if(typeof raw === "number"){
+
+        const excelDate =
+        new Date(
+            (raw - 25569) * 86400 * 1000
+        );
+
+        return excelDate
+        .toLocaleDateString(
+            "id-ID"
+        );
+    }
+
+    return raw;
+
+})(),
 
     posttest:
 
@@ -1789,7 +1831,366 @@ function updateInductionCount(){
     }
 }
 
+// =====================================
+// DETAIL TRAINING
+// =====================================
+function showTrainingDetail(username){
 
+    const detailData =
+    inductionData.filter(item =>
+
+        String(item.username || "")
+        .trim()
+        .toLowerCase()
+
+        ===
+
+        String(username || "")
+        .trim()
+        .toLowerCase()
+    );
+
+    if(!detailData.length){
+
+        Swal.fire(
+            "Tidak ada data detail"
+        );
+
+        return;
+    }
+
+    const user =
+    detailData[0];
+
+    const completed =
+    Number(
+        user.completed_training || 0
+    );
+
+    const total =
+    Number(
+        user.total_training || 0
+    );
+
+    const avg =
+    Number(
+        user.avg_score || 0
+    );
+
+    const progress =
+    Number(
+        user.progress || 0
+    );
+
+    const rows =
+    detailData.map(item=>{
+
+        const score =
+        Number(
+            item.posttest || 0
+        );
+
+        const status =
+        score > 0;
+
+        return `
+        <tr class="border-b border-slate-100">
+
+            <td class="px-3 py-3">
+                ${item.training || "-"}
+            </td>
+
+            <td class="px-3 py-3 text-center">
+                ${
+                    item.training_date
+                    || "-"
+                }
+            </td>
+
+            <td class="px-3 py-3 text-center">
+
+                ${
+                    status
+                    ? `
+                    <span class="px-2 py-1 rounded-lg bg-green-100 text-green-700 text-xs font-semibold">
+                        Selesai
+                    </span>
+                    `
+                    : `
+                    <span class="px-2 py-1 rounded-lg bg-red-100 text-red-600 text-xs font-semibold">
+                        Belum
+                    </span>
+                    `
+                }
+
+            </td>
+
+            <td class="px-3 py-3 text-center font-semibold">
+                ${score || "-"}
+            </td>
+
+        </tr>
+        `;
+    }).join("");
+
+    Swal.fire({
+
+        width:"900px",
+
+        title:`
+        <div class="text-left">
+
+            <div class="text-xl font-bold">
+                Detail Progress Training
+            </div>
+
+            <div class="text-sm text-slate-500 mt-1">
+                ${user.nama || "-"}
+            </div>
+
+        </div>
+        `,
+
+        html:`
+
+        <div class="text-left mb-4">
+
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
+
+                <div class="bg-slate-50 rounded-xl p-3">
+                    <div class="text-slate-500 text-xs">
+                        Progress
+                    </div>
+
+                    <div class="font-bold text-blue-600">
+                        ${progress}%
+                    </div>
+                </div>
+
+                <div class="bg-slate-50 rounded-xl p-3">
+                    <div class="text-slate-500 text-xs">
+                        Completed
+                    </div>
+
+                    <div class="font-bold">
+                        ${completed}/${total}
+                    </div>
+                </div>
+
+                <div class="bg-slate-50 rounded-xl p-3">
+                    <div class="text-slate-500 text-xs">
+                        Avg Score
+                    </div>
+
+                    <div class="font-bold">
+                        ${avg}
+                    </div>
+                </div>
+
+                <div class="bg-slate-50 rounded-xl p-3">
+                    <div class="text-slate-500 text-xs">
+                        Department
+                    </div>
+
+                    <div class="font-bold">
+                        ${user.department || user.departement || "-"}
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="overflow-auto max-h-[420px] border rounded-2xl">
+
+            <table class="w-full text-xs">
+
+                <thead class="sticky top-0 bg-slate-50">
+
+                    <tr>
+
+                        <th class="px-3 py-3 text-left">
+                            Materi Training
+                        </th>
+
+                        <th class="px-3 py-3 text-center">
+                            Tanggal Training
+                        </th>
+
+                        <th class="px-3 py-3 text-center">
+                            Status
+                        </th>
+
+                        <th class="px-3 py-3 text-center">
+                            Nilai
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    ${rows}
+
+                </tbody>
+
+            </table>
+
+        </div>
+        `,
+
+        confirmButtonText:
+        "Tutup"
+    });
+}
+
+function showInductionDetail(username){
+
+    const detailData =
+    inductionData.filter(item =>
+
+        String(item.username)
+        .trim()
+        .toLowerCase()
+
+        ===
+
+        String(username)
+        .trim()
+        .toLowerCase()
+    );
+
+    detailData.sort((a,b)=>{
+
+        return new Date(
+            a.training_date || 0
+        ) - new Date(
+            b.training_date || 0
+        );
+
+    });
+
+    Swal.fire({
+
+        title:
+        `Detail Progress - ${username}`,
+
+        width:"900px",
+
+        html:`
+
+<div class="overflow-auto max-h-[500px]">
+
+<table class="w-full text-xs border-collapse">
+
+    <thead>
+
+        <tr class="bg-slate-100 text-slate-700">
+
+            <th class="px-3 py-2 text-left">
+                Materi
+            </th>
+
+            <th class="px-3 py-2 text-center">
+                Tgl Training
+            </th>
+
+            <th class="px-3 py-2 text-center">
+                Nilai
+            </th>
+
+            <th class="px-3 py-2 text-center">
+                Status
+            </th>
+
+        </tr>
+
+    </thead>
+
+    <tbody>
+
+        ${
+            detailData
+            .map(item=>`
+
+            <tr class="border-b">
+
+                <td class="px-3 py-2 text-left">
+
+                    ${
+                        item.training
+                        || "-"
+                    }
+
+                </td>
+
+                <td class="px-3 py-2 text-center">
+
+                    ${
+                        item.training_date
+
+                        ?
+
+                        new Intl.DateTimeFormat(
+                            "id-ID"
+                        ).format(
+                            new Date(
+                                item.training_date
+                            )
+                        )
+
+                        : "-"
+                    }
+
+                </td>
+
+                <td class="px-3 py-2 text-center font-semibold">
+
+                    ${
+                        item.posttest
+                        || 0
+                    }
+
+                </td>
+
+                <td class="px-3 py-2 text-center">
+
+                    ${
+                        Number(
+                            item.posttest || 0
+                        ) >= 80
+
+                        ?
+
+                        `<span class="text-green-600 font-semibold">
+                            ✅ Passed
+                        </span>`
+
+                        :
+
+                        `<span class="text-red-500 font-semibold">
+                            ❌ Belum Lulus
+                        </span>`
+                    }
+
+                </td>
+
+            </tr>
+
+            `)
+            .join("")
+        }
+
+    </tbody>
+
+</table>
+
+</div>
+`
+    });
+}
+    
 // =====================================
 // AUTO LOAD
 // =====================================

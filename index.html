@@ -10,8 +10,13 @@
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-        body{
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+/* ======================
+BASE
+====================== */
+
+body{
     font-family:'Inter',sans-serif;
 
     background-image:
@@ -21,6 +26,44 @@
     background-position: center;
     background-repeat: no-repeat;
     background-attachment: fixed;
+}
+
+/* ======================
+GLASSY SIDEBAR
+====================== */
+
+#sidebar{
+    background:
+    linear-gradient(
+        180deg,
+        rgba(255,255,255,.78),
+        rgba(240,248,255,.72)
+    );
+
+    backdrop-filter: blur(22px);
+    -webkit-backdrop-filter: blur(22px);
+
+    border-right:
+    1px solid rgba(255,255,255,.28);
+}
+
+/* ======================
+GLASSY HEADER
+====================== */
+
+header{
+    background:
+    linear-gradient(
+        180deg,
+        rgba(255,255,255,.76),
+        rgba(240,248,255,.70)
+    );
+
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+
+    border-bottom:
+    1px solid rgba(255,255,255,.22);
 }
 
 /* ======================
@@ -70,36 +113,65 @@ MOBILE UI IMPROVEMENT
         font-size:13px;
         padding:12px;
     }
-
 }
-        .glass-card { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); }
-        .sidebar-item.active { background: #3b82f6; color: white; }
-        /* Fix teks sidebar agar tidak turun baris */
-.sidebar-item {
+
+/* ======================
+CARD
+====================== */
+
+.glass-card{
+    background:
+    rgba(255,255,255,.95);
+
+    backdrop-filter:
+    blur(10px);
+}
+
+/* ======================
+SIDEBAR ACTIVE
+====================== */
+
+.sidebar-item.active{
+    background:#3b82f6;
+    color:white;
+}
+
+/* ======================
+SIDEBAR TEXT FIX
+====================== */
+
+.sidebar-item{
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
-        
-        /* Mobile Overlay */
-        #sidebar-overlay {
-            display: none;
-        }
-        @media (max-width: 768px) {
-            #sidebar.open {
-                transform: translateX(0);
-            }
-            #sidebar {
-                transform: translateX(-100%);
-                position: fixed;
-                z-index: 50;
-                height: 100%;
-            }
-            #sidebar-overlay.active {
-                display: block;
-            }
-        }
-    </style>
+
+/* ======================
+MOBILE OVERLAY
+====================== */
+
+#sidebar-overlay{
+    display:none;
+}
+
+@media (max-width:768px){
+
+    #sidebar.open{
+        transform: translateX(0);
+    }
+
+    #sidebar{
+        transform: translateX(-100%);
+        position: fixed;
+        z-index: 50;
+        height: 100%;
+    }
+
+    #sidebar-overlay.active{
+        display:block;
+    }
+}
+</style>
 </head>
 <body class="text-slate-900 overflow-hidden h-screen flex">
 
@@ -107,7 +179,7 @@ MOBILE UI IMPROVEMENT
     <div id="sidebar-overlay" onclick="toggleSidebar()" class="fixed inset-0 bg-slate-900/40 z-40"></div>
 
     <!-- Sidebar -->
-<aside id="sidebar" class="w-64 bg-white/85 backdrop-blur-md border-r border-white/30 flex flex-col transition-transform duration-300 ease-in-out shadow-xl md:shadow-none">
+<aside id="sidebar" class="w-64 bg-white/70 backdrop-blur-2xl border-r border-white/20 flex flex-col transition-transform duration-300 ease-in-out shadow-[0_8px_32px_rgba(15,23,42,0.12)] md:shadow-none">
 
     <!-- Header -->
     <div class="p-4 border-b border-slate-100 flex items-center justify-between">
@@ -233,7 +305,7 @@ MOBILE UI IMPROVEMENT
 <main class="flex-1 flex flex-col overflow-hidden">
 
     <!-- Header -->
-    <header class="min-h-16 bg-white/75 backdrop-blur-md border-b border-white/20 flex items-center justify-between px-4 md:px-8 py-3 z-10 gap-3">
+    <header class="min-h-16 bg-white/70 backdrop-blur-2xl border-b border-white/20 flex items-center justify-between px-4 md:px-8 py-3 z-10 gap-3 shadow-sm">
 
         <!-- Left Side -->
         <div class="flex items-center gap-3 flex-1 min-w-0">

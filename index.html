@@ -140,29 +140,27 @@ SIDEBAR ITEM
     overflow: hidden;
     text-overflow: ellipsis;
 
-    padding:16px 18px !important;
+    padding:10px 12px !important;
 
-    border-radius:20px;
+    border-radius:16px;
 
-    background:
-    rgba(255,255,255,.22);
+    background:#ffffff !important;
+
+    color:#475569 !important;
 
     border:
-    1px solid rgba(255,255,255,.12);
-
-    backdrop-filter:
-    blur(16px);
-
-    -webkit-backdrop-filter:
-    blur(16px);
+    1px solid #f1f5f9;
 
     margin-bottom:10px;
 
     transition:
-    all .25s ease;
+    all .22s ease;
 
     box-shadow:
-    0 4px 18px rgba(15,23,42,.04);
+    0 1px 3px rgba(15,23,42,.05);
+
+    position:relative;
+    z-index:2;
 }
 
 /* HOVER */
@@ -170,10 +168,13 @@ SIDEBAR ITEM
 .sidebar-item:hover{
 
     background:
-    #eff6ff;
+    #eff6ff !important;
+
+    border:
+    1px solid #bfdbfe;
 
     color:
-    #2563eb;
+    #2563eb !important;
 }
 
 /* ACTIVE */
@@ -183,17 +184,14 @@ SIDEBAR ITEM
     background:
     linear-gradient(
         135deg,
-        rgba(59,130,246,.92),
-        rgba(37,99,235,.88)
+        rgba(59,130,246,.95),
+        rgba(37,99,235,.92)
     );
 
-    color:white;
-
-    border:
-    1px solid rgba(255,255,255,.18);
+    color:white !important;
 
     box-shadow:
-    0 12px 28px rgba(59,130,246,.28);
+    0 10px 24px rgba(59,130,246,.28);
 }
 
 /* ======================

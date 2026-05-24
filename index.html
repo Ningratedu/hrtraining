@@ -2141,35 +2141,66 @@ Terima kasih 🙏`;
 
     Swal.fire({
 
-        title:`
+        title: `
 
-<div class="text-left">
+<div style="
+    text-align:left;
+    margin-bottom:10px;
+">
 
-    <div class="text-xl font-bold text-slate-800">
+    <div style="
+        font-size:20px;
+        font-weight:700;
+        color:#1e293b;
+        line-height:1.2;
+    ">
         ${nama}
     </div>
 
-    <div class="text-sm text-slate-500 mt-1">
+    <div style="
+        font-size:13px;
+        color:#64748b;
+        margin-top:2px;
+    ">
         Progress Onboarding Training
     </div>
 
-    <div class="mt-3">
+    <div style="margin-top:12px;">
 
-        <div class="w-full bg-slate-200 rounded-full h-3 overflow-hidden">
+        <div style="
+            width:100%;
+            background:#e2e8f0;
+            border-radius:999px;
+            height:10px;
+            overflow:hidden;
+        ">
 
-            <div
-                class="bg-blue-600 h-3 rounded-full"
-                style="width:${progress}%"
-            ></div>
+            <div style="
+                width:${progress}%;
+                height:100%;
+                background:#2563eb;
+                border-radius:999px;
+            "></div>
 
         </div>
 
-        <div class="text-xs text-slate-600 mt-2">
+        <div style="
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            margin-top:6px;
+            font-size:12px;
+            color:#64748b;
+        ">
 
-            ${completed}/${total}
-            materi selesai
-            •
-            ${progress}% completed
+            <span>
+                ${completed}/${total}
+                materi selesai
+            </span>
+
+            <span>
+                ${progress}% completed
+            </span>
 
         </div>
 
@@ -2178,31 +2209,56 @@ Terima kasih 🙏`;
 </div>
 `,
 
-        width:"950px",
+width:"950px",
 
-        html:`
+html:`
 
-<div class="overflow-auto max-h-[450px]">
+<div style="
+    max-height:420px;
+    overflow:auto;
+">
 
-<table class="w-full text-xs border-collapse">
+<table style="
+    width:100%;
+    border-collapse:collapse;
+    font-size:12px;
+">
 
     <thead>
 
-        <tr class="bg-slate-100 text-slate-700">
+        <tr style="
+            background:#f1f5f9;
+            color:#475569;
+        ">
 
-            <th class="px-3 py-2 text-left">
+            <th style="
+                padding:10px;
+                text-align:left;
+            ">
                 Materi
             </th>
 
-            <th class="px-3 py-2 text-center">
+            <th style="
+                padding:10px;
+                text-align:center;
+                width:120px;
+            ">
                 Tgl Training
             </th>
 
-            <th class="px-3 py-2 text-center">
+            <th style="
+                padding:10px;
+                text-align:center;
+                width:80px;
+            ">
                 Nilai
             </th>
 
-            <th class="px-3 py-2 text-center">
+            <th style="
+                padding:10px;
+                text-align:center;
+                width:150px;
+            ">
                 Status
             </th>
 
@@ -2216,37 +2272,47 @@ Terima kasih 🙏`;
             detailData
             .map(item=>`
 
-            <tr class="border-b hover:bg-slate-50">
+            <tr style="
+                border-bottom:1px solid #e2e8f0;
+            ">
 
-                <td class="px-3 py-2">
-
+                <td style="
+                    padding:10px;
+                    line-height:1.35;
+                ">
                     ${
                         item.training
                         || "-"
                     }
-
                 </td>
 
-                <td class="px-3 py-2 text-center">
-
+                <td style="
+                    padding:10px;
+                    text-align:center;
+                    white-space:nowrap;
+                ">
                     ${
                         item.training_date
                         ? item.training_date
                         : "-"
                     }
-
                 </td>
 
-                <td class="px-3 py-2 text-center font-semibold">
-
+                <td style="
+                    padding:10px;
+                    text-align:center;
+                    font-weight:600;
+                ">
                     ${
                         item.posttest
                         || 0
                     }
-
                 </td>
 
-                <td class="px-3 py-2 text-center">
+                <td style="
+                    padding:10px;
+                    text-align:center;
+                ">
 
                     ${
                         Number(
@@ -2255,13 +2321,19 @@ Terima kasih 🙏`;
 
                         ?
 
-                        `<span class="text-green-600 font-semibold">
+                        `<span style="
+                            color:#16a34a;
+                            font-weight:600;
+                        ">
                             ✅ Passed
                         </span>`
 
                         :
 
-                        `<span class="text-amber-600 font-semibold">
+                        `<span style="
+                            color:#f59e0b;
+                            font-weight:600;
+                        ">
                             ⏳ Belum Selesai
                         </span>`
                     }
@@ -2280,7 +2352,6 @@ Terima kasih 🙏`;
 
 </div>
 `,
-
         showCancelButton:true,
 
         confirmButtonText:

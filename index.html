@@ -2061,26 +2061,128 @@ function showInductionDetail(username){
         .toLowerCase()
     );
 
-    detailData.sort((a,b)=>{
+    if(!detailData.length) return;
 
-        return new Date(
-            a.training_date || 0
-        ) - new Date(
-            b.training_date || 0
-        );
+    const user =
+    detailData[0];
 
-    });
+    const nama =
+    user.nama || username;
+
+    const completedList =
+    detailData.filter(item=>
+
+        Number(item.posttest || 0)
+        >= 80
+    );
+
+    const pendingList =
+    detailData.filter(item=>
+
+        Number(item.posttest || 0)
+        < 80
+    );
+
+    const total =
+    detailData.length;
+
+    const completed =
+    completedList.length;
+
+    const progress =
+    Math.round(
+        (completed / total) * 100
+    );
+
+    // =====================================
+    // WHATSAPP MESSAGE
+    // =====================================
+    const message = `Halo ${nama},
+
+Berikut progress onboarding training Anda saat ini:
+
+✅ Materi Selesai (${completed}/${total})
+
+${completedList.length
+? completedList
+.map((x,i)=>
+`${i+1}. ${x.training}`
+).join("\n")
+: "-"}
+
+📌 Materi Yang Belum Diselesaikan
+
+${pendingList.length
+? pendingList
+.map((x,i)=>
+`${i+1}. ${x.training}`
+).join("\n")
+: "Semua materi telah selesai"}
+
+Silakan melanjutkan penyelesaian onboarding training melalui:
+
+🌐 trusmicorp.com/e-training/
+
+Cara akses:
+1. Login ke E-Training
+2. Cari nama materi pada kolom pencarian
+3. Kerjakan materi dan post test hingga selesai
+
+Jika terdapat kendala login, materi tidak muncul, atau ada hal yang perlu dikoordinasikan, silakan hubungi Tim Training.
+
+Terima kasih 🙏`;
+
+    const whatsappLink =
+    `https://wa.me/?text=${
+        encodeURIComponent(
+            message
+        )
+    }`;
 
     Swal.fire({
 
-        title:
-        `Detail Progress - ${username}`,
+        title:`
 
-        width:"900px",
+<div class="text-left">
+
+    <div class="text-xl font-bold text-slate-800">
+        ${nama}
+    </div>
+
+    <div class="text-sm text-slate-500 mt-1">
+        Progress Onboarding Training
+    </div>
+
+    <div class="mt-3">
+
+        <div class="w-full bg-slate-200 rounded-full h-3 overflow-hidden">
+
+            <div
+                class="bg-blue-600 h-3 rounded-full"
+                style="width:${progress}%"
+            ></div>
+
+        </div>
+
+        <div class="text-xs text-slate-600 mt-2">
+
+            ${completed}/${total}
+            materi selesai
+            •
+            ${progress}% completed
+
+        </div>
+
+    </div>
+
+</div>
+`,
+
+        width:"950px",
 
         html:`
 
-<div class="overflow-auto max-h-[500px]">
+<div class="overflow-auto max-h-[450px]">
 
 <table class="w-full text-xs border-collapse">
 
@@ -2114,9 +2216,9 @@ function showInductionDetail(username){
             detailData
             .map(item=>`
 
-            <tr class="border-b">
+            <tr class="border-b hover:bg-slate-50">
 
-                <td class="px-3 py-2 text-left">
+                <td class="px-3 py-2">
 
                     ${
                         item.training
@@ -2129,17 +2231,7 @@ function showInductionDetail(username){
 
                     ${
                         item.training_date
-
-                        ?
-
-                        new Intl.DateTimeFormat(
-                            "id-ID"
-                        ).format(
-                            new Date(
-                                item.training_date
-                            )
-                        )
-
+                        ? item.training_date
                         : "-"
                     }
 
@@ -2169,8 +2261,8 @@ function showInductionDetail(username){
 
                         :
 
-                        `<span class="text-red-500 font-semibold">
-                            ❌ Belum Lulus
+                        `<span class="text-amber-600 font-semibold">
+                            ⏳ Belum Selesai
                         </span>`
                     }
 
@@ -2187,7 +2279,29 @@ function showInductionDetail(username){
 </table>
 
 </div>
-`
+`,
+
+        showCancelButton:true,
+
+        confirmButtonText:
+        "Send Reminder Training",
+
+        cancelButtonText:
+        "Close",
+
+        confirmButtonColor:
+        "#2563eb"
+
+    }).then((result)=>{
+
+        if(result.isConfirmed){
+
+            window.open(
+                whatsappLink,
+                "_blank"
+            );
+        }
+
     });
 }
     

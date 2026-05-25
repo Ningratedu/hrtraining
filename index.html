@@ -5035,6 +5035,333 @@ function sortTable(field){
         });
     }
 }
+
+// =====================================
+// UPLOAD ASSIGNMENT EXCEL
+// =====================================
+document
+.getElementById(
+    "assignmentExcelUpload"
+)
+?.addEventListener(
+"change",
+async function(e){
+
+    const file =
+    e.target.files[0];
+
+    if(!file) return;
+
+    try{
+
+        Swal.fire({
+
+            title:
+            "Uploading...",
+
+            text:
+            "Sedang memproses assignment",
+
+            allowOutsideClick:false,
+
+            didOpen:()=>{
+
+                Swal.showLoading();
+            }
+        });
+
+        // ======================
+        // READ EXCEL
+        // ======================
+        const data =
+        await file.arrayBuffer();
+
+        const workbook =
+        XLSX.read(data);
+
+        const sheetName =
+        workbook.SheetNames[0];
+
+        const worksheet =
+        workbook.Sheets[
+            sheetName
+        ];
+
+        const json =
+        XLSX.utils
+        .sheet_to_json(
+            worksheet
+        );
+
+        if(!json.length){
+
+            throw new Error(
+                "Excel kosong"
+            );
+        }
+
+        // ======================
+        // VALIDASI HEADER
+        // ======================
+        const requiredHeaders = [
+
+            "Tanggal Join",
+            "Usia",
+            "Employee Name",
+            "SPV",
+            "MM",
+            "Progress Task"
+
+        ];
+
+        const excelHeaders =
+        Object.keys(
+            json[0]
+        );
+
+        const missing =
+        requiredHeaders.filter(h=>
+
+            !excelHeaders.includes(h)
+        );
+
+        if(missing.length){
+
+            throw new Error(
+
+                "Header tidak lengkap: "
+
+                +
+
+                missing.join(", ")
+            );
+        }
+
+        // ======================
+        // LOAD INDUCTION
+        // ======================
+        const inductionRes =
+        await fetch(
+
+            `${API_URL}?sheet=induction_progress`
+        );
+
+        const induction =
+        await inductionRes.json();
+
+        // ======================
+        // MAP USERNAME
+        // ======================
+        const inductionMap =
+        {};
+
+        induction.forEach(item=>{
+
+            const nama =
+            String(
+                item.nama || ""
+            )
+            .trim()
+            .toLowerCase();
+
+            if(
+                !inductionMap[
+                    nama
+                ]
+            ){
+
+                inductionMap[
+                    nama
+                ] = item;
+            }
+        });
+
+        // ======================
+        // PREPARE DATA
+        // ======================
+        const rows =
+        json.map(row=>{
+
+            const nama =
+            String(
+
+                row[
+                    "Employee Name"
+                ] || ""
+
+            )
+            .trim();
+
+            const user =
+            inductionMap[
+                nama.toLowerCase()
+            ] || {};
+
+            // ======================
+            // FORMAT JOIN DATE
+            // ======================
+            let joinDate =
+            row[
+                "Tanggal Join"
+            ] || "";
+
+            if(
+                typeof joinDate
+                === "number"
+            ){
+
+                joinDate =
+                new Date(
+
+                    (
+                        joinDate
+                        - 25569
+                    )
+
+                    *
+
+                    86400
+                    *
+                    1000
+                )
+                .toISOString();
+            }
+
+            return {
+
+                username:
+                user.username
+                || "",
+
+                join_date:
+                joinDate,
+
+                usia_join:
+
+                Number(
+
+                    row[
+                        "Usia"
+                    ] || 0
+                ),
+
+                nama:
+                nama,
+
+                spv:
+
+                row[
+                    "SPV"
+                ] || "",
+
+                bm:
+
+                row[
+                    "MM"
+                ] || "",
+
+                progress_task:
+
+                Number(
+
+                    row[
+                        "Progress Task"
+                    ] || 0
+                )
+            };
+        });
+
+        console.log(rows);
+
+        // ======================
+        // POST API
+        // ======================
+        const res =
+        await fetch(
+            API_URL,
+            {
+
+                method:
+                "POST",
+
+                body:
+                JSON.stringify({
+
+                    sheet:
+                    "assignment",
+
+                    action:
+                    "bulk_create",
+
+                    rows
+                })
+            }
+        );
+
+        const result =
+        await res.json();
+
+        // ======================
+        // REFRESH TABLE
+        // ======================
+        await loadAssignmentData();
+
+        Swal.fire({
+
+            icon:
+            "success",
+
+            title:
+            "Upload selesai",
+
+            html:`
+
+            <div class="text-left text-sm">
+
+                <div>
+                    ✅ Inserted :
+                    <b>
+                        ${
+                            result.inserted
+                            || 0
+                        }
+                    </b>
+                </div>
+
+                <div>
+                    ⏭️ Skipped :
+                    <b>
+                        ${
+                            result.skipped
+                            || 0
+                        }
+                    </b>
+                </div>
+
+            </div>
+            `
+        });
+
+    }catch(err){
+
+        console.error(err);
+
+        Swal.fire({
+
+            icon:
+            "error",
+
+            title:
+            "Upload gagal",
+
+            text:
+            err.toString()
+        });
+    }
+
+    e.target.value =
+    "";
+});
         
 </script>
     <!-- UPLOAD PROGRESS OVERLAY -->

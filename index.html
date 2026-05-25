@@ -1259,31 +1259,32 @@ async function loadAssignmentData(){
 
     try{
 
-        const res =
+        // ======================
+        // GET ASSIGNMENT
+        // ======================
+        const assignmentRes =
         await fetch(
-
             `${API_URL}?sheet=assignment`
-
         );
 
         const assignment =
-        await res.json();
+        await assignmentRes.json();
 
+        // ======================
+        // GET INDUCTION
+        // ======================
         const inductionRes =
         await fetch(
-
             `${API_URL}?sheet=induction_progress`
-
         );
 
         const induction =
         await inductionRes.json();
 
         // ======================
-        // GROUP COMPLETED USER
+        // GROUP USER COMPLETED
         // ======================
-        const inductionMap =
-        {};
+        const grouped = {};
 
         induction.forEach(item=>{
 
@@ -1294,33 +1295,37 @@ async function loadAssignmentData(){
             .trim()
             .toLowerCase();
 
+            if(!username) return;
+
             const progress =
             Number(
                 item.progress || 0
             );
 
             // hanya completed
-            if(
-                progress < 100
-            ) return;
+            if(progress < 100)
+            return;
 
+            // ambil 1 user saja
             if(
-                !inductionMap[
+                !grouped[
                     username
                 ]
             ){
 
-                inductionMap[
+                grouped[
                     username
                 ] = item;
             }
         });
 
         // ======================
-        // MERGE
+        // MAP ASSIGNMENT EXISTING
         // ======================
-        assignmentData =
-        assignment.map(item=>{
+        const assignmentMap =
+        {};
+
+        assignment.forEach(item=>{
 
             const username =
             String(
@@ -1329,32 +1334,65 @@ async function loadAssignmentData(){
             .trim()
             .toLowerCase();
 
-            const inductionUser =
-            inductionMap[
+            assignmentMap[
+                username
+            ] = item;
+        });
+
+        // ======================
+        // BUILD FINAL DATA
+        // ======================
+        assignmentData =
+        Object.values(grouped)
+        .map(item=>{
+
+            const username =
+            String(
+                item.username || ""
+            )
+            .trim()
+            .toLowerCase();
+
+            const existing =
+            assignmentMap[
                 username
             ] || {};
 
             return {
 
-                ...item,
+                id:
+                existing.id || "",
 
                 nama:
-                inductionUser.nama
-                || item.nama
-                || "-",
+                item.nama || "-",
+
+                username:
+                item.username || "-",
+
+                join_date:
+                item.join_date || "-",
+
+                usia_join:
+                existing.usia_join || "-",
 
                 department:
-                inductionUser.department
+                item.department
+                || item.departement
                 || "-",
 
                 position:
-                inductionUser.position
-                || "-",
+                item.position || "-",
 
-                join_date:
-                inductionUser.join_date
-                || item.join_date
-                || "-"
+                spv:
+                existing.spv || "-",
+
+                bm:
+                existing.bm || "-",
+
+                progress_task:
+                Number(
+                    existing.progress_task || 0
+                )
             };
         });
 

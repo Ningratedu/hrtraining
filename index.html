@@ -1372,8 +1372,17 @@ async function loadAssignmentData(){
                 join_date:
                 item.join_date || "-",
 
-                usia_join:
-                existing.usia_join || "-",
+                usia_join:(()=>{if(!item.join_date) return "-";
+                const joinDate =new Date(item.join_date);
+                if(isNaN(joinDate)) return "-";
+                const today =new Date();
+                const diffTime =today - joinDate;
+                const diffDays =Math.floor(diffTime/(
+                1000 *
+                60 *
+                60 *
+                24));
+                return diffDays;})(),
 
                 department:
                 item.department

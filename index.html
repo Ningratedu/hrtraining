@@ -2610,6 +2610,144 @@ function updateAssignmentCount(){
     )?.value;
 
     if(
+
+        period
+
+        &&
+
+        period !== "all"
+
+    ){
+
+        data =
+        data.filter(item=>{
+
+            if(
+                !item.join_date
+            ) return false;
+
+            const join =
+            new Date(
+                item.join_date
+            );
+
+            if(
+                isNaN(join)
+            ) return false;
+
+            const month =
+            String(
+                join.getMonth() + 1
+            ).padStart(2,"0");
+
+            const year =
+            join.getFullYear();
+
+            return `${year}-${month}`
+            === period;
+        });
+    }
+
+    // ======================
+    // FILTER DEPARTMENT
+    // ======================
+    if(
+        selectedDepartments
+        ?.length
+    ){
+
+        data =
+        data.filter(item =>
+
+            selectedDepartments
+            .includes(
+
+                String(
+                    item.department
+                    || ""
+                )
+                .trim()
+                .toLowerCase()
+
+            )
+        );
+    }
+
+    // ======================
+    // COUNT STATUS
+    // ======================
+    let done = 0;
+    let ongoing = 0;
+    let failed = 0;
+
+    data.forEach(item=>{
+
+        const progress =
+        Number(
+            item.progress_task || 0
+        );
+
+        const usiaJoin =
+        Number(
+            item.usia_join || 0
+        );
+
+        // DONE
+        if(
+            progress >= 100
+        ){
+
+            done++;
+            return;
+        }
+
+        // ONGOING
+        if(
+            usiaJoin < 15
+        ){
+
+            ongoing++;
+
+        }else{
+
+            failed++;
+        }
+
+    });
+
+    // ======================
+    // UPDATE UI
+    // ======================
+    document.getElementById(
+        "countAssignment"
+    ).innerText =
+    data.length;
+
+    document.getElementById(
+        "countAssignmentDone"
+    ).innerText =
+    `✅ ${done}`;
+
+    document.getElementById(
+        "countAssignmentOngoing"
+    ).innerText =
+    `⏳ ${ongoing}`;
+
+    document.getElementById(
+        "countAssignmentFailed"
+    ).innerText =
+    `❌ ${failed}`;
+}
+    
+    // ======================
+    // FILTER PERIODE
+    // ======================
+    const period =
+    document.getElementById(
+        "globalPeriodeFilter"
+    )?.value;
+
+    if(
         period
         &&
         period !== "all"

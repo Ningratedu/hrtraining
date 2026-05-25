@@ -566,11 +566,11 @@ nav .text-slate-400{
 </div>
 
         <!-- CARD -->
-        <div class="grid grid-cols-2 lg:grid-cols-5 gap-3">
+<div class="grid grid-cols-2 lg:grid-cols-5 gap-3">
 
-    <!-- RECRUITMENT -->
+    <!-- RECRUITMENT (TETAP SINGLE VALUE) -->
     <div
-        class="funnel-card bg-gradient-to-br from-blue-50 to-white rounded-[24px] p-4 border border-blue-100 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 cursor-pointer relative overflow-hidden"
+        class="funnel-card bg-gradient-to-br from-blue-50 to-white rounded-[24px] p-4 border border-blue-200 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 cursor-pointer relative overflow-hidden"
         onclick="filterByStage('Recruitment')"
     >
         <div class="absolute top-0 right-0 w-24 h-24 bg-blue-100/40 blur-3xl rounded-full"></div>
@@ -581,15 +581,15 @@ nav .text-slate-400{
 
         <h2
             id="countRecruitment"
-            class="text-lg md:text-xl italic font-extrabold tracking-tight text-blue-700 mt-1 relative z-10"
+            class="text-xl md:text-2xl font-extrabold italic tracking-tight text-blue-700 mt-1 relative z-10"
         >
             0
         </h2>
     </div>
 
-    <!-- IN CLASS -->
+    <!-- INDUCTION -->
     <div
-        class="funnel-card bg-gradient-to-br from-amber-50 to-white rounded-[24px] p-4 border border-amber-100 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 cursor-pointer relative overflow-hidden"
+        class="funnel-card bg-gradient-to-br from-amber-50 to-white rounded-[24px] p-4 border border-amber-200 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 cursor-pointer relative overflow-hidden"
         onclick="filterByStage('In Class Training')"
     >
         <div class="absolute top-0 right-0 w-24 h-24 bg-amber-100/40 blur-3xl rounded-full"></div>
@@ -598,85 +598,48 @@ nav .text-slate-400{
             Induction Training
         </p>
 
-        <div class="relative z-10">
+        <h2
+            id="countInduction"
+            class="text-xl md:text-2xl font-extrabold italic tracking-tight text-yellow-800 mt-1 relative z-10"
+        >
+            0
+        </h2>
 
-    <h2
-        id="countInduction"
-        class="text-lg md:text-xl italic font-extrabold tracking-tight text-yellow-800 mt-1"
-    >
-        0
-    </h2>
-
-    <div
-        class="flex items-center gap-2 mt-1 text-[10px] md:text-[11px] font-medium text-slate-500"
-    >
-        <span id="countInductionCompleted">
-            ✅ 0
-        </span>
-
-        <span id="countInductionProgress">
-            ⏳ 0
-        </span>
-
-        <span id="countInductionFailed">
-            ❌ 0
-        </span>
-    </div>
-
-</div>
+        <div class="flex items-center gap-2 mt-1 text-[10px] md:text-[11px] font-medium text-slate-500 relative z-10">
+            <span id="countInductionCompleted">✅ 0</span>
+            <span id="countInductionProgress">⏳ 0</span>
+            <span id="countInductionFailed">❌ 0</span>
+        </div>
     </div>
 
     <!-- ASSIGNMENT -->
-<div
-    class="funnel-card bg-gradient-to-br from-purple-50 to-white rounded-[24px] p-4 border border-purple-100 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 cursor-pointer relative overflow-hidden"
-    onclick="
-    document
-    .getElementById(
-        'assignmentSection'
-    )
-    ?.scrollIntoView({
-        behavior:'smooth'
-    })
-    "
->
-
-    <div class="absolute top-0 right-0 w-24 h-24 bg-purple-100/40 blur-3xl rounded-full"></div>
-
-    <p class="text-[11px] md:text-xs font-medium text-slate-500 relative z-10">
-        Assignment
-    </p>
-
-    <h2
-        id="countAssignment"
-        class="text-lg md:text-xl italic font-extrabold tracking-tight text-purple-700 mt-1 relative z-10"
-    >
-        0
-    </h2>
-
-    <!-- STATUS -->
     <div
-        class="flex items-center gap-2 mt-1 text-[10px] md:text-[11px] font-medium text-slate-500"
+        class="funnel-card bg-gradient-to-br from-purple-50 to-white rounded-[24px] p-4 border border-purple-200 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 cursor-pointer relative overflow-hidden"
+        onclick="document.getElementById('assignmentSection')?.scrollIntoView({ behavior:'smooth' })"
     >
-        <span id="countAssignmentDone">
-            ✅ 0
-        </span>
+        <div class="absolute top-0 right-0 w-24 h-24 bg-purple-100/40 blur-3xl rounded-full"></div>
 
-        <span id="countAssignmentOngoing">
-            ⏳ 0
-        </span>
+        <p class="text-[11px] md:text-xs font-medium text-slate-500 relative z-10">
+            Assignment
+        </p>
 
-        <span id="countAssignmentFailed">
-            ❌ 0
-        </span>
+        <h2
+            id="countAssignment"
+            class="text-xl md:text-2xl font-extrabold italic tracking-tight text-purple-700 mt-1 relative z-10"
+        >
+            0
+        </h2>
+
+        <div class="flex items-center gap-2 mt-1 text-[10px] md:text-[11px] font-medium text-slate-500 relative z-10">
+            <span id="countAssignmentDone">✅ 0</span>
+            <span id="countAssignmentOngoing">⏳ 0</span>
+            <span id="countAssignmentFailed">❌ 0</span>
+        </div>
     </div>
-    
-</div>
 
-</div>
-
-    <!-- SERAH TERIMA -->
+    <!-- SERAH TERIMA (NOW SAME FORMAT AS INDUCTION/ASSIGNMENT) -->
     <div
-        class="funnel-card bg-gradient-to-br from-emerald-50 to-white rounded-[24px] p-4 border border-emerald-100 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 cursor-pointer relative overflow-hidden"
+        class="funnel-card bg-gradient-to-br from-emerald-50 to-white rounded-[24px] p-4 border border-emerald-200 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 cursor-pointer relative overflow-hidden"
         onclick="filterByStage('Serah Terima User')"
     >
         <div class="absolute top-0 right-0 w-24 h-24 bg-emerald-100/40 blur-3xl rounded-full"></div>
@@ -687,15 +650,21 @@ nav .text-slate-400{
 
         <h2
             id="countUser"
-            class="text-lg md:text-xl italic font-extrabold tracking-tight text-emerald-700 mt-1 relative z-10"
+            class="text-xl md:text-2xl font-extrabold italic tracking-tight text-emerald-700 mt-1 relative z-10"
         >
             0
         </h2>
+
+        <div class="flex items-center gap-2 mt-1 text-[10px] md:text-[11px] font-medium text-slate-500 relative z-10">
+            <span id="countUserCompleted">✅ 0</span>
+            <span id="countUserProgress">⏳ 0</span>
+            <span id="countUserFailed">❌ 0</span>
+        </div>
     </div>
 
-    <!-- COMPLETED -->
+    <!-- COMPLETED (NOW SAME FORMAT AS INDUCTION/ASSIGNMENT) -->
     <div
-        class="funnel-card bg-gradient-to-br from-slate-50 to-white rounded-[24px] p-4 border border-slate-200 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 cursor-pointer relative overflow-hidden col-span-2 lg:col-span-1"
+        class="funnel-card bg-gradient-to-br from-slate-50 to-white rounded-[24px] p-4 border border-slate-300 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 cursor-pointer relative overflow-hidden col-span-2 lg:col-span-1"
         onclick="filterByStage('Completed')"
     >
         <div class="absolute top-0 right-0 w-24 h-24 bg-slate-200/40 blur-3xl rounded-full"></div>
@@ -706,14 +675,19 @@ nav .text-slate-400{
 
         <h2
             id="countCompleted"
-            class="text-lg md:text-xl italic font-extrabold tracking-tight text-slate-700 mt-1 relative z-10"
+            class="text-xl md:text-2xl font-extrabold italic tracking-tight text-slate-700 mt-1 relative z-10"
         >
             0
         </h2>
-    </div>
-  </div>
-</div>
 
+        <div class="flex items-center gap-2 mt-1 text-[10px] md:text-[11px] font-medium text-slate-500 relative z-10">
+            <span id="countCompletedDone">✅ 0</span>
+            <span id="countCompletedProgress">⏳ 0</span>
+            <span id="countCompletedFailed">❌ 0</span>
+        </div>
+    </div>
+
+</div>
 
     <!-- TABLE SECTION -->
     <div class="bg-white rounded-[28px] border border-slate-200 shadow-sm overflow-hidden">

@@ -1138,53 +1138,163 @@ nav .text-slate-400{
 
         <table class="w-full min-w-[1500px] border-collapse text-xs">
 
-            <thead class="sticky top-0 bg-white z-30 border-b border-slate-200">
+            <thead
+    class="sticky top-0 bg-white z-30 border-b border-slate-200"
+>
 
-                <tr class="bg-slate-50 text-[12px] uppercase text-slate-600">
+    <tr class="bg-slate-50 text-[12px] uppercase text-slate-600">
 
-                    <th class="sticky left-0 bg-white z-40 px-3 py-3 min-w-[70px]">
-                        No
-                    </th>
+        <th class="sticky left-0 bg-white z-40 px-3 py-3 min-w-[70px]">
+            No
+        </th>
 
-                    <th class="px-3 py-3 min-w-[220px] text-left">
-                        Name
-                    </th>
+        <th
+            onclick="sortAssignment('nama')"
+            class="px-3 py-3 min-w-[220px] text-left cursor-pointer hover:bg-slate-100 transition"
+        >
+            <div class="flex items-center gap-2">
 
-                    <th class="px-3 py-3 min-w-[180px] text-left">
-                        Username
-                    </th>
+                <span>Name</span>
 
-                    <th class="px-3 py-3 min-w-[150px] text-left">
-                        Join Date
-                    </th>
+                <i
+                    data-lucide="arrow-up-down"
+                    class="w-3.5 h-3.5"
+                ></i>
 
-                    <th class="px-3 py-3 min-w-[120px] text-center">
-                        Usia Join
-                    </th>
+            </div>
+        </th>
 
-                    <th class="px-3 py-3 min-w-[180px] text-left">
-                        Department
-                    </th>
+        <th
+            onclick="sortAssignment('username')"
+            class="px-3 py-3 min-w-[180px] text-left cursor-pointer hover:bg-slate-100 transition"
+        >
+            <div class="flex items-center gap-2">
 
-                    <th class="px-3 py-3 min-w-[180px] text-left">
-                        Position
-                    </th>
+                <span>Username</span>
 
-                    <th class="px-3 py-3 min-w-[180px] text-left">
-                        SPV
-                    </th>
+                <i
+                    data-lucide="arrow-up-down"
+                    class="w-3.5 h-3.5"
+                ></i>
 
-                    <th class="px-3 py-3 min-w-[180px] text-left">
-                        Manager
-                    </th>
+            </div>
+        </th>
 
-                    <th class="px-3 py-3 min-w-[180px] text-center">
-                        % Progress Task
-                    </th>
+        <th
+            onclick="sortAssignment('join_date')"
+            class="px-3 py-3 min-w-[150px] text-left cursor-pointer hover:bg-slate-100 transition"
+        >
+            <div class="flex items-center gap-2">
 
-                </tr>
+                <span>Join Date</span>
 
-            </thead>
+                <i
+                    data-lucide="arrow-up-down"
+                    class="w-3.5 h-3.5"
+                ></i>
+
+            </div>
+        </th>
+
+        <th
+            onclick="sortAssignment('usia_join')"
+            class="px-3 py-3 min-w-[120px] text-center cursor-pointer hover:bg-slate-100 transition"
+        >
+            <div class="flex items-center justify-center gap-2">
+
+                <span>Usia Join</span>
+
+                <i
+                    data-lucide="arrow-up-down"
+                    class="w-3.5 h-3.5"
+                ></i>
+
+            </div>
+        </th>
+
+        <th
+            onclick="sortAssignment('department')"
+            class="px-3 py-3 min-w-[180px] text-left cursor-pointer hover:bg-slate-100 transition"
+        >
+            <div class="flex items-center gap-2">
+
+                <span>Department</span>
+
+                <i
+                    data-lucide="arrow-up-down"
+                    class="w-3.5 h-3.5"
+                ></i>
+
+            </div>
+        </th>
+
+        <th
+            onclick="sortAssignment('position')"
+            class="px-3 py-3 min-w-[180px] text-left cursor-pointer hover:bg-slate-100 transition"
+        >
+            <div class="flex items-center gap-2">
+
+                <span>Position</span>
+
+                <i
+                    data-lucide="arrow-up-down"
+                    class="w-3.5 h-3.5"
+                ></i>
+
+            </div>
+        </th>
+
+        <th
+            onclick="sortAssignment('spv')"
+            class="px-3 py-3 min-w-[180px] text-left cursor-pointer hover:bg-slate-100 transition"
+        >
+            <div class="flex items-center gap-2">
+
+                <span>SPV</span>
+
+                <i
+                    data-lucide="arrow-up-down"
+                    class="w-3.5 h-3.5"
+                ></i>
+
+            </div>
+        </th>
+
+        <th
+            onclick="sortAssignment('bm')"
+            class="px-3 py-3 min-w-[180px] text-left cursor-pointer hover:bg-slate-100 transition"
+        >
+            <div class="flex items-center gap-2">
+
+                <span>Manager</span>
+
+                <i
+                    data-lucide="arrow-up-down"
+                    class="w-3.5 h-3.5"
+                ></i>
+
+            </div>
+        </th>
+
+        <th
+            onclick="sortAssignment('progress_task')"
+            class="px-3 py-3 min-w-[180px] text-center cursor-pointer hover:bg-slate-100 transition"
+        >
+            <div class="flex items-center justify-center gap-2">
+
+                <span>% Progress Task</span>
+
+                <i
+                    data-lucide="arrow-up-down"
+                    class="w-3.5 h-3.5"
+                ></i>
+
+            </div>
+        </th>
+
+    </tr>
+
+</thead>
 
             <tbody
                 id="assignmentBody"

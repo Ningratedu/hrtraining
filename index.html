@@ -2176,6 +2176,31 @@ function updateAssignmentCount(){
     .innerText =
     data.length;
 }
+    // ======================
+// RENDER ASSIGNMENT
+// ======================
+function renderAssignmentTable(){
+
+    const tbody =
+    document.getElementById(
+        "assignmentBody"
+    );
+
+    if(!tbody)
+    return;
+
+    tbody.innerHTML =
+    `
+    <tr>
+        <td
+            colspan="11"
+            class="text-center py-10 text-slate-400"
+        >
+            Assignment table loading...
+        </td>
+    </tr>
+    `;
+}
 // =====================================
 // DETAIL TRAINING
 // =====================================

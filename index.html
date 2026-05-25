@@ -1976,44 +1976,6 @@ function updateInductionCount(){
     `❌ ${failed}`;
 }
 
-    // =====================================
-    // FILTER DEPARTMENT
-    // GLOBAL HEADER
-    // =====================================
-    if(
-        selectedDepartments
-        .length
-    ){
-
-        data =
-        data.filter(item =>
-
-            selectedDepartments
-            .includes(
-
-                String(
-                    item.department ||
-                    item.departement || ""
-                )
-                .trim()
-                .toLowerCase()
-
-            )
-        );
-    }
-
-    const el =
-    document.getElementById(
-        "countInduction"
-    );
-
-    if(el){
-
-        el.innerText =
-        data.length;
-    }
-}
-
 // =====================================
 // DETAIL TRAINING
 // =====================================

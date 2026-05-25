@@ -3916,10 +3916,19 @@ function renderRecruitmentTable(){
 
 
 
-    if(selectedPeriode){
+    if(
 
-        data =
-        data.filter(item => {
+    selectedPeriode
+
+    &&
+
+    selectedPeriode !==
+    "all"
+
+){
+
+    data =
+    data.filter(item => {
 
             if(!item.date_join)
             return false;

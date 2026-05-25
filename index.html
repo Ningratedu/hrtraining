@@ -2490,7 +2490,7 @@ function updateAssignmentCount(){
     .innerText =
     data.length;
 }
-    // =====================================
+// =====================================
 // RENDER ASSIGNMENT TABLE
 // =====================================
 function renderAssignmentTable(){
@@ -2505,7 +2505,78 @@ function renderAssignmentTable(){
     let data =
     [...assignmentData];
 
+    // ======================
+    // FILTER PERIOD
+    // ======================
+    const period =
+    document.getElementById(
+        "globalPeriodeFilter"
+    )?.value;
+
+    if(
+        period
+        &&
+        period !== "all"
+    ){
+
+        data =
+        data.filter(item=>{
+
+            if(
+                !item.join_date
+            ) return false;
+
+            const join =
+            new Date(
+                item.join_date
+            );
+
+            if(
+                isNaN(join)
+            ) return false;
+
+            const month =
+            String(
+                join.getMonth() + 1
+            ).padStart(2,"0");
+
+            const year =
+            join.getFullYear();
+
+            return `${year}-${month}`
+            === period;
+        });
+    }
+
+    // ======================
+    // FILTER DEPARTMENT
+    // ======================
+    if(
+        selectedDepartments
+        .length
+    ){
+
+        data =
+        data.filter(item=>
+
+            selectedDepartments
+            .includes(
+
+                String(
+                    item.department ||
+                    item.departement ||
+                    ""
+                )
+                .trim()
+                .toLowerCase()
+
+            )
+        );
+    }
+
+    // ======================
     // SEARCH
+    // ======================
     const keyword =
     document
     .getElementById(
@@ -2528,16 +2599,100 @@ function renderAssignmentTable(){
         );
     }
 
+    // ======================
+    // SORT
+    // ======================
+    data.sort((a,b)=>{
+
+        let aVal =
+        a[
+            assignmentSortField
+        ];
+
+        let bVal =
+        b[
+            assignmentSortField
+        ];
+
+        // NUMERIC
+        if([
+            "usia_join",
+            "progress_task"
+        ].includes(
+            assignmentSortField
+        )){
+
+            aVal =
+            Number(aVal || 0);
+
+            bVal =
+            Number(bVal || 0);
+
+            return assignmentSortDirection
+            === "asc"
+            ? aVal - bVal
+            : bVal - aVal;
+        }
+
+        // DATE
+        if(
+            assignmentSortField
+            === "join_date"
+        ){
+
+            aVal =
+            new Date(
+                aVal || 0
+            ).getTime();
+
+            bVal =
+            new Date(
+                bVal || 0
+            ).getTime();
+
+            return assignmentSortDirection
+            === "asc"
+            ? aVal - bVal
+            : bVal - aVal;
+        }
+
+        // TEXT
+        aVal =
+        String(
+            aVal || ""
+        ).toLowerCase();
+
+        bVal =
+        String(
+            bVal || ""
+        ).toLowerCase();
+
+        return assignmentSortDirection
+        === "asc"
+        ? aVal.localeCompare(
+            bVal
+        )
+        : bVal.localeCompare(
+            aVal
+        );
+
+    });
+
+    // ======================
+    // EMPTY STATE
+    // ======================
     if(!data.length){
 
         tbody.innerHTML = `
         <tr>
+
             <td
                 colspan="10"
                 class="text-center py-10 text-slate-400"
             >
                 Tidak ada data
             </td>
+
         </tr>
         `;
 
@@ -2569,18 +2724,35 @@ function renderAssignmentTable(){
                 ${item.username || "-"}
             </td>
 
-            <td class="px-3 py-3">${item.join_date? new Intl.DateTimeFormat("id-ID",{
-                timeZone:
-                "Asia/Jakarta",
-                day:"2-digit",
-                month:"2-digit",
-                year:"numeric"
-            }).format(new Date(item.join_date)): "-"}
+            <td class="px-3 py-3">
+
+                ${
+                    item.join_date
+                    ? new Intl.DateTimeFormat(
+                        "id-ID",
+                        {
+                            timeZone:
+                            "Asia/Jakarta",
+                            day:"2-digit",
+                            month:"2-digit",
+                            year:"numeric"
+                        }
+                    ).format(
+                        new Date(
+                            item.join_date
+                        )
+                    )
+                    : "-"
+                }
+
             </td>
 
             <td class="px-3 py-3 text-center">
-                ${item.usia_join !== "-"
-                ? `${item.usia_join} Hari`: "-"}
+                ${
+                    item.usia_join !== "-"
+                    ? `${item.usia_join} Hari`
+                    : "-"
+                }
             </td>
 
             <td class="px-3 py-3">
@@ -2616,6 +2788,16 @@ function renderAssignmentTable(){
                         ${progress}%
                     </span>
 
+                    <button
+                        onclick="editAssignment('${item.id}')"
+                        class="text-slate-500 hover:text-blue-600 transition"
+                    >
+                        <i
+                            data-lucide="pencil"
+                            class="w-4 h-4"
+                        ></i>
+                    </button>
+
                 </div>
 
             </td>
@@ -2626,7 +2808,6 @@ function renderAssignmentTable(){
 
     lucide.createIcons();
 }
-
 // =====================================
 // DETAIL TRAINING
 // =====================================

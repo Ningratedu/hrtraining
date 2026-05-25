@@ -3961,13 +3961,86 @@ function generateGlobalPeriodeFilter(){
 // ======================
 // FUNNEL
 // ======================
-function updateFunnel(filteredData = recruitmentData){
+function updateFunnel(){
+
+    let data =
+    [...recruitmentData];
+
+    // ======================
+    // FILTER PERIODE
+    // ======================
+    const period =
+    document.getElementById(
+        "globalPeriodeFilter"
+    )?.value;
+
+    if(
+        period
+        &&
+        period !== "all"
+    ){
+
+        data =
+        data.filter(item=>{
+
+            if(
+                !item.date_join
+            ) return false;
+
+            const join =
+            new Date(
+                item.date_join
+            );
+
+            if(
+                isNaN(join)
+            ) return false;
+
+            const month =
+            String(
+                join.getMonth() + 1
+            ).padStart(2,"0");
+
+            const year =
+            join.getFullYear();
+
+            return `${year}-${month}`
+            === period;
+        });
+    }
+
+    // ======================
+    // FILTER DEPARTMENT
+    // ======================
+    if(
+        selectedDepartments
+        .length
+    ){
+
+        data =
+        data.filter(item=>
+
+            selectedDepartments
+            .includes(
+
+                String(
+                    item.departement ||
+                    item.department ||
+                    ""
+                )
+                .trim()
+                .toLowerCase()
+
+            )
+        );
+    }
 
     const count =
     stage =>
-    filteredData.filter(
-        x=>x.stage===stage
-    ).length;
+
+        data.filter(
+            x => x.stage === stage
+        ).length;
 
     document
     .getElementById(
@@ -3975,10 +4048,7 @@ function updateFunnel(filteredData = recruitmentData){
     )
     .innerText =
     count("Recruitment");
-
 }
-
-
 // ======================
 // SORT
 // ======================

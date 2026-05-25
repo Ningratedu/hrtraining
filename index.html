@@ -2073,6 +2073,31 @@ function sortInduction(field){
 
     renderInductionTable();
 }
+    
+function sortAssignment(field){
+
+    if(
+        assignmentSortField
+        === field
+    ){
+
+        assignmentSortDirection =
+        assignmentSortDirection
+        === "asc"
+        ? "desc"
+        : "asc";
+
+    }else{
+
+        assignmentSortField =
+        field;
+
+        assignmentSortDirection =
+        "asc";
+    }
+
+    renderAssignmentTable();
+}    
 
 function updateInductionCount(){
 

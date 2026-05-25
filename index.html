@@ -598,12 +598,32 @@ nav .text-slate-400{
             Induction Training
         </p>
 
-        <h2
-            id="countInduction"
-            class="text-lg md:text-xl italic font-extrabold tracking-tight text-yellow-800 mt-1 relative z-10"
-        >
-            0
-        </h2>
+        <div class="relative z-10">
+
+    <h2
+        id="countInduction"
+        class="text-lg md:text-xl italic font-extrabold tracking-tight text-yellow-800 mt-1"
+    >
+        0
+    </h2>
+
+    <div
+        class="flex items-center gap-2 mt-1 text-[10px] md:text-[11px] font-medium text-slate-500"
+    >
+        <span id="countInductionCompleted">
+            ✅ 0
+        </span>
+
+        <span id="countInductionProgress">
+            ⏳ 0
+        </span>
+
+        <span id="countInductionFailed">
+            ❌ 0
+        </span>
+    </div>
+
+</div>
     </div>
 
     <!-- ASSIGNMENT -->
@@ -1763,14 +1783,18 @@ function updateInductionCount(){
     [...inductionData];
 
     // =====================================
-    // GROUP USER
+    // GROUP USER (AMBIL PROGRESS TERTINGGI)
     // =====================================
     const grouped = {};
 
     data.forEach(item=>{
 
         const key =
-        item.username || "-";
+        String(
+            item.username || "-"
+        )
+        .trim()
+        .toLowerCase();
 
         if(
             !grouped[key]
@@ -1790,6 +1814,167 @@ function updateInductionCount(){
 
     data =
     Object.values(grouped);
+
+    // =====================================
+    // FILTER PERIODE
+    // JOIN DATE
+    // =====================================
+    const period =
+    document.getElementById(
+        "globalPeriodeFilter"
+    )?.value;
+
+    if(
+        period
+        &&
+        period !== "all"
+    ){
+
+        data =
+        data.filter(item=>{
+
+            if(
+                !item.join_date
+            ) return false;
+
+            const join =
+            new Date(
+                item.join_date
+            );
+
+            if(
+                isNaN(join)
+            ) return false;
+
+            const month =
+            String(
+                join.getMonth() + 1
+            ).padStart(2,"0");
+
+            const year =
+            join.getFullYear();
+
+            return `${year}-${month}`
+            === period;
+        });
+    }
+
+    // =====================================
+    // FILTER DEPARTMENT
+    // =====================================
+    if(
+        selectedDepartments
+        .length
+    ){
+
+        data =
+        data.filter(item =>
+
+            selectedDepartments
+            .includes(
+
+                String(
+                    item.department ||
+                    item.departement ||
+                    ""
+                )
+                .trim()
+                .toLowerCase()
+
+            )
+        );
+    }
+
+    // =====================================
+    // COUNT STATUS
+    // =====================================
+    let completed = 0;
+    let onProgress = 0;
+    let failed = 0;
+
+    const today =
+    new Date();
+
+    data.forEach(item=>{
+
+        const progress =
+        Number(
+            item.progress || 0
+        );
+
+        // COMPLETED
+        if(progress >= 100){
+
+            completed++;
+            return;
+        }
+
+        // JOIN DATE
+        const joinDate =
+        new Date(
+            item.join_date
+        );
+
+        let days = 0;
+
+        if(
+            !isNaN(joinDate)
+        ){
+
+            days =
+            Math.floor(
+
+                (
+                    today -
+                    joinDate
+                )
+
+                /
+
+                (
+                    1000 *
+                    60 *
+                    60 *
+                    24
+                )
+            );
+        }
+
+        // <10 HARI = ON PROGRESS
+        if(days < 10){
+
+            onProgress++;
+
+        }else{
+
+            failed++;
+        }
+
+    });
+
+    // =====================================
+    // UPDATE UI
+    // =====================================
+    document.getElementById(
+        "countInduction"
+    ).innerText =
+    data.length;
+
+    document.getElementById(
+        "countInductionCompleted"
+    ).innerText =
+    `✅ ${completed}`;
+
+    document.getElementById(
+        "countInductionProgress"
+    ).innerText =
+    `⏳ ${onProgress}`;
+
+    document.getElementById(
+        "countInductionFailed"
+    ).innerText =
+    `❌ ${failed}`;
+}
 
     // =====================================
     // FILTER DEPARTMENT

@@ -2208,7 +2208,193 @@ function sortAssignment(field){
 
     renderAssignmentTable();
 }    
+// =====================================
+// EDIT ASSIGNMENT
+// =====================================
+async function editAssignment(id){
 
+    const item =
+    assignmentData.find(x=>
+
+        String(x.id)
+        ===
+        String(id)
+    );
+
+    if(!item){
+
+        Swal.fire({
+
+            icon:"error",
+
+            title:
+            "Data tidak ditemukan"
+        });
+
+        return;
+    }
+
+    const result =
+    await Swal.fire({
+
+        title:
+        "Update Progress Task",
+
+        html:`
+
+        <div class="text-left text-sm mb-2">
+
+            <div class="font-semibold text-slate-700">
+                ${item.nama || "-"}
+            </div>
+
+            <div class="text-slate-500 text-xs">
+                ${item.username || "-"}
+            </div>
+
+        </div>
+
+        <input
+            id="editProgressTask"
+            type="number"
+            min="0"
+            max="100"
+            class="swal2-input"
+            placeholder="Input progress task (%)"
+            value="${
+                item.progress_task
+                || 0
+            }"
+        >
+        `,
+
+        confirmButtonText:
+        "Simpan",
+
+        showCancelButton:true,
+
+        cancelButtonText:
+        "Batal",
+
+        preConfirm:()=>{
+
+            const progress =
+            Number(
+
+                document
+                .getElementById(
+                    "editProgressTask"
+                )
+                ?.value
+            );
+
+            if(
+
+                isNaN(progress)
+
+                ||
+
+                progress < 0
+
+                ||
+
+                progress > 100
+
+            ){
+
+                Swal.showValidationMessage(
+
+                    "Progress harus 0 - 100"
+                );
+
+                return false;
+            }
+
+            return progress;
+        }
+    });
+
+    if(!result.isConfirmed)
+    return;
+
+    try{
+
+        Swal.fire({
+
+            title:
+            "Saving...",
+
+            allowOutsideClick:false,
+
+            didOpen:()=>{
+
+                Swal.showLoading();
+            }
+        });
+
+        const res =
+        await fetch(
+            API_URL,
+            {
+
+                method:"POST",
+
+                body:
+                JSON.stringify({
+
+                    sheet:
+                    "assignment",
+
+                    action:
+                    "update",
+
+                    ...item,
+
+                    progress_task:
+                    result.value
+                })
+            }
+        );
+
+        const saveResult =
+        await res.json();
+
+        if(
+            !saveResult.success
+        ){
+
+            throw new Error(
+                "Gagal update"
+            );
+        }
+
+        // refresh
+        await loadAssignmentData();
+
+        Swal.fire({
+
+            icon:"success",
+
+            title:
+            "Progress berhasil diupdate"
+        });
+
+    }catch(err){
+
+        console.error(err);
+
+        Swal.fire({
+
+            icon:"error",
+
+            title:
+            "Update gagal",
+
+            text:
+            err.toString()
+        });
+    }
+}
 function updateInductionCount(){
 
     let data =

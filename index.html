@@ -3167,7 +3167,7 @@ function renderRecruitmentTable(){
 `;
 });
 
-updateFunnel(data);
+updateFunnel();
 
 lucide.createIcons();
 }
@@ -3189,10 +3189,6 @@ function(e){
 
 });
 
-
-// ======================
-// EXCEL UPLOAD
-// ======================
 // ======================
 // BULK EXCEL UPLOAD
 // ======================
@@ -3968,49 +3964,81 @@ function updateFunnel(){
     // ======================
     // FILTER PERIODE
     // ======================
-    const period =
+    const selectedPeriode =
     document.getElementById(
         "globalPeriodeFilter"
     )?.value;
 
-    if(
-        period
-        &&
-        period !== "all"
-    ){
+    if(selectedPeriode){
 
         data =
         data.filter(item=>{
 
-            const rawDate =
-
-                item.join_date
-                || item.date_join
-                || "";
-
             if(
-                !rawDate
+                !item.date_join
             ) return false;
 
-            const join =
-            new Date(
-                rawDate
+            const parseIndoDate =
+            (dateStr)=>{
+
+                if(!dateStr)
+                return null;
+
+                // ISO DATE
+                const iso =
+                new Date(dateStr);
+
+                if(!isNaN(iso)){
+                    return iso;
+                }
+
+                // FORMAT INDO
+                const bulan = {
+
+                    januari:0,
+                    februari:1,
+                    maret:2,
+                    april:3,
+                    mei:4,
+                    juni:5,
+                    juli:6,
+                    agustus:7,
+                    september:8,
+                    oktober:9,
+                    november:10,
+                    desember:11
+                };
+
+                const parts =
+                String(dateStr)
+                .toLowerCase()
+                .split(" ");
+
+                if(parts.length !== 3)
+                return null;
+
+                return new Date(
+                    parseInt(parts[2]),
+                    bulan[parts[1]],
+                    parseInt(parts[0])
+                );
+            };
+
+            const d =
+            parseIndoDate(
+                item.date_join
             );
 
-            if(
-                isNaN(join)
-            ) return false;
+            if(!d)
+            return false;
 
-            const month =
-            String(
-                join.getMonth() + 1
-            ).padStart(2,"0");
+            const periode =
+            `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}`;
 
-            const year =
-            join.getFullYear();
-
-            return `${year}-${month}`
-            === period;
+            return (
+                periode ===
+                selectedPeriode
+            );
         });
     }
 
@@ -4029,9 +4057,7 @@ function updateFunnel(){
             .includes(
 
                 String(
-                    item.departement ||
-                    item.department ||
-                    ""
+                    item.departement || ""
                 )
                 .trim()
                 .toLowerCase()
@@ -4040,31 +4066,27 @@ function updateFunnel(){
         );
     }
 
-    const count =
-    stage =>
+    const totalRecruitment =
+    data.filter(item =>
 
-        data.filter(x =>
+        String(
+            item.stage || ""
+        )
+        .trim()
+        .toLowerCase()
 
-            String(
-                x.stage || ""
-            )
-            .trim()
-            .toLowerCase()
+        ===
 
-            ===
+        "recruitment"
 
-            String(stage)
-            .trim()
-            .toLowerCase()
-
-        ).length;
+    ).length;
 
     document
     .getElementById(
         "countRecruitment"
     )
     .innerText =
-    count("Recruitment");
+    totalRecruitment;
 }
 // ======================
 // SORT

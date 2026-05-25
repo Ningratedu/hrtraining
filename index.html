@@ -1119,7 +1119,125 @@ updateInductionCount();
         );
     }
 }
+    
+// ======================
+// LOAD ASSIGNMENT
+// ======================
+async function loadAssignmentData(){
 
+    try{
+
+        const res =
+        await fetch(
+
+            `${API_URL}?sheet=assignment`
+
+        );
+
+        const assignment =
+        await res.json();
+
+        const inductionRes =
+        await fetch(
+
+            `${API_URL}?sheet=induction_progress`
+
+        );
+
+        const induction =
+        await inductionRes.json();
+
+        // ======================
+        // GROUP COMPLETED USER
+        // ======================
+        const inductionMap =
+        {};
+
+        induction.forEach(item=>{
+
+            const username =
+            String(
+                item.username || ""
+            )
+            .trim()
+            .toLowerCase();
+
+            const progress =
+            Number(
+                item.progress || 0
+            );
+
+            // hanya completed
+            if(
+                progress < 100
+            ) return;
+
+            if(
+                !inductionMap[
+                    username
+                ]
+            ){
+
+                inductionMap[
+                    username
+                ] = item;
+            }
+        });
+
+        // ======================
+        // MERGE
+        // ======================
+        assignmentData =
+        assignment.map(item=>{
+
+            const username =
+            String(
+                item.username || ""
+            )
+            .trim()
+            .toLowerCase();
+
+            const inductionUser =
+            inductionMap[
+                username
+            ] || {};
+
+            return {
+
+                ...item,
+
+                nama:
+                inductionUser.nama
+                || item.nama
+                || "-",
+
+                department:
+                inductionUser.department
+                || "-",
+
+                position:
+                inductionUser.position
+                || "-",
+
+                join_date:
+                inductionUser.join_date
+                || item.join_date
+                || "-"
+            };
+        });
+
+        renderAssignmentTable();
+        updateAssignmentCount();
+
+    }catch(err){
+
+        console.error(
+            "assignment error",
+            err
+        );
+    }
+}
+    
 // =====================================
 // RENDER INDUCTION TABLE
 // =====================================
@@ -2802,7 +2920,20 @@ let selectedStage = "";
 let inductionData = [];
 let inductionSortField = "nama";
 let inductionSortDirection = "asc";
+        
+let assignmentData = [];
 
+let assignmentSortField =
+"nama";
+
+let assignmentSortDirection =
+"asc";
+
+let assignmentCurrentPage =
+1;
+
+const assignmentRowsPerPage =
+10;
 
 // ======================
 // LOAD DATA ONLINE

@@ -3957,7 +3957,6 @@ function generateGlobalPeriodeFilter(){
     }
 }
 
-
 // ======================
 // FUNNEL
 // ======================
@@ -3983,13 +3982,19 @@ function updateFunnel(){
         data =
         data.filter(item=>{
 
+            const rawDate =
+
+                item.join_date
+                || item.date_join
+                || "";
+
             if(
-                !item.date_join
+                !rawDate
             ) return false;
 
             const join =
             new Date(
-                item.date_join
+                rawDate
             );
 
             if(
@@ -4018,7 +4023,7 @@ function updateFunnel(){
     ){
 
         data =
-        data.filter(item=>
+        data.filter(item =>
 
             selectedDepartments
             .includes(
@@ -4038,8 +4043,20 @@ function updateFunnel(){
     const count =
     stage =>
 
-        data.filter(
-            x => x.stage === stage
+        data.filter(x =>
+
+            String(
+                x.stage || ""
+            )
+            .trim()
+            .toLowerCase()
+
+            ===
+
+            String(stage)
+            .trim()
+            .toLowerCase()
+
         ).length;
 
     document

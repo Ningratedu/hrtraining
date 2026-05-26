@@ -3,7 +3,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <title>HR Training Monitoring & Reporting</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -25,7 +25,7 @@ body{
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    background-attachment: fixed;
+    background-attachment: scroll;
 }
 
 /* ======================
@@ -217,7 +217,7 @@ MOBILE OVERLAY
         transform: translateX(-100%);
         position: fixed;
         z-index: 50;
-        height: 100%;
+        height: 100dvh;
     }
 
     #sidebar-overlay.active{
@@ -243,7 +243,7 @@ nav .text-slate-400{
 }
 </style>
 </head>
-<body class="text-slate-900 overflow-hidden h-screen flex">
+<body class="text-slate-900 min-h-screen min-h-dvh flex overflow-hidden">
 
     <!-- Mobile Overlay -->
     <div id="sidebar-overlay" onclick="toggleSidebar()" class="fixed inset-0 bg-slate-900/40 z-40"></div>
@@ -375,7 +375,8 @@ nav .text-slate-400{
 <main class="flex-1 flex flex-col overflow-hidden">
 
     <!-- Header -->
-    <header class="min-h-16 flex items-center justify-between px-4 md:px-8 py-3 z-10 gap-3">
+    <header class="min-h-16 flex items-center justify-between px-4 md:px-8 py-3 z-50 gap-3 sticky top-0"
+        style="padding-top: env(safe-area-inset-top);">
         
         <!-- Left Side -->
         <div class="flex items-center gap-3 flex-1 min-w-0">

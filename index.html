@@ -63,19 +63,19 @@ GLASSY HEADER
 header{
 
     background:
-    rgba(255,255,255,.22) !important;
+    rgba(255,255,255,.78) !important;
 
     backdrop-filter:
-    blur(30px);
+    blur(22px);
 
     -webkit-backdrop-filter:
-    blur(30px);
+    blur(22px);
 
     border-bottom:
-    1px solid rgba(255,255,255,.10);
+    1px solid rgba(255,255,255,.22);
 
     box-shadow:
-    0 8px 32px rgba(15,23,42,.08);
+    0 4px 18px rgba(15,23,42,.08);
 }
 /* ======================
 MOBILE UI IMPROVEMENT
@@ -415,7 +415,7 @@ nav .text-slate-400{
 
     <!-- Main Content -->
 <main 
-    class="flex-1 flex flex-col min-w-0 min-h-0 h-full md:ml-64 pt-[200px] md:pt-[60px]"
+    class="flex-1 flex flex-col min-w-0 min-h-0 h-full md:ml-64 pt-[190px] md:pt-[56px]"
 >
     <!-- Header -->
     <header class="fixed top-0 left-0 md:left-64 right-0 z-[999] flex items-center justify-between px-4 md:px-8 py-3 bg-white/25 backdrop-blur-2xl border-b border-white/30 shadow-sm"
@@ -441,7 +441,7 @@ nav .text-slate-400{
         </div>
 
         <!-- Right Side -->
-        <div class="flex flex-col md:flex-row items-end md:items-center gap-2 flex-shrink-0 ml-3 relative w-auto">
+        <div class="flex flex-col md:flex-row items-end md:items-center gap-2 flex-shrink-0 ml-2 md:ml-3 relative w-auto max-w-[145px] md:max-w-none">
 
             <!-- PERIODE -->
             <select
@@ -451,7 +451,7 @@ nav .text-slate-400{
                     renderInductionTable();
                     updateInductionCount();
                 "
-                class="bg-white border border-slate-200 rounded-xl px-3 py-2 text-[10px] md:text-xs text-left shadow-sm outline-none focus:ring-2 focus:ring-blue-500 w-[120px] md:w-[140px]"
+                class="bg-white border border-slate-200 rounded-xl px-2.5 py-2 text-[10px] md:text-xs text-left shadow-sm outline-none focus:ring-2 focus:ring-blue-500 w-[108px] md:w-[135px]"
             >
                 <option value="">
                     All Periode
@@ -464,7 +464,7 @@ nav .text-slate-400{
                 <button
     id="filterButton"
     onclick="toggleFilterDropdown()"
-    class="w-[120px] md:w-[180px] bg-white border border-slate-200 rounded-xl px-3 py-2 text-[10px] md:text-xs shadow-sm hover:bg-slate-50 transition-all flex items-center justify-between whitespace-nowrap"
+    class="w-[108px] md:w-[170px] bg-white border border-slate-200 rounded-xl px-2.5 py-2 text-[10px] md:text-xs shadow-sm hover:bg-slate-50 transition-all flex items-center justify-between whitespace-nowrap"
 >
 
     <span
@@ -514,7 +514,7 @@ nav .text-slate-400{
         <!-- Dynamic Content Area -->
         <div 
     id="content-area" 
-    class="flex-1 min-w-0 overflow-y-auto pt-8 md:pt-4 px-4 md:px-8 pb-4 md:pb-8 bg-transparent"
+    class="flex-1 min-w-0 overflow-y-auto pt-6 md:pt-3 px-4 md:px-5 pb-5 md:pb-5 bg-transparent"
             <!-- Dashboard Content (Default) -->
             <div id="tab-dashboard" class="tab-content space-y-6">
                 <!-- Stats Grid -->
@@ -597,7 +597,7 @@ nav .text-slate-400{
 <div id="tab-onboarding-page" class="tab-content hidden space-y-4">
 
     <!-- FUNNEL -->
-    <div class="bg-white rounded-[28px] border border-slate-200 p-4 md:p-6 shadow-sm">
+    <div class="bg-white/95 rounded-[28px] border border-slate-200 p-4 md:p-5 shadow-sm">
 
         <div class="flex justify-between items-center mb-4">
     <div>

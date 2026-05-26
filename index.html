@@ -214,11 +214,12 @@ MOBILE OVERLAY
     }
 
     #sidebar{
-        transform: translateX(-100%);
-        position: fixed;
-        z-index: 50;
-        height: 100dvh;
-    }
+    position: fixed;
+    top: calc(64px + env(safe-area-inset-top));
+    left: 0;
+    height: calc(100dvh - 64px - env(safe-area-inset-top));
+    z-index: 40;
+}
 
     #sidebar-overlay.active{
         display:block;

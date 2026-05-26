@@ -463,22 +463,22 @@ nav .text-slate-400{
                 <button
     id="filterButton"
     onclick="toggleFilterDropdown()"
-    class="w-[120px] md:w-[180px] bg-white border border-slate-200 rounded-xl px-3 py-2 text-[9px] md:text-xs shadow-sm hover:bg-slate-50 transition-all flex items-center justify-center gap-1 whitespace-nowrap"
+    class="w-[120px] md:w-[180px] bg-white border border-slate-200 rounded-xl px-3 py-2 text-[10px] md:text-xs shadow-sm hover:bg-slate-50 transition-all flex items-center justify-between whitespace-nowrap"
 >
 
-                    <i
-                        data-lucide="building-2"
-                        class="w-3.5 h-3.5"
-                    ></i>
+    <span
+        id="filterLabel"
+        class="truncate"
+    >
+        Filter Department
+    </span>
 
-                    <span
-    id="filterLabel"
-    class="whitespace-nowrap"
->
-    Filter Department
-</span>
+    <i
+        data-lucide="chevron-down"
+        class="w-4 h-4 text-slate-500 flex-shrink-0"
+    ></i>
 
-                </button>
+</button>
 
                 <!-- DROPDOWN -->
                 <div

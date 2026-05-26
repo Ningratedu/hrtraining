@@ -214,12 +214,12 @@ MOBILE OVERLAY
     }
 
     #sidebar{
-    position: fixed;
-    top: 0;
-    left: 0;
-    height: 100dvh;
-    z-index: 40;
-}
+        transform: translateX(-100%);
+        position: fixed;
+        z-index: 50;
+        height: 100dvh;
+    }
+
     #sidebar-overlay.active{
         display:block;
     }
@@ -281,7 +281,7 @@ nav .text-slate-400{
     </div>
 
     <!-- Navigation -->
-    <nav class="flex-1 p-3 space-y-1 overflow-y-auto pt-16">
+    <nav class="flex-1 p-3 space-y-1 overflow-y-auto">
 
         <button onclick="handleNavClick('dashboard')" id="btn-dashboard"
             class="sidebar-item w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm text-slate-600 hover:bg-slate-100 transition-all font-medium active">

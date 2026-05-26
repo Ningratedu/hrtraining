@@ -214,15 +214,47 @@ MOBILE OVERLAY
     }
 
     #sidebar{
+
+        position: fixed !important;
+
+        top: 0 !important;
+        left: 0 !important;
+
+        width: 16rem;
+
+        height: 100dvh !important;
+
         transform: translateX(-100%);
-        position: fixed;
-        z-index: 50;
-        height: 100dvh;
+
+        z-index: 9999 !important;
+    }
+
+    header{
+
+        z-index: 40 !important;
+    }
+
+    #sidebar-overlay{
+
+        z-index: 8888 !important;
     }
 
     #sidebar-overlay.active{
         display:block;
     }
+
+    nav .text-slate-400{
+
+        color:
+        rgba(255,255,255,.78) !important;
+
+        font-weight:
+        600;
+
+        letter-spacing:
+        .08em;
+    }
+}
 
     /* ======================
 SIDEBAR SECTION TITLE
@@ -249,7 +281,7 @@ nav .text-slate-400{
     <div id="sidebar-overlay" onclick="toggleSidebar()" class="fixed inset-0 bg-slate-900/40 z-40"></div>
 
     <!-- Sidebar -->
-<aside id="sidebar" class="fixed left-0 top-0 z-[60] w-64 h-[100dvh] bg-white/70 backdrop-blur-2xlborder-r border-white/20flex flex-coltransition-transform duration-300 ease-in-out shadow-[0_8px_32px_rgba(15,23,42,0.12)] md:translate-x-0">
+<aside id="sidebar" class="fixed left-0 top-0 w-64 h-[100dvh] bg-white/70 backdrop-blur-2xlborder-r border-white/20flex flex-coltransition-transform duration-300 ease-in-out shadow-[0_8px_32px_rgba(15,23,42,0.12)] md:translate-x-0">
 
     <!-- Header -->
     <div class="p-4 border-b border-slate-100 flex items-center justify-between">

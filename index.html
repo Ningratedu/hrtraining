@@ -86,24 +86,38 @@ SIDEBAR HEADER
 
     position: sticky;
     top: 0;
-    z-index: 20;
+    z-index: 30;
 
     background:
-    rgba(255,255,255,.70);
+    rgba(255,255,255,.28);
 
     backdrop-filter:
-    blur(22px);
+    blur(30px);
 
     -webkit-backdrop-filter:
-    blur(22px);
+    blur(30px);
 
     border-bottom:
-    1px solid rgba(255,255,255,.22);
+    1px solid rgba(255,255,255,.14);
 
-    box-shadow:
-    0 4px 18px rgba(15,23,42,.08);
+    overflow: hidden;
+}
 
-    isolation: isolate;
+/* glossy glass layer */
+#sidebar .sidebar-header::before{
+
+    content:"";
+    position:absolute;
+    inset:0;
+
+    background:
+    linear-gradient(
+        180deg,
+        rgba(255,255,255,.28),
+        rgba(255,255,255,.08)
+    );
+
+    pointer-events:none;
 }        
 /* ======================
 MOBILE UI IMPROVEMENT
@@ -326,15 +340,15 @@ nav .text-slate-400{
 >
 
     <!-- Header -->
-<div class="sidebar-header sticky top-0 z-20 h-14 px-4 flex items-center flex-shrink-0 relative overflow-hidden">
+<div class="sidebar-header h-14 px-4 flex items-center flex-shrink-0 relative">
 
     <!-- Logo -->
-    <div class="flex items-center w-full overflow-hidden">
+    <div class="flex items-center w-full overflow-hidden relative z-10">
 
         <img 
             src="https://raw.githubusercontent.com/Ningratedu/asset-foto/refs/heads/main/ChatGPT%20Image%20May%2027%2C%202026%2C%2012_23_38%20PM.png"
             alt="NINGRAT EDU"
-            class="h-[58px] w-auto object-contain scale-[1.65] origin-left"
+            class="h-[58px] w-auto object-contain scale-[1.60] origin-left"
         >
 
     </div>
@@ -342,7 +356,7 @@ nav .text-slate-400{
     <!-- Close Button Mobile -->
     <button 
         onclick="toggleSidebar()" 
-        class="md:hidden absolute right-4 p-1.5 text-slate-400 hover:text-slate-700 transition"
+        class="md:hidden absolute right-4 p-1.5 text-slate-400 hover:text-slate-700 transition z-10"
     >
         <i data-lucide="x" class="w-5 h-5"></i>
     </button>

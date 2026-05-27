@@ -3406,6 +3406,46 @@ function showTrainingDetail(username){
     });
 }
 
+// ======================
+// GET PHONE BY USERNAME
+// ======================
+function getEmployeePhone(username){
+
+    const employee =
+    recruitmentData.find(item =>
+
+        String(
+            item.username || ""
+        )
+        .trim()
+        .toLowerCase()
+
+        ===
+
+        String(
+            username || ""
+        )
+        .trim()
+        .toLowerCase()
+    );
+
+    if(!employee)
+    return "";
+
+    // fallback beberapa kemungkinan nama field
+    return String(
+        employee.phone ||
+        employee.no_hp ||
+        employee.nohp ||
+        employee.nomor_hp ||
+        employee.nomor ||
+        employee.whatsapp ||
+        employee.wa ||
+        ""
+    )
+    .replace(/\D/g,"");
+}
+    
 function showInductionDetail(username){
 
     const detailData =
@@ -3493,12 +3533,38 @@ Jika terdapat kendala, atau ada hal yang perlu dikoordinasikan, silakan hubungi 
 
 Terima kasih 🙏`;
 
-    const whatsappLink =
-    `https://wa.me/?text=${
-        encodeURIComponent(
-            message
-        )
-    }`;
+    // ======================
+// GET EMPLOYEE PHONE
+// ======================
+let phone =
+getEmployeePhone(
+    username
+);
+
+// format indo
+if(
+    phone.startsWith("08")
+){
+
+    phone =
+    "62" +
+    phone.substring(1);
+}
+
+const whatsappLink =
+phone
+
+? `https://wa.me/${phone}?text=${
+    encodeURIComponent(
+        message
+    )
+}`
+
+: `https://wa.me/?text=${
+    encodeURIComponent(
+        message
+    )
+}`;
 
     Swal.fire({
 

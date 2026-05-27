@@ -84,20 +84,26 @@ SIDEBAR HEADER
 
 #sidebar .sidebar-header{
 
+    position: sticky;
+    top: 0;
+    z-index: 20;
+
     background:
-    rgba(255,255,255,.70) !important;
+    rgba(255,255,255,.70);
 
     backdrop-filter:
     blur(22px);
 
     -webkit-backdrop-filter:
-    blur(18px);
+    blur(22px);
 
     border-bottom:
     1px solid rgba(255,255,255,.22);
 
     box-shadow:
     0 4px 18px rgba(15,23,42,.08);
+
+    isolation: isolate;
 }        
 /* ======================
 MOBILE UI IMPROVEMENT
@@ -320,7 +326,7 @@ nav .text-slate-400{
 >
 
     <!-- Header -->
-<div class="sidebar-header h-14 px-4 flex items-center flex-shrink-0 relative overflow-hidden">
+<div class="sidebar-header sticky top-0 z-20 h-14 px-4 flex items-center flex-shrink-0 relative overflow-hidden">
 
     <!-- Logo -->
     <div class="flex items-center w-full overflow-hidden">
@@ -328,7 +334,7 @@ nav .text-slate-400{
         <img 
             src="https://raw.githubusercontent.com/Ningratedu/asset-foto/refs/heads/main/ChatGPT%20Image%20May%2027%2C%202026%2C%2012_23_38%20PM.png"
             alt="NINGRAT EDU"
-            class="h-[58px] w-auto object-contain scale-[1.55] origin-left"
+            class="h-[58px] w-auto object-contain scale-[1.65] origin-left"
         >
 
     </div>

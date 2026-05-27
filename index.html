@@ -86,30 +86,26 @@ SIDEBAR HEADER
 
     position: sticky;
     top: 0;
-    z-index: 30;
+    z-index: 50;
 
     background:
-    rgba(255,255,255,.34);
+    rgba(255,255,255,.12);
 
     backdrop-filter:
-    blur(22px);
+    saturate(180%) blur(24px);
 
     -webkit-backdrop-filter:
-    blur(22px);
+    saturate(180%) blur(24px);
 
     border-bottom:
-    1px solid rgba(255,255,255,.18);
-
-    box-shadow:
-    0 4px 18px rgba(15,23,42,.08);
+    1px solid rgba(255,255,255,.16);
 
     overflow: hidden;
 
-    /* bikin blur lebih konsisten */
     isolation: isolate;
 }
 
-/* glossy glass layer */
+/* glossy reflection */
 #sidebar .sidebar-header::before{
 
     content:"";
@@ -120,21 +116,20 @@ SIDEBAR HEADER
     background:
     linear-gradient(
         180deg,
-        rgba(255,255,255,.26) 0%,
-        rgba(255,255,255,.10) 100%
+        rgba(255,255,255,.18) 0%,
+        rgba(255,255,255,.04) 100%
     );
 
     pointer-events:none;
-
-    z-index:0;
 }
 
-/* biar isi header di atas glass */
-#sidebar .sidebar-header > *{
+/* navigation layer */
+#sidebar nav{
 
     position: relative;
     z-index: 1;
-}       
+}
+
 /* ======================
 MOBILE UI IMPROVEMENT
 ====================== */
@@ -364,7 +359,7 @@ nav .text-slate-400{
         <img 
             src="https://raw.githubusercontent.com/Ningratedu/asset-foto/refs/heads/main/ChatGPT%20Image%20May%2027%2C%202026%2C%2012_23_38%20PM.png"
             alt="NINGRAT EDU"
-            class="h-[58px] w-auto object-contain scale-[1.65] origin-left translate-y-[3px] relative z-10"
+            class="h-[58px] w-auto object-contain scale-[1.70] origin-left translate-y-[3px] relative z-10"
         >
 
     </div>

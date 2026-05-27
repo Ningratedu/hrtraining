@@ -86,53 +86,29 @@ SIDEBAR HEADER
 
     position: sticky;
     top: 0;
-    z-index: 999;
+    z-index: 50;
 
     background:
-    rgba(255,255,255,.22);
+    rgba(255,255,255,.32);
 
     backdrop-filter:
-    blur(28px)
-    saturate(180%);
+    blur(22px);
 
     -webkit-backdrop-filter:
-    blur(28px)
-    saturate(180%);
+    blur(22px);
 
     border-bottom:
-    1px solid rgba(255,255,255,.18);
+    1px solid rgba(255,255,255,.22);
 
     box-shadow:
     0 4px 18px rgba(15,23,42,.08);
-
-    isolation: isolate;
-
-    overflow: hidden;
 }
 
-/* glossy top reflection */
-#sidebar .sidebar-header::before{
-
-    content:"";
-
-    position:absolute;
-    inset:0;
-
-    background:
-    linear-gradient(
-        180deg,
-        rgba(255,255,255,.28) 0%,
-        rgba(255,255,255,.05) 100%
-    );
-
-    pointer-events:none;
-}
-
-/* layer fix */
-#sidebar .sidebar-header > *{
+/* navigation layer */
+#sidebar nav{
 
     position: relative;
-    z-index: 2;
+    z-index: 1;
 }
 
 /* ======================

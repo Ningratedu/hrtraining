@@ -3571,19 +3571,23 @@ if(
     phone.substring(1);
 }
 
+if(!phone){
+
+    Swal.fire({
+
+        icon:"warning",
+
+        title:"Nomor WhatsApp tidak ditemukan",
+
+        text:"Pastikan data kontak tersedia di tabel recruitment"
+    });
+
+    return;
+}
+
 const whatsappLink =
-phone
-
-? `https://wa.me/${phone}?text=${
-    encodeURIComponent(
-        message
-    )
-}`
-
-: `https://wa.me/?text=${
-    encodeURIComponent(
-        message
-    )
+`https://wa.me/${phone}?text=${
+    encodeURIComponent(message)
 }`;
 
     Swal.fire({

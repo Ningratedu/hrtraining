@@ -3414,26 +3414,34 @@ function getEmployeePhone(username){
     const employee =
     recruitmentData.find(item =>
 
-        String(
-            item.username || ""
-        )
+        String(item.username || "")
         .trim()
         .toLowerCase()
 
         ===
 
-        String(
-            username || ""
-        )
+        String(username || "")
         .trim()
         .toLowerCase()
     );
 
-    if(!employee)
-    return "";
+    if(!employee){
 
-    // fallback beberapa kemungkinan nama field
-    return String(
+        console.warn(
+            "Nomor recruitment tidak ditemukan untuk username:",
+            username
+        );
+
+        return "";
+    }
+
+    // =====================================
+    // AMBIL NOMOR DARI RECRUITMENT
+    // =====================================
+    let phone = String(
+
+        employee.kontak ||
+        employee.contact ||
         employee.phone ||
         employee.no_hp ||
         employee.nohp ||
@@ -3442,8 +3450,20 @@ function getEmployeePhone(username){
         employee.whatsapp ||
         employee.wa ||
         ""
+
     )
-    .replace(/\D/g,"");
+    .replace(/\D/g, "");
+
+    // =====================================
+    // FORMAT NOMOR INDONESIA
+    // =====================================
+    if(phone.startsWith("08")){
+
+        phone =
+        "62" + phone.substring(1);
+    }
+
+    return phone;
 }
     
 function showInductionDetail(username){

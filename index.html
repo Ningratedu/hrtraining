@@ -482,12 +482,16 @@ nav .text-slate-400{
 
             <!-- PERIODE -->
             <select
-                id="globalPeriodeFilter"
-                onchange="
-                    renderRecruitmentTable();
-                    renderInductionTable();
-                    updateInductionCount();
-                "
+    id="globalPeriodeFilter"
+    onchange="
+        renderRecruitmentTable();
+        renderInductionTable();
+        renderAssignmentTable();
+
+        updateFunnel();
+        updateInductionCount();
+        updateAssignmentCount();
+    "
                 class="bg-white border border-slate-200 rounded-xl px-2 py-1.5 text-[9px] md:text-xs text-left shadow-sm outline-none focus:ring-2 focus:ring-blue-500 w-[96px] md:w-[135px]"
             >
                 <option value="">
@@ -1601,6 +1605,8 @@ async function loadAssignmentData(){
         });
 
         renderAssignmentTable();
+
+        updateFunnel();
         updateAssignmentCount();
 
     }catch(err){
@@ -5092,9 +5098,13 @@ function applyDepartmentFilter(){
             "hidden"
         );
 
-    renderRecruitmentTable();
-    renderInductionTable();
-    updateInductionCount();
+renderRecruitmentTable();
+renderInductionTable();
+renderAssignmentTable();
+
+updateFunnel();
+updateInductionCount();
+updateAssignmentCount();
 }
 
 

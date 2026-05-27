@@ -284,50 +284,39 @@ nav .text-slate-400{
 <body class="text-slate-900 min-h-[100dvh] flex overflow-hidden">
 
     <!-- Mobile Overlay -->
-    <div id="sidebar-overlay" onclick="toggleSidebar()" class="fixed inset-0 bg-slate-900/40 z-40"></div>
+<div 
+    id="sidebar-overlay" 
+    onclick="toggleSidebar()" 
+    class="fixed inset-0 bg-slate-900/40 z-40 hidden md:hidden">
+</div>
 
-    <!-- Sidebar -->
+<!-- Sidebar -->
 <aside 
     id="sidebar"
-    class="fixed left-0 top-0 w-64 h-screen overflow-y-auto overflow-x-hidden bg-white/25 backdrop-blur-2xl border-r border-white/20 flex flex-col transition-transform duration-300 ease-in-out shadow-[0_8px_32px_rgba(15,23,42,0.12)] md:translate-x-0"
+    class="fixed left-0 top-0 w-64 h-screen overflow-y-auto overflow-x-hidden bg-white/25 backdrop-blur-2xl border-r border-white/20 flex flex-col transition-transform duration-300 ease-in-out shadow-[0_8px_32px_rgba(15,23,42,0.12)] md:translate-x-0 z-50"
     style="-webkit-overflow-scrolling: touch;"
 >
 
     <!-- Header -->
-    <div class="h-14 px-4 border-b border-slate-100 flex items-center justify-between flex-shrink-0">
+    <div class="h-16 px-4 border-b border-slate-100 flex items-center justify-between flex-shrink-0 bg-white/10 backdrop-blur-md">
 
-        <div class="flex items-center gap-2.5 min-w-0">
+        <!-- Logo -->
+        <div class="flex items-center justify-center flex-1 min-w-0">
 
-            <div class="relative w-10 h-10 flex items-center justify-center flex-shrink-0">
-
-    <!-- Background -->
-    <div class="absolute inset-0 rounded-xl bg-gradient-to-br from-[#2D5BFF] to-[#1A2E80] shadow-md"></div>
-
-    <!-- Logo -->
-    <img 
-        src="https://raw.githubusercontent.com/Ningratedu/asset-foto/refs/heads/main/ChatGPT%20Image%2027%20Mei%202026%2C%2010.28.51.png"
-        alt="NINGRAT EDU"
-        class="relative z-10 w-[36px] h-[36px] object-contain scale-125 drop-shadow-[0_2px_4px_rgba(0,0,0,0.45)]"
-    >
-
-</div>
-
-            <h1 class="font-bold text-lg tracking-tight flex items-center leading-none">
-
-    <span class="px-2 py-0.5 bg-white text-blue-700 border border-blue-700 rounded-l-md pr-0">
-        NINGRAT
-    </span>
-
-    <span class="-ml-px px-2 py-0.5 bg-blue-700 text-white border border-blue-700 rounded-r-md pl-0">
-        EDU
-    </span>
-
-</h1>
+            <img 
+                src="https://raw.githubusercontent.com/Ningratedu/asset-foto/refs/heads/main/ChatGPT%20Image%2027%20Mei%202026%2C%2010.43.30.png"
+                alt="NINGRAT EDU"
+                class="h-11 w-auto object-contain drop-shadow-[0_2px_8px_rgba(0,0,0,0.12)]"
+            >
 
         </div>
 
-        <button onclick="toggleSidebar()" class="md:hidden p-1.5 text-slate-400">
-            <i data-lucide="x" class="w-4 h-4"></i>
+        <!-- Close Button Mobile -->
+        <button 
+            onclick="toggleSidebar()" 
+            class="md:hidden p-1.5 text-slate-400 hover:text-slate-700 transition absolute right-4"
+        >
+            <i data-lucide="x" class="w-5 h-5"></i>
         </button>
 
     </div>
@@ -335,8 +324,11 @@ nav .text-slate-400{
     <!-- Navigation -->
     <nav class="flex-1 p-3 space-y-1 overflow-y-auto">
 
-        <button onclick="handleNavClick('dashboard')" id="btn-dashboard"
-            class="sidebar-item w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm text-slate-600 hover:bg-slate-100 transition-all font-medium active">
+        <button 
+            onclick="handleNavClick('dashboard')" 
+            id="btn-dashboard"
+            class="sidebar-item w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm text-slate-600 hover:bg-slate-100 transition-all font-medium active"
+        >
             <i data-lucide="layout-dashboard" class="w-4 h-4 flex-shrink-0"></i>
             <span class="truncate">Dashboard</span>
         </button>
@@ -344,7 +336,6 @@ nav .text-slate-400{
         <div class="pt-3 pb-1 px-3 text-[10px] font-semibold text-slate-400 uppercase tracking-wider">
             Program
         </div>
-
         <button onclick="handleNavClick('onboarding')" id="btn-onboarding"
             class="sidebar-item w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm text-slate-600 hover:bg-slate-100 transition-all font-medium">
             <i data-lucide="user-plus" class="w-4 h-4 flex-shrink-0"></i>

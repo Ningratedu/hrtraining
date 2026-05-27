@@ -2890,66 +2890,6 @@ function renderAssignmentTable(){
     let data =
     [...assignmentData];
 
-    function sendAssignmentReminder(username){
-
-    // =========================
-    // AMBIL NOMOR WA
-    // =========================
-    const phone =
-    getEmployeePhone(username);
-
-    if(!phone){
-
-        Swal.fire({
-
-            icon:"warning",
-
-            title:"Nomor WhatsApp tidak ditemukan",
-
-            text:"Pastikan data kontak tersedia di tabel recruitment"
-        });
-
-        return;
-    }
-
-    // =========================
-    // TEMPLATE PESAN
-    // =========================
-    const message =
-`Halo ${username},
-
-Reminder untuk segera melakukan update Penugasan Tasklist Marketing Probation.
-
-Silakan login di aplikasi RSP Project menggunakan akun masing-masing melalui link berikut:
-https://trusmicorp.com/rspproject/
-
-Kemudian gunakan fitur pencarian dan ketik:
-
-Tasklist Mkt Prob
-
-Lalu lakukan update sesuai progress penugasan yang sedang dikerjakan.
-
-Apabila terdapat kendala atau ada yang perlu dikoordinasikan terkait hal ini harap segera menghubungi tim training
-
-Terima kasih.`;
-
-    // =========================
-    // FORMAT LINK WA
-    // =========================
-    const whatsappLink =
-    `https://wa.me/${phone}?text=${
-        encodeURIComponent(message)
-    }`;
-
-    // =========================
-    // OPEN WA
-    // =========================
-    window.open(
-        whatsappLink,
-        "_blank"
-    );
-}
-
     // ======================
     // FILTER PERIOD
     // ======================
@@ -3264,6 +3204,67 @@ Terima kasih.`;
 
     lucide.createIcons();
 }
+
+function sendAssignmentReminder(username){
+
+    // =========================
+    // AMBIL NOMOR WA
+    // =========================
+    const phone =
+    getEmployeePhone(username);
+
+    if(!phone){
+
+        Swal.fire({
+
+            icon:"warning",
+
+            title:"Nomor WhatsApp tidak ditemukan",
+
+            text:"Pastikan data kontak tersedia di tabel recruitment"
+        });
+
+        return;
+    }
+
+    // =========================
+    // TEMPLATE PESAN
+    // =========================
+    const message =
+`Halo ${username},
+
+Reminder untuk segera melakukan update Penugasan Tasklist Marketing Probation.
+
+Silakan login di aplikasi RSP Project menggunakan akun masing-masing melalui link berikut:
+https://trusmicorp.com/rspproject/
+
+Kemudian gunakan fitur pencarian dan ketik:
+
+Tasklist Mkt Prob
+
+Lalu lakukan update sesuai progress penugasan yang sedang dikerjakan.
+
+Apabila terdapat kendala atau ada yang perlu dikoordinasikan terkait hal ini harap segera menghubungi tim training
+
+Terima kasih.`;
+
+    // =========================
+    // FORMAT LINK WA
+    // =========================
+    const whatsappLink =
+    `https://wa.me/${phone}?text=${
+        encodeURIComponent(message)
+    }`;
+
+    // =========================
+    // OPEN WA
+    // =========================
+    window.open(
+        whatsappLink,
+        "_blank"
+    );
+}
+    
 // =====================================
 // DETAIL TRAINING
 // =====================================

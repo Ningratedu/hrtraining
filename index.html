@@ -2718,13 +2718,12 @@ function updateAssignmentCount(){
             ) return false;
 
             const join =
-            new Date(
-                item.join_date
+            parseDateSafe(
+            item.join_date
             );
 
-            if(
-                isNaN(join)
-            ) return false;
+            if(!join)
+            return false;
 
             const month =
             String(
@@ -2907,6 +2906,53 @@ function updateAssignmentCount(){
     data.length;
 }
     */
+
+// ======================
+// SAFE DATE PARSER
+// SUPPORT DD/MM/YYYY
+// ======================
+function parseDateSafe(dateString){
+
+    if(!dateString)
+    return null;
+
+    // kalau sudah object date
+    const direct =
+    new Date(dateString);
+
+    if(!isNaN(direct))
+    return direct;
+
+    // format indonesia dd/mm/yyyy
+    const parts =
+    String(dateString)
+    .split("/");
+
+    if(parts.length === 3){
+
+        const day =
+        parseInt(parts[0]);
+
+        const month =
+        parseInt(parts[1]) - 1;
+
+        const year =
+        parseInt(parts[2]);
+
+        const parsed =
+        new Date(
+            year,
+            month,
+            day
+        );
+
+        if(!isNaN(parsed))
+        return parsed;
+    }
+
+    return null;
+}    
+    
 // =====================================
 // RENDER ASSIGNMENT TABLE
 // =====================================
@@ -2944,13 +2990,12 @@ function renderAssignmentTable(){
             ) return false;
 
             const join =
-            new Date(
-                item.join_date
+            parseDateSafe(
+            item.join_date
             );
 
-            if(
-                isNaN(join)
-            ) return false;
+            if(!join)
+            return false;
 
             const month =
             String(

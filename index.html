@@ -685,38 +685,67 @@ nav .text-slate-400{
         0
     </h2>
 
-    <!-- STATUS ROW 1 -->
-    <div class="flex flex-wrap items-center gap-x-3 gap-y-1 mt-2 text-[10px] md:text-[11px] font-medium text-slate-500 relative z-10">
+    <!-- STATUS -->
+<div class="mt-2 flex flex-wrap gap-1.5 relative z-10">
 
-        <span id="countInductionCompleted">
-            ✅ 0
+    <div class="px-2 py-1 rounded-full bg-green-100 text-green-700 text-[10px] font-semibold">
+        Completed
+        <span
+            id="countInductionCompleted"
+            class="font-bold"
+        >
+            0
         </span>
-
-        <span id="countInductionProgress">
-            🔵 0
-        </span>
-
-        <span id="countInductionProgressLate">
-            🟠 0
-        </span>
-
     </div>
 
-    <!-- STATUS ROW 2 -->
-    <div class="flex flex-wrap items-center gap-x-3 gap-y-1 mt-1 text-[10px] md:text-[11px] font-medium text-slate-500 relative z-10">
-
-        <span id="countInductionRemedial">
-            🔴 0
+    <div class="px-2 py-1 rounded-full bg-blue-100 text-blue-700 text-[10px] font-semibold">
+        Progress
+        <span
+            id="countInductionProgress"
+            class="font-bold"
+        >
+            0
         </span>
+    </div>
 
-        <span id="countInductionRemedialLate">
-            🚨 0
+    <div class="px-2 py-1 rounded-full bg-amber-100 text-amber-700 text-[10px] font-semibold">
+        Late
+        <span
+            id="countInductionProgressLate"
+            class="font-bold"
+        >
+            0
         </span>
+    </div>
 
-        <span id="countInductionResign">
-            ⚫ 0
+    <div class="px-2 py-1 rounded-full bg-red-100 text-red-700 text-[10px] font-semibold">
+        Remedial
+        <span
+            id="countInductionRemedial"
+            class="font-bold"
+        >
+            0
         </span>
+    </div>
 
+    <div class="px-2 py-1 rounded-full bg-rose-200 text-rose-800 text-[10px] font-semibold">
+        Remedial Late
+        <span
+            id="countInductionRemedialLate"
+            class="font-bold"
+        >
+            0
+        </span>
+    </div>
+
+    <div class="px-2 py-1 rounded-full bg-slate-200 text-slate-700 text-[10px] font-semibold">
+        Resign
+        <span
+            id="countInductionResign"
+            class="font-bold"
+        >
+            0
+        </span>
     </div>
 
 </div>
@@ -3111,32 +3140,32 @@ data.length;
 document.getElementById(
     "countInductionCompleted"
 ).innerText =
-`✅ ${completed}`;
+completed;
 
 document.getElementById(
     "countInductionProgress"
 ).innerText =
-`🔵 ${onProgress}`;
+onProgress;
 
 document.getElementById(
     "countInductionProgressLate"
 ).innerText =
-`🟠 ${onProgressLate}`;
+onProgressLate;
 
 document.getElementById(
     "countInductionRemedial"
 ).innerText =
-`🔴 ${remedial}`;
+remedial;
 
 document.getElementById(
     "countInductionRemedialLate"
 ).innerText =
-`🚨 ${remedialLate}`;
+remedialLate;
 
 document.getElementById(
     "countInductionResign"
 ).innerText =
-`⚫ ${resign}`;
+resign;
 }
 // ======================
 // ASSIGNMENT COUNT

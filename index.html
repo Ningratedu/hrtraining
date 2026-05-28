@@ -1428,7 +1428,54 @@ async function loadInductionData(){
         await res.json();
 
         inductionData =
-result || [];
+(result || []).map(item=>{
+
+    const joinDate =
+    parseDateSafe(
+        item.join_date
+    );
+
+    let period = "";
+
+    if(joinDate){
+
+        const month =
+        String(
+            joinDate.getMonth() + 1
+        ).padStart(2,"0");
+
+        const year =
+        joinDate.getFullYear();
+
+        period =
+        `${year}-${month}`;
+    }
+
+    return {
+
+        ...item,
+
+        // CACHE DATE
+        parsedJoinDate:
+        joinDate,
+
+        // CACHE PERIOD
+        parsedPeriod:
+        period,
+
+        // CACHE DEPARTMENT
+        normalizedDepartment:
+        String(
+            item.department ||
+            item.departement ||
+            ""
+        )
+        .trim()
+        .toLowerCase()
+
+    };
+
+});
 
 updateDepartmentFilter();
         
@@ -1667,9 +1714,7 @@ function renderInductionTable(){
         data.filter(item=>{
 
             const join =
-            parseDateSafe(
-                item.join_date
-            );
+item.parsedJoinDate;
 
             if(!join)
             return false;
@@ -1683,8 +1728,8 @@ function renderInductionTable(){
             join.getFullYear();
 
             return (
-                `${year}-${month}`
-                === period
+            item.parsedPeriod
+            === period
             );
         });
     }
@@ -1887,9 +1932,7 @@ function renderInductionTable(){
                 "Asia/Jakarta"
             }
         ).format(
-            parseDateSafe(
-                item.join_date
-            )
+            item.parsedJoinDate
         )
         : "-";
 
@@ -2593,13 +2636,7 @@ function updateInductionCount(){
             selectedDepartments
             .includes(
 
-                String(
-                    item.department ||
-                    item.departement ||
-                    ""
-                )
-                .trim()
-                .toLowerCase()
+                item.normalizedDepartment
 
             )
         );

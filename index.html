@@ -1087,45 +1087,52 @@ nav .text-slate-400{
     </th>
 
     <th
-        onclick="sortInduction('avg_score')"
-        class="px-3 py-3 min-w-[150px] text-center cursor-pointer hover:bg-slate-100 transition"
-    >
-        <div class="flex items-center justify-center gap-2">
+    onclick="sortInduction('avg_score')"
+    class="px-3 py-3 min-w-[150px] text-center cursor-pointer hover:bg-slate-100 transition"
+>
+    <div class="flex items-center justify-center gap-2">
 
-            <span>Avg Score</span>
+        <span>Avg Score</span>
 
-            <i
-                data-lucide="arrow-up-down"
-                class="w-3.5 h-3.5"
-            ></i>
+        <i
+            data-lucide="arrow-up-down"
+            class="w-3.5 h-3.5"
+        ></i>
 
-        </div>
-    </th>
+    </div>
+</th>
 
-    <th
-        onclick="sortInduction('completed_training')"
-        class="px-3 py-3 min-w-[150px] text-center cursor-pointer hover:bg-slate-100 transition"
-    >
-        <div class="flex items-center justify-center gap-2">
+<th
+    onclick="sortInduction('completed_training')"
+    class="px-3 py-3 min-w-[150px] text-center cursor-pointer hover:bg-slate-100 transition"
+>
+    <div class="flex items-center justify-center gap-2">
 
-            <span>Completed</span>
+        <span>Completed</span>
 
-            <i
-                data-lucide="arrow-up-down"
-                class="w-3.5 h-3.5"
-            ></i>
+        <i
+            data-lucide="arrow-up-down"
+            class="w-3.5 h-3.5"
+        ></i>
 
-        </div>
-    </th>
+    </div>
+</th>
 
-    <th class="px-3 py-3 min-w-[150px] text-center">
-        Status
-    </th>
+<th class="px-3 py-3 min-w-[220px] text-center">
+    Status
+</th>
+
+<th class="px-3 py-3 min-w-[170px] text-center">
+    Tanggal Resign
+</th>
+
+<th class="px-3 py-3 min-w-[250px] text-center">
+    Alasan Resign
+</th>
 
 </tr>
 
-            </thead>
-
+</thead>
             <!-- BODY -->
             <tbody
                 id="inductionBody"
@@ -1911,10 +1918,17 @@ item.parsedJoinDate;
             item.total_training || 0
         );
 
-        // =====================================
+// =====================================
 // STATUS BADGE
 // =====================================
 let statusBadge = "";
+
+const statusKaryawan =
+String(
+    item.status_karyawan || ""
+)
+.trim()
+.toLowerCase();
 
 const rowStatus =
 String(
@@ -1967,17 +1981,25 @@ rowStatus ===
 
 // =====================================
 // RESIGN
+// PRIORITAS PALING ATAS
 // =====================================
 if(
 
-    rowStatus ===
+    statusKaryawan ===
     "resign"
 
 ){
 
     statusBadge = `
-    <span class="px-2 py-1 rounded-lg bg-slate-200 text-slate-700 font-semibold">
+    <span class="
+    px-2 py-1
+    rounded-lg
+    bg-slate-200
+    text-slate-700
+    font-semibold">
+
         Resign
+
     </span>
     `;
 }
@@ -1992,8 +2014,15 @@ else if(
 ){
 
     statusBadge = `
-    <span class="px-2 py-1 rounded-lg bg-green-100 text-green-700 font-semibold">
+    <span class="
+    px-2 py-1
+    rounded-lg
+    bg-green-100
+    text-green-700
+    font-semibold">
+
         Completed
+
     </span>
     `;
 }
@@ -2008,18 +2037,22 @@ else if(
 ){
 
     statusBadge = `
-    <span class="px-2 py-1 rounded-lg
+    <span class="
+    px-2 py-1
+    rounded-lg
     ${
       isLate
       ? "bg-red-200 text-red-800"
       : "bg-red-100 text-red-700"
     }
     font-semibold">
+
         ${
           isLate
           ? "Remedial + Late"
           : "Remedial"
         }
+
     </span>
     `;
 }
@@ -2030,178 +2063,186 @@ else if(
 else{
 
     statusBadge = `
-    <span class="px-2 py-1 rounded-lg
+    <span class="
+    px-2 py-1
+    rounded-lg
     ${
       isLate
       ? "bg-amber-200 text-amber-800"
       : "bg-blue-100 text-blue-700"
     }
     font-semibold">
+
         ${
           isLate
           ? "On Progress + Late"
           : "On Progress"
         }
+
     </span>
     `;
 }
 
-        const formattedDate =
-        item.join_date
-        ? new Intl.DateTimeFormat(
-            "id-ID",
-            {
-                timeZone:
-                "Asia/Jakarta"
-            }
-        ).format(
-            item.parsedJoinDate
-        )
-        : "-";
+const formattedDate =
+item.join_date
+? new Intl.DateTimeFormat(
+    "id-ID",
+    {
+        timeZone:
+        "Asia/Jakarta"
+    }
+).format(
+    item.parsedJoinDate
+)
+: "-";
 
-        rows.push(`
+rows.push(`
 
-        <tr class="hover:bg-slate-50 transition-all">
+<tr class="hover:bg-slate-50 transition-all">
 
-            <td class="sticky left-0 bg-white px-3 py-3 font-medium">
-                ${index + 1}
-            </td>
+    <td class="sticky left-0 bg-white px-3 py-3 font-medium">
+        ${index + 1}
+    </td>
 
-            <td class="px-3 py-3">
-                ${item.nama || "-"}
-            </td>
+    <td class="px-3 py-3">
+        ${item.nama || "-"}
+    </td>
 
-            <td class="px-3 py-3">
-                ${item.username || "-"}
-            </td>
+    <td class="px-3 py-3">
+        ${item.username || "-"}
+    </td>
 
-            <td class="px-3 py-3">
-                ${formattedDate}
-            </td>
+    <td class="px-3 py-3">
+        ${formattedDate}
+    </td>
 
-            <td class="px-3 py-3">
-                ${item.department || "-"}
-            </td>
+    <td class="px-3 py-3">
+        ${item.department || "-"}
+    </td>
 
-            <td class="px-3 py-3">
-                ${item.position || "-"}
-            </td>
+    <td class="px-3 py-3">
+        ${item.position || "-"}
+    </td>
 
-            <td
-                class="px-3 py-3 cursor-pointer hover:bg-blue-50 transition"
-                onclick="showInductionDetail('${item.username}')"
-            >
-
-                <div class="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
-
-                    <div
-                        class="bg-blue-600 h-2 rounded-full"
-                        style="width:${progress}%"
-                    ></div>
-
-                </div>
-
-                <div class="text-center mt-1">
-
-                    <div class="text-[11px] font-semibold text-slate-700">
-                        ${progress}%
-                    </div>
-
-                    <div class="text-[10px] text-blue-600 font-medium leading-none">
-                        Lihat Detail
-                    </div>
-
-                </div>
-
-            </td>
-
-            <td class="px-3 py-3 text-center font-semibold">
-                ${avg}
-            </td>
-
-            <td class="px-3 py-3 text-center">
-                ${completed}/${total}
-            </td>
-
-            <td class="px-3 py-3 text-center">
-
-    <div class="flex items-center justify-center gap-2">
-
-        ${statusBadge}
-
-        ${
-            String(
-                item.status || ""
-            )
-            .trim()
-            .toLowerCase()
-
-            !==
-
-            "resign"
-
-            ?
-
-            `
-            <button
-    onclick="
-        event.stopPropagation();
-        openResignModal(
-            '${item.id}',
-            '${item.nama || ""}'
-        )
-    "
-    class="
-    inline-flex
-    items-center
-    gap-1
-    text-[11px]
-    px-2 py-1
-    rounded-lg
-    bg-red-100
-    text-red-700
-    hover:bg-red-200
-    transition
-    font-medium
-    "
->
-
-    <svg
-        xmlns="http://www.w3.org/2000/svg"
-        class="w-3 h-3"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
-        stroke-width="2"
+    <td
+        class="px-3 py-3 cursor-pointer hover:bg-blue-50 transition"
+        onclick="showInductionDetail('${item.username}')"
     >
-        <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            d="M15.232 5.232l3.536 3.536M9 11l6.768-6.768a2.5 2.5 0 113.536 3.536L12.536 14.536A4 4 0 019.172 15.9L7 16l.1-2.172A4 4 0 019 11z"
-        />
-    </svg>
 
-    <span>
-        Resign
-    </span>
+        <div class="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
 
-</button>
-            `
+            <div
+                class="bg-blue-600 h-2 rounded-full"
+                style="width:${progress}%"
+            ></div>
 
-            :
+        </div>
 
-            ""
+        <div class="text-center mt-1">
 
+            <div class="text-[11px] font-semibold text-slate-700">
+                ${progress}%
+            </div>
+
+            <div class="text-[10px] text-blue-600 font-medium leading-none">
+                Lihat Detail
+            </div>
+
+        </div>
+
+    </td>
+
+    <td class="px-3 py-3 text-center font-semibold">
+        ${avg}
+    </td>
+
+    <td class="px-3 py-3 text-center">
+        ${completed}/${total}
+    </td>
+
+    <td class="px-3 py-3 text-center">
+
+        <div class="flex items-center justify-center gap-2">
+
+            ${statusBadge}
+
+            ${
+                statusKaryawan
+                !==
+                "resign"
+
+                ?
+
+                `
+                <button
+                    onclick="
+                        event.stopPropagation();
+                        openResignModal(
+                            '${item.id}',
+                            '${item.nama || ""}'
+                        )
+                    "
+                    class="
+                    inline-flex
+                    items-center
+                    gap-1
+                    text-[11px]
+                    px-2 py-1
+                    rounded-lg
+                    bg-red-100
+                    text-red-700
+                    hover:bg-red-200
+                    transition
+                    font-medium
+                    "
+                >
+
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        class="w-3 h-3"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        stroke-width="2"
+                    >
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            d="M15.232 5.232l3.536 3.536M9 11l6.768-6.768a2.5 2.5 0 113.536 3.536L12.536 14.536A4 4 0 019.172 15.9L7 16l.1-2.172A4 4 0 019 11z"
+                        />
+                    </svg>
+
+                    <span>
+                        Resign
+                    </span>
+
+                </button>
+                `
+
+                :
+
+                ""
+
+            }
+
+        </div>
+
+    </td>
+
+    <td class="px-3 py-3 text-center">
+        ${
+            item.resign_date || "-"
         }
+    </td>
 
-    </div>
+    <td class="px-3 py-3">
+        ${
+            item.resign_reason || "-"
+        }
+    </td>
 
-</td>
-
-        </tr>
-        `);
-
-    });
+</tr>
+`);
 
     // ======================
     // SINGLE RENDER
@@ -6003,7 +6044,7 @@ async function saveResign(){
                     "induction_progress",
 
                     action:
-                    "update",
+                    "resign",
 
                     id:
                     id,

@@ -483,15 +483,7 @@ nav .text-slate-400{
             <!-- PERIODE -->
             <select
     id="globalPeriodeFilter"
-    onchange="
-        renderRecruitmentTable();
-        renderInductionTable();
-        renderAssignmentTable();
-
-        updateFunnel();
-        updateInductionCount();
-        updateAssignmentCount();
-    "
+    onchange="refreshOnboardingUI()"
                 class="bg-white border border-slate-200 rounded-xl px-2 py-1.5 text-[9px] md:text-xs text-left shadow-sm outline-none focus:ring-2 focus:ring-blue-500 w-[96px] md:w-[135px]"
             >
                 <option value="">
@@ -1437,9 +1429,10 @@ async function loadInductionData(){
 
         inductionData =
 result || [];
+
 updateDepartmentFilter();
-renderInductionTable();
-updateInductionCount();
+
+refreshOnboardingUI();
         
     }catch(err){
 
@@ -1572,8 +1565,11 @@ async function loadAssignmentData(){
                 item.join_date || "-",
 
                 usia_join:(()=>{if(!item.join_date) return "-";
-                const joinDate =new Date(item.join_date);
-                if(isNaN(joinDate)) return "-";
+                const joinDate =
+parseDateSafe(
+    item.join_date
+);
+                if(!joinDate) return "-";
                 const today =new Date();
                 const diffTime =today - joinDate;
                 const diffDays =Math.floor(diffTime/(
@@ -1604,10 +1600,7 @@ async function loadAssignmentData(){
             };
         });
 
-        renderAssignmentTable();
-
-        updateFunnel();
-        updateAssignmentCount();
+        refreshOnboardingUI();
 
     }catch(err){
 
@@ -2628,15 +2621,13 @@ function updateInductionCount(){
 
         // JOIN DATE
         const joinDate =
-        new Date(
-            item.join_date
-        );
+parseDateSafe(
+    item.join_date
+);
 
         let days = 0;
 
-        if(
-            !isNaN(joinDate)
-        ){
+        if(joinDate){
 
             days =
             Math.floor(
@@ -4007,6 +3998,26 @@ html:`
     });
 }
     
+// ======================
+// GLOBAL REFRESH
+// ======================
+function refreshOnboardingUI(){
+
+    renderRecruitmentTable();
+
+    renderInductionTable();
+
+    renderAssignmentTable();
+
+    updateFunnel();
+
+    updateInductionCount();
+
+    updateAssignmentCount();
+
+    lucide.createIcons();
+}
+    
 // =====================================
 // AUTO LOAD
 // =====================================
@@ -5311,13 +5322,7 @@ function applyDepartmentFilter(){
             "hidden"
         );
 
-renderRecruitmentTable();
-renderInductionTable();
-renderAssignmentTable();
-
-updateFunnel();
-updateInductionCount();
-updateAssignmentCount();
+refreshOnboardingUI();
 }
 
 

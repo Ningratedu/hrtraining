@@ -717,7 +717,7 @@ nav .text-slate-400{
     </div>
 
     <div class="flex items-center justify-between px-1 py-[2px] rounded bg-rose-200 text-rose-800 font-semibold">
-        <span>🚨 Remedial Late</span>
+        <span>🚨 Remed Late</span>
         <span id="countInductionRemedialLate" class="font-bold">
             0
         </span>
@@ -1730,7 +1730,11 @@ function renderInductionTable(){
     data.forEach(item=>{
 
         const key =
-        item.username || "-";
+String(
+    item.username || "-"
+)
+.trim()
+.toLowerCase();
 
         if(
             !grouped[key]
@@ -1998,7 +2002,7 @@ Math.floor(
 );
 
 const isLate =
-diffDays > 10;
+diffDays > 14;
 
 const completedCount =
 Number(
@@ -3016,12 +3020,41 @@ data.forEach(item=>{
         item.total_training || 0
     );
 
-    const rowStatus =
+    // =====================================
+// CHECK REMEDIAL
+// SAMA SEPERTI TABEL
+// =====================================
+const userMaterials =
+inductionData.filter(r=>
+
     String(
-        item.status || ""
+        r.username || ""
     )
     .trim()
-    .toLowerCase();
+    .toLowerCase()
+
+    ===
+
+    String(
+        item.username || ""
+    )
+    .trim()
+    .toLowerCase()
+);
+
+const hasRemedial =
+userMaterials.some(r=>
+
+    String(
+        r.status || ""
+    )
+    .trim()
+    .toLowerCase()
+
+    ===
+
+    "remedial"
+);
 
     // =====================================
     // JOIN DATE
@@ -3055,7 +3088,7 @@ data.forEach(item=>{
     }
 
     const isLate =
-    days > 10;
+    days > 14;
 
     // =====================================
     // COMPLETED
@@ -3081,10 +3114,9 @@ data.forEach(item=>{
     // =====================================
     if(
 
-        rowStatus ===
-        "remedial"
+    hasRemedial
 
-    ){
+){
 
         if(isLate){
 

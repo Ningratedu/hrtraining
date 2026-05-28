@@ -2230,10 +2230,30 @@ rows.push(`
     </td>
 
     <td class="px-3 py-3 text-center">
-        ${
-            item.resign_date || "-"
-        }
-    </td>
+
+    ${
+        item.resign_date
+
+        ?
+
+        new Intl.DateTimeFormat(
+            "id-ID",
+            {
+                timeZone:
+                "Asia/Jakarta"
+            }
+        ).format(
+            new Date(
+                item.resign_date
+            )
+        )
+
+        :
+
+        "-"
+    }
+
+</td>
 
     <td class="px-3 py-3">
         ${

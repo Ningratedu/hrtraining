@@ -6104,10 +6104,25 @@ async function saveResign(){
 
             closeResignModal();
 
-            // refresh data induction
-            await loadInductionData();
+// refresh ulang data
+await loadInductionData();
 
-            Swal.fire({
+// force render ulang table
+renderInductionTable();
+
+Swal.fire({
+
+    icon:"success",
+
+    title:"Berhasil",
+
+    text:
+    "Status resign berhasil disimpan",
+
+    timer:1500,
+
+    showConfirmButton:false
+});
 
                 icon:"success",
 

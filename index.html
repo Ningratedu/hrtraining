@@ -685,52 +685,81 @@ nav .text-slate-400{
         0
     </h2>
 
-    <!-- STATUS -->
-<div class="mt-1.5 grid grid-cols-2 gap-0.5 relative z-10 text-[6px] leading-none">
+    <!-- DONUT CHART -->
+<div class="relative z-10 mt-2 flex items-center gap-3">
 
-    <div class="flex items-center justify-between px-1 py-[2px] rounded bg-green-100 text-green-700 font-semibold">
-        <span>✅ Completed</span>
-        <span id="countInductionCompleted" class="font-bold">
-            0
-        </span>
+    <!-- DONUT -->
+    <div class="relative w-[72px] h-[72px] flex-shrink-0">
+
+        <div
+            id="inductionDonut"
+            class="w-full h-full rounded-full shadow-inner transition-all duration-500"
+            style="
+                background:
+                conic-gradient(
+                    #22c55e 0deg 0deg,
+                    #3b82f6 0deg 0deg,
+                    #f59e0b 0deg 0deg,
+                    #ef4444 0deg 0deg,
+                    #e11d48 0deg 0deg,
+                    #64748b 0deg 360deg
+                );
+            "
+        ></div>
+
+        <!-- CENTER -->
+        <div class="absolute inset-[10px] rounded-full bg-white flex flex-col items-center justify-center shadow-sm">
+
+            <span
+                id="countInduction"
+                class="text-lg font-extrabold italic text-yellow-800 leading-none"
+            >
+                0
+            </span>
+
+            <span class="text-[8px] text-slate-500 font-semibold uppercase tracking-wide">
+                Total
+            </span>
+
+        </div>
+
     </div>
 
-    <div class="flex items-center justify-between px-1 py-[2px] rounded bg-blue-100 text-blue-700 font-semibold">
-        <span>⏳ Progress</span>
-        <span id="countInductionProgress" class="font-bold">
-            0
-        </span>
+    <!-- LEGEND -->
+    <div class="flex-1 grid grid-cols-2 gap-x-2 gap-y-1 text-[8px] font-semibold">
+
+        <div class="flex justify-between text-green-700">
+            <span>✅ Comp</span>
+            <span id="countInductionCompleted">0</span>
+        </div>
+
+        <div class="flex justify-between text-blue-700">
+            <span>⏳ Prog</span>
+            <span id="countInductionProgress">0</span>
+        </div>
+
+        <div class="flex justify-between text-amber-700">
+            <span>🕒 Late</span>
+            <span id="countInductionProgressLate">0</span>
+        </div>
+
+        <div class="flex justify-between text-red-700">
+            <span>❌ Remed</span>
+            <span id="countInductionRemedial">0</span>
+        </div>
+
+        <div class="flex justify-between text-rose-700">
+            <span>🚨 R-Late</span>
+            <span id="countInductionRemedialLate">0</span>
+        </div>
+
+        <div class="flex justify-between text-slate-700">
+            <span>👋 Resign</span>
+            <span id="countInductionResign">0</span>
+        </div>
+
     </div>
 
-    <div class="flex items-center justify-between px-1 py-[2px] rounded bg-amber-100 text-amber-700 font-semibold">
-        <span>🕒 Late</span>
-        <span id="countInductionProgressLate" class="font-bold">
-            0
-        </span>
-    </div>
-
-    <div class="flex items-center justify-between px-1 py-[2px] rounded bg-red-100 text-red-700 font-semibold">
-        <span>❌ Remedial</span>
-        <span id="countInductionRemedial" class="font-bold">
-            0
-        </span>
-    </div>
-
-    <div class="flex items-center justify-between px-1 py-[2px] rounded bg-rose-200 text-rose-800 font-semibold">
-        <span>🚨 Remed Late</span>
-        <span id="countInductionRemedialLate" class="font-bold">
-            0
-        </span>
-    </div>
-
-    <div class="flex items-center justify-between px-1 py-[2px] rounded bg-slate-200 text-slate-700 font-semibold">
-        <span>👋 Resign</span>
-        <span id="countInductionResign" class="font-bold">
-            0
-        </span>
-    </div>
-
-</div>
 </div>
     <!-- ASSIGNMENT -->
     <div
@@ -3182,6 +3211,36 @@ document.getElementById(
 ).innerText =
 resign;
 }
+    // ======================
+// UPDATE DONUT CHART
+// ======================
+
+const total = data.length;
+
+const pCompleted = total ? (completed / total) * 360 : 0;
+const pProgress = total ? (onProgress / total) * 360 : 0;
+const pLate = total ? (onProgressLate / total) * 360 : 0;
+const pRemedial = total ? (remedial / total) * 360 : 0;
+const pRemedialLate = total ? (remedialLate / total) * 360 : 0;
+
+let start = 0;
+
+const end1 = start + pCompleted;
+const end2 = end1 + pProgress;
+const end3 = end2 + pLate;
+const end4 = end3 + pRemedial;
+const end5 = end4 + pRemedialLate;
+
+document.getElementById("inductionDonut").style.background =
+`conic-gradient(
+#22c55e ${start}deg ${end1}deg,
+#3b82f6 ${end1}deg ${end2}deg,
+#f59e0b ${end2}deg ${end3}deg,
+#ef4444 ${end3}deg ${end4}deg,
+#e11d48 ${end4}deg ${end5}deg,
+#64748b ${end5}deg 360deg
+)`;
+    
 // ======================
 // ASSIGNMENT COUNT
 // ======================

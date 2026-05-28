@@ -1680,10 +1680,18 @@ if(
         ) return false;
 
         const join =
-        new Date(
-            item.join_date
-        );
+parseDateSafe(
+    item.join_date
+);
 
+if(!join)
+return false;
+
+const month =
+String(
+    join.getMonth() + 1
+).padStart(2,"0");
+        
         const month =
         String(
             join.getMonth() + 1
@@ -2831,45 +2839,120 @@ function updateAssignmentCount(){
 
 // ======================
 // SAFE DATE PARSER
-// SUPPORT DD/MM/YYYY
+// SUPPORT:
+// - ISO
+// - DD/MM/YYYY
+// - 28 Mei 2026
 // ======================
 function parseDateSafe(dateString){
 
     if(!dateString)
     return null;
 
-    // kalau sudah object date
-    const direct =
-    new Date(dateString);
+    // ======================
+    // SUDAH DATE OBJECT
+    // ======================
+    if(dateString instanceof Date){
 
-    if(!isNaN(direct))
-    return direct;
+        return isNaN(dateString)
+        ? null
+        : dateString;
+    }
 
-    // format indonesia dd/mm/yyyy
-    const parts =
+    const str =
     String(dateString)
-    .split("/");
+    .trim()
+    .toLowerCase();
 
-    if(parts.length === 3){
+    // ======================
+    // ISO / NORMAL DATE
+    // ======================
+    const direct =
+    new Date(str);
+
+    if(!isNaN(direct)){
+        return direct;
+    }
+
+    // ======================
+    // DD/MM/YYYY
+    // ======================
+    if(str.includes("/")){
+
+        const parts =
+        str.split("/");
+
+        if(parts.length === 3){
+
+            const day =
+            parseInt(parts[0]);
+
+            const month =
+            parseInt(parts[1]) - 1;
+
+            const year =
+            parseInt(parts[2]);
+
+            const parsed =
+            new Date(
+                year,
+                month,
+                day
+            );
+
+            if(!isNaN(parsed)){
+                return parsed;
+            }
+        }
+    }
+
+    // ======================
+    // FORMAT INDONESIA
+    // ======================
+    const bulan = {
+
+        januari:0,
+        februari:1,
+        maret:2,
+        april:3,
+        mei:4,
+        juni:5,
+        juli:6,
+        agustus:7,
+        september:8,
+        oktober:9,
+        november:10,
+        desember:11
+
+    };
+
+    const indo =
+    str.split(" ");
+
+    if(indo.length === 3){
 
         const day =
-        parseInt(parts[0]);
+        parseInt(indo[0]);
 
         const month =
-        parseInt(parts[1]) - 1;
+        bulan[indo[1]];
 
         const year =
-        parseInt(parts[2]);
+        parseInt(indo[2]);
 
-        const parsed =
-        new Date(
-            year,
-            month,
-            day
-        );
+        if(month !== undefined){
 
-        if(!isNaN(parsed))
-        return parsed;
+            const parsed =
+            new Date(
+                year,
+                month,
+                day
+            );
+
+            if(!isNaN(parsed)){
+                return parsed;
+            }
+        }
     }
 
     return null;

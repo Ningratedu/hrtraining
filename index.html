@@ -2920,18 +2920,18 @@ function parseDateSafe(dateString){
         const day =
         parseInt(indo[0]);
 
-        const month =
+        const indoMonth =
         bulan[indo[1]];
 
         const year =
         parseInt(indo[2]);
 
-        if(month !== undefined){
+        if(indoMonth !== undefined){
 
             const parsed =
             new Date(
                 year,
-                month,
+                indoMonth,
                 day
             );
 

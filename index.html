@@ -1454,6 +1454,11 @@ async function loadInductionData(){
     return {
 
         ...item,
+        
+        searchIndex:
+Object.values(item)
+.join(" ")
+.toLowerCase(),
 
         // CACHE DATE
         parsedJoinDate:
@@ -1751,10 +1756,8 @@ item.parsedJoinDate;
         data =
         data.filter(item=>
 
-            Object.values(item)
-            .join(" ")
-            .toLowerCase()
-            .includes(keyword)
+            item.searchIndex
+.includes(keyword)
 
         );
     }

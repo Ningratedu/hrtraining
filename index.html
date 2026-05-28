@@ -5966,31 +5966,21 @@ function closeResignModal(){
 async function saveResign(){
 
     const id =
-    document
-    .getElementById(
+    document.getElementById(
         "resignId"
-    )
-    .value;
+    ).value;
 
     const resignDate =
-    document
-    .getElementById(
+    document.getElementById(
         "resignDate"
-    )
-    .value;
+    ).value;
 
     const resignReason =
-    document
-    .getElementById(
+    document.getElementById(
         "resignReason"
-    )
-    .value;
+    ).value;
 
-    if(
-
-        !resignDate
-
-    ){
+    if(!resignDate){
 
         alert(
             "Tanggal resign wajib diisi"
@@ -5999,30 +5989,53 @@ async function saveResign(){
         return;
     }
 
-    await postData({
+    try{
 
-        sheet:
-        "induction_progress",
+        await fetch(
+            API_URL,
+            {
+                method:"POST",
 
-        action:
-        "update",
+                body:
+                JSON.stringify({
 
-        id,
+                    sheet:
+                    "induction_progress",
 
-        status:
-        "Resign",
+                    action:
+                    "update",
 
-        resign_date:
-        resignDate,
+                    id:
+                    id,
 
-        resign_reason:
-        resignReason
+                    status:
+                    "Resign",
 
-    });
+                    resign_date:
+                    resignDate,
 
-    closeResignModal();
+                    resign_reason:
+                    resignReason
+                })
+            }
+        );
 
-    loadInduction();
+        closeResignModal();
+
+        await loadInductionData();
+
+        alert(
+            "Status resign berhasil disimpan"
+        );
+
+    }catch(err){
+
+        console.error(err);
+
+        alert(
+            "Gagal simpan resign"
+        );
+    }
 }    
         
     function filterByStage(stage){

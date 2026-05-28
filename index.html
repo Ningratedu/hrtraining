@@ -1911,20 +1911,140 @@ item.parsedJoinDate;
             item.total_training || 0
         );
 
-        let statusBadge = `
-        <span class="px-2 py-1 rounded-lg bg-slate-100 text-slate-600">
-            Pending
-        </span>
-        `;
+        // =====================================
+// STATUS BADGE
+// =====================================
+let statusBadge = "";
 
-        if(progress >= 100){
+const rowStatus =
+String(
+    item.status || ""
+)
+.trim()
+.toLowerCase();
 
-            statusBadge = `
-            <span class="px-2 py-1 rounded-lg bg-green-100 text-green-700 font-semibold">
-                Completed
-            </span>
-            `;
+const joinDate =
+new Date(
+    item.join_date
+);
+
+const today =
+new Date();
+
+const diffDays =
+Math.floor(
+
+    (
+        today -
+        joinDate
+    )
+
+    /
+
+    (
+        1000 *
+        60 *
+        60 *
+        24
+    )
+);
+
+const isLate =
+diffDays > 10;
+
+const isCompleted =
+
+completed === total
+
+&&
+
+total > 0;
+
+const hasRemedial =
+
+rowStatus ===
+"remedial";
+
+// =====================================
+// RESIGN
+// =====================================
+if(
+
+    rowStatus ===
+    "resign"
+
+){
+
+    statusBadge = `
+    <span class="px-2 py-1 rounded-lg bg-slate-200 text-slate-700 font-semibold">
+        Resign
+    </span>
+    `;
+}
+
+// =====================================
+// COMPLETED
+// =====================================
+else if(
+
+    isCompleted
+
+){
+
+    statusBadge = `
+    <span class="px-2 py-1 rounded-lg bg-green-100 text-green-700 font-semibold">
+        Completed
+    </span>
+    `;
+}
+
+// =====================================
+// REMEDIAL
+// =====================================
+else if(
+
+    hasRemedial
+
+){
+
+    statusBadge = `
+    <span class="px-2 py-1 rounded-lg
+    ${
+      isLate
+      ? "bg-red-200 text-red-800"
+      : "bg-red-100 text-red-700"
+    }
+    font-semibold">
+        ${
+          isLate
+          ? "Remedial + Late"
+          : "Remedial"
         }
+    </span>
+    `;
+}
+
+// =====================================
+// ON PROGRESS
+// =====================================
+else{
+
+    statusBadge = `
+    <span class="px-2 py-1 rounded-lg
+    ${
+      isLate
+      ? "bg-amber-200 text-amber-800"
+      : "bg-blue-100 text-blue-700"
+    }
+    font-semibold">
+        ${
+          isLate
+          ? "On Progress + Late"
+          : "On Progress"
+        }
+    </span>
+    `;
+}
 
         const formattedDate =
         item.join_date

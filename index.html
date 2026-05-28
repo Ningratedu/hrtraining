@@ -2124,8 +2124,57 @@ else{
             </td>
 
             <td class="px-3 py-3 text-center">
-                ${statusBadge}
-            </td>
+
+    <div class="flex items-center justify-center gap-2">
+
+        ${statusBadge}
+
+        ${
+            String(
+                item.status || ""
+            )
+            .trim()
+            .toLowerCase()
+
+            !==
+
+            "resign"
+
+            ?
+
+            `
+            <button
+                onclick="
+                    event.stopPropagation();
+                    openResignModal(
+                        '${item.id}',
+                        '${item.nama || ""}'
+                    )
+                "
+                class="
+                text-[11px]
+                px-2 py-1
+                rounded-lg
+                bg-red-100
+                text-red-700
+                hover:bg-red-200
+                transition
+                font-medium
+                "
+            >
+                Resign
+            </button>
+            `
+
+            :
+
+            ""
+
+        }
+
+    </div>
+
+</td>
 
         </tr>
         `);
@@ -5829,7 +5878,132 @@ function sortTable(field){
         '_blank'
     );
 }
-        function filterByStage(stage){
+function openResignModal(
+    id,
+    nama
+){
+
+    document
+    .getElementById(
+        "resignId"
+    )
+    .value = id;
+
+    document
+    .getElementById(
+        "resignDate"
+    )
+    .value = "";
+
+    document
+    .getElementById(
+        "resignReason"
+    )
+    .value = "";
+
+    document
+    .getElementById(
+        "resignModal"
+    )
+    .classList
+    .remove(
+        "hidden"
+    );
+
+    document
+    .getElementById(
+        "resignModal"
+    )
+    .classList
+    .add(
+        "flex"
+    );
+}
+
+function closeResignModal(){
+
+    document
+    .getElementById(
+        "resignModal"
+    )
+    .classList
+    .add(
+        "hidden"
+    );
+
+    document
+    .getElementById(
+        "resignModal"
+    )
+    .classList
+    .remove(
+        "flex"
+    );
+}
+
+async function saveResign(){
+
+    const id =
+    document
+    .getElementById(
+        "resignId"
+    )
+    .value;
+
+    const resignDate =
+    document
+    .getElementById(
+        "resignDate"
+    )
+    .value;
+
+    const resignReason =
+    document
+    .getElementById(
+        "resignReason"
+    )
+    .value;
+
+    if(
+
+        !resignDate
+
+    ){
+
+        alert(
+            "Tanggal resign wajib diisi"
+        );
+
+        return;
+    }
+
+    await postData({
+
+        sheet:
+        "induction_progress",
+
+        action:
+        "update",
+
+        id,
+
+        status:
+        "Resign",
+
+        resign_date:
+        resignDate,
+
+        resign_reason:
+        resignReason
+
+    });
+
+    closeResignModal();
+
+    loadInduction();
+}    
+        
+    function filterByStage(stage){
 
     // FILTER RECRUITMENT
     if(stage === "Recruitment"){
@@ -6264,6 +6438,73 @@ async function(e){
             >
                 0%
             </span>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- RESIGN MODAL -->
+<div
+    id="resignModal"
+    class="fixed inset-0 bg-black/40 hidden items-center justify-center z-50 p-4"
+>
+
+    <div class="bg-white rounded-3xl w-full max-w-md p-5 shadow-xl">
+
+        <div class="text-lg font-bold text-slate-800 mb-4">
+            Input Data Resign
+        </div>
+
+        <input
+            type="hidden"
+            id="resignId"
+        >
+
+        <div class="mb-3">
+
+            <label class="text-sm font-medium text-slate-700">
+                Tanggal Resign
+            </label>
+
+            <input
+                type="date"
+                id="resignDate"
+                class="w-full border rounded-xl px-3 py-2 mt-1"
+            >
+
+        </div>
+
+        <div class="mb-4">
+
+            <label class="text-sm font-medium text-slate-700">
+                Alasan Resign
+            </label>
+
+            <textarea
+                id="resignReason"
+                rows="3"
+                class="w-full border rounded-xl px-3 py-2 mt-1"
+            ></textarea>
+
+        </div>
+
+        <div class="flex justify-end gap-2">
+
+            <button
+                onclick="closeResignModal()"
+                class="px-4 py-2 rounded-xl bg-slate-100"
+            >
+                Batal
+            </button>
+
+            <button
+                onclick="saveResign()"
+                class="px-4 py-2 rounded-xl bg-red-600 text-white"
+            >
+                Simpan
+            </button>
 
         </div>
 

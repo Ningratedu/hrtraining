@@ -1431,8 +1431,6 @@ async function loadInductionData(){
 result || [];
 
 updateDepartmentFilter();
-
-refreshOnboardingUI();
         
     }catch(err){
 
@@ -1599,8 +1597,6 @@ parseDateSafe(
                 )
             };
         });
-
-        refreshOnboardingUI();
 
     }catch(err){
 
@@ -4013,6 +4009,19 @@ function refreshOnboardingUI(){
     lucide.createIcons();
 }
     
+// ======================
+// INITIAL LOAD
+// ======================
+async function initializeOnboarding(){
+
+    await loadInductionData();
+
+    await loadAssignmentData();
+
+    generateGlobalPeriodeFilter();
+
+    refreshOnboardingUI();
+}    
 // =====================================
 // AUTO LOAD
 // =====================================
@@ -4021,8 +4030,7 @@ document
     "DOMContentLoaded",
     function(){
 
-        loadInductionData();
-        loadAssignmentData();
+        initializeOnboarding();
 
         lucide.createIcons();
 

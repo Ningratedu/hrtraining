@@ -1637,7 +1637,10 @@ function renderInductionTable(){
             ||
             Number(item.progress || 0)
             >
-            Number(grouped[key].progress || 0)
+            Number(
+                grouped[key]
+                .progress || 0
+            )
         ){
 
             grouped[key] = item;
@@ -1646,48 +1649,45 @@ function renderInductionTable(){
 
     data =
     Object.values(grouped);
-    // =====================================
-// GLOBAL PERIOD FILTER
-// JOIN DATE
-// =====================================
-const period =
-document.getElementById(
-    "globalPeriodeFilter"
-)?.value;
 
-if(
-    period
-    &&
-    period !== "all"
-){
+    // ======================
+    // FILTER PERIODE
+    // ======================
+    const period =
+    document.getElementById(
+        "globalPeriodeFilter"
+    )?.value;
 
-    data =
-    data.filter(item=>{
+    if(
+        period &&
+        period !== "all"
+    ){
 
-        if(
-            !item.join_date
-        ) return false;
+        data =
+        data.filter(item=>{
 
-        const join =
-parseDateSafe(
-    item.join_date
-);
+            const join =
+            parseDateSafe(
+                item.join_date
+            );
 
-if(!join)
-return false;
-        
-        const month =
-        String(
-            join.getMonth() + 1
-        ).padStart(2,"0");
+            if(!join)
+            return false;
 
-        const year =
-        join.getFullYear();
+            const month =
+            String(
+                join.getMonth() + 1
+            ).padStart(2,"0");
 
-        return `${year}-${month}`
-        === period;
-    });
-}
+            const year =
+            join.getFullYear();
+
+            return (
+                `${year}-${month}`
+                === period
+            );
+        });
+    }
 
     // ======================
     // SEARCH
@@ -1704,7 +1704,7 @@ return false;
     if(keyword){
 
         data =
-        data.filter(item =>
+        data.filter(item=>
 
             Object.values(item)
             .join(" ")
@@ -1723,14 +1723,15 @@ return false;
     ){
 
         data =
-        data.filter(item =>
+        data.filter(item=>
 
             selectedDepartments
             .includes(
 
                 String(
                     item.department ||
-                    item.departement || ""
+                    item.departement ||
+                    ""
                 )
                 .trim()
                 .toLowerCase()
@@ -1750,7 +1751,9 @@ return false;
         let bVal =
         b[inductionSortField];
 
-        // NUMERIC SORT
+        // ======================
+        // NUMERIC
+        // ======================
         if([
             "progress",
             "avg_score",
@@ -1772,21 +1775,21 @@ return false;
             : bVal - aVal;
         }
 
-        // DATE SORT
+        // ======================
+        // DATE
+        // ======================
         if(
             inductionSortField
             === "join_date"
         ){
 
             aVal =
-            new Date(
-                aVal || 0
-            ).getTime();
+            parseDateSafe(aVal)
+            ?.getTime() || 0;
 
             bVal =
-            new Date(
-                bVal || 0
-            ).getTime();
+            parseDateSafe(bVal)
+            ?.getTime() || 0;
 
             return inductionSortDirection
             === "asc"
@@ -1794,7 +1797,9 @@ return false;
             : bVal - aVal;
         }
 
-        // TEXT SORT
+        // ======================
+        // TEXT
+        // ======================
         aVal =
         String(
             aVal || ""
@@ -1812,6 +1817,9 @@ return false;
 
     });
 
+    // ======================
+    // EMPTY STATE
+    // ======================
     if(!data.length){
 
         tbody.innerHTML = `
@@ -1828,7 +1836,10 @@ return false;
         return;
     }
 
-    tbody.innerHTML = "";
+    // ======================
+    // BUILD ROWS
+    // ======================
+    const rows = [];
 
     data.forEach((item,index)=>{
 
@@ -1867,7 +1878,22 @@ return false;
             `;
         }
 
-        tbody.innerHTML += `
+        const formattedDate =
+        item.join_date
+        ? new Intl.DateTimeFormat(
+            "id-ID",
+            {
+                timeZone:
+                "Asia/Jakarta"
+            }
+        ).format(
+            parseDateSafe(
+                item.join_date
+            )
+        )
+        : "-";
+
+        rows.push(`
 
         <tr class="hover:bg-slate-50 transition-all">
 
@@ -1884,21 +1910,7 @@ return false;
             </td>
 
             <td class="px-3 py-3">
-                ${
-                    item.join_date
-                    ? new Intl.DateTimeFormat(
-                        "id-ID",
-                        {
-                            timeZone:
-                            "Asia/Jakarta"
-                        }
-                    ).format(
-                        new Date(
-                            item.join_date
-                        )
-                    )
-                    : "-"
-                }
+                ${formattedDate}
             </td>
 
             <td class="px-3 py-3">
@@ -1909,33 +1921,33 @@ return false;
                 ${item.position || "-"}
             </td>
 
-           <td
-    class="px-3 py-3 cursor-pointer hover:bg-blue-50 transition"
-    onclick="showInductionDetail('${item.username}')"
->
+            <td
+                class="px-3 py-3 cursor-pointer hover:bg-blue-50 transition"
+                onclick="showInductionDetail('${item.username}')"
+            >
 
-    <div class="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
+                <div class="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
 
-        <div
-            class="bg-blue-600 h-2 rounded-full"
-            style="width:${progress}%"
-        ></div>
+                    <div
+                        class="bg-blue-600 h-2 rounded-full"
+                        style="width:${progress}%"
+                    ></div>
 
-    </div>
+                </div>
 
-    <div class="text-center mt-1">
+                <div class="text-center mt-1">
 
-        <div class="text-[11px] font-semibold text-slate-700">
-            ${progress}%
-        </div>
+                    <div class="text-[11px] font-semibold text-slate-700">
+                        ${progress}%
+                    </div>
 
-        <div class="text-[10px] text-blue-600 font-medium leading-none">
-            Lihat Detail
-        </div>
+                    <div class="text-[10px] text-blue-600 font-medium leading-none">
+                        Lihat Detail
+                    </div>
 
-    </div>
+                </div>
 
-</td>
+            </td>
 
             <td class="px-3 py-3 text-center font-semibold">
                 ${avg}
@@ -1950,8 +1962,15 @@ return false;
             </td>
 
         </tr>
-        `;
+        `);
+
     });
+
+    // ======================
+    // SINGLE RENDER
+    // ======================
+    tbody.innerHTML =
+    rows.join("");
 
     lucide.createIcons();
 }

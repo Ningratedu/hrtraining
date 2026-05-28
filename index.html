@@ -667,30 +667,59 @@ nav .text-slate-400{
     </div>
 
     <!-- INDUCTION -->
-    <div
-        class="funnel-card bg-gradient-to-br from-amber-50 to-white rounded-[24px] p-4 border border-amber-200 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 cursor-pointer relative overflow-hidden"
-        onclick="filterByStage('In Class Training')"
+<div
+    class="funnel-card bg-gradient-to-br from-amber-50 to-white rounded-[24px] p-4 border border-amber-200 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 cursor-pointer relative overflow-hidden"
+    onclick="filterByStage('In Class Training')"
+>
+
+    <div class="absolute top-0 right-0 w-24 h-24 bg-amber-100/40 blur-3xl rounded-full"></div>
+
+    <p class="text-[11px] md:text-xs font-medium text-slate-500 relative z-10">
+        Induction Training
+    </p>
+
+    <h2
+        id="countInduction"
+        class="text-xl md:text-2xl font-extrabold italic tracking-tight text-yellow-800 mt-1 relative z-10"
     >
-        <div class="absolute top-0 right-0 w-24 h-24 bg-amber-100/40 blur-3xl rounded-full"></div>
+        0
+    </h2>
 
-        <p class="text-[11px] md:text-xs font-medium text-slate-500 relative z-10">
-            Induction Training
-        </p>
+    <!-- STATUS ROW 1 -->
+    <div class="flex flex-wrap items-center gap-x-3 gap-y-1 mt-2 text-[10px] md:text-[11px] font-medium text-slate-500 relative z-10">
 
-        <h2
-            id="countInduction"
-            class="text-xl md:text-2xl font-extrabold italic tracking-tight text-yellow-800 mt-1 relative z-10"
-        >
-            0
-        </h2>
+        <span id="countInductionCompleted">
+            ✅ 0
+        </span>
 
-        <div class="flex items-center gap-2 mt-1 text-[10px] md:text-[11px] font-medium text-slate-500 relative z-10">
-            <span id="countInductionCompleted">✅ 0</span>
-            <span id="countInductionProgress">⏳ 0</span>
-            <span id="countInductionFailed">❌ 0</span>
-        </div>
+        <span id="countInductionProgress">
+            🔵 0
+        </span>
+
+        <span id="countInductionProgressLate">
+            🟠 0
+        </span>
+
     </div>
 
+    <!-- STATUS ROW 2 -->
+    <div class="flex flex-wrap items-center gap-x-3 gap-y-1 mt-1 text-[10px] md:text-[11px] font-medium text-slate-500 relative z-10">
+
+        <span id="countInductionRemedial">
+            🔴 0
+        </span>
+
+        <span id="countInductionRemedialLate">
+            🚨 0
+        </span>
+
+        <span id="countInductionResign">
+            ⚫ 0
+        </span>
+
+    </div>
+
+</div>
     <!-- ASSIGNMENT -->
     <div
         class="funnel-card bg-gradient-to-br from-purple-50 to-white rounded-[24px] p-4 border border-purple-200 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 cursor-pointer relative overflow-hidden"
@@ -2925,92 +2954,189 @@ function updateInductionCount(){
     }
 
     // =====================================
-    // COUNT STATUS
+// COUNT STATUS
+// =====================================
+let completed = 0;
+let onProgress = 0;
+let onProgressLate = 0;
+let remedial = 0;
+let remedialLate = 0;
+let resign = 0;
+
+const today =
+new Date();
+
+data.forEach(item=>{
+
+    const statusKaryawan =
+    String(
+        item.status_karyawan || ""
+    )
+    .trim()
+    .toLowerCase();
+
     // =====================================
-    let completed = 0;
-    let onProgress = 0;
-    let failed = 0;
+    // RESIGN
+    // =====================================
+    if(
 
-    const today =
-    new Date();
+        statusKaryawan ===
+        "resign"
 
-    data.forEach(item=>{
+    ){
 
-        const progress =
-        Number(
-            item.progress || 0
+        resign++;
+        return;
+    }
+
+    const progress =
+    Number(
+        item.progress || 0
+    );
+
+    const completedTraining =
+    Number(
+        item.completed_training || 0
+    );
+
+    const totalTraining =
+    Number(
+        item.total_training || 0
+    );
+
+    const rowStatus =
+    String(
+        item.status || ""
+    )
+    .trim()
+    .toLowerCase();
+
+    // =====================================
+    // JOIN DATE
+    // =====================================
+    const joinDate =
+    parseDateSafe(
+        item.join_date
+    );
+
+    let days = 0;
+
+    if(joinDate){
+
+        days =
+        Math.floor(
+
+            (
+                today -
+                joinDate
+            )
+
+            /
+
+            (
+                1000 *
+                60 *
+                60 *
+                24
+            )
         );
+    }
 
-        // COMPLETED
-        if(progress >= 100){
+    const isLate =
+    days > 10;
 
-            completed++;
-            return;
-        }
+    // =====================================
+    // COMPLETED
+    // semua training lulus
+    // =====================================
+    if(
 
-        // JOIN DATE
-        const joinDate =
-parseDateSafe(
-    item.join_date
-);
+        completedTraining ===
+        totalTraining
 
-        let days = 0;
+        &&
 
-        if(joinDate){
+        totalTraining > 0
 
-            days =
-            Math.floor(
+    ){
 
-                (
-                    today -
-                    joinDate
-                )
+        completed++;
+        return;
+    }
 
-                /
+    // =====================================
+    // REMEDIAL
+    // =====================================
+    if(
 
-                (
-                    1000 *
-                    60 *
-                    60 *
-                    24
-                )
-            );
-        }
+        rowStatus ===
+        "remedial"
 
-        // <10 HARI = ON PROGRESS
-        if(days < 10){
+    ){
 
-            onProgress++;
+        if(isLate){
+
+            remedialLate++;
 
         }else{
 
-            failed++;
+            remedial++;
         }
 
-    });
+        return;
+    }
 
     // =====================================
-    // UPDATE UI
+    // ON PROGRESS
     // =====================================
-    document.getElementById(
-        "countInduction"
-    ).innerText =
-    data.length;
+    if(isLate){
 
-    document.getElementById(
-        "countInductionCompleted"
-    ).innerText =
-    `✅ ${completed}`;
+        onProgressLate++;
 
-    document.getElementById(
-        "countInductionProgress"
-    ).innerText =
-    `⏳ ${onProgress}`;
+    }else{
 
-    document.getElementById(
-        "countInductionFailed"
-    ).innerText =
-    `❌ ${failed}`;
+        onProgress++;
+    }
+
+});
+
+// =====================================
+// UPDATE UI
+// =====================================
+document.getElementById(
+    "countInduction"
+).innerText =
+data.length;
+
+document.getElementById(
+    "countInductionCompleted"
+).innerText =
+`✅ ${completed}`;
+
+document.getElementById(
+    "countInductionProgress"
+).innerText =
+`🔵 ${onProgress}`;
+
+document.getElementById(
+    "countInductionProgressLate"
+).innerText =
+`🟠 ${onProgressLate}`;
+
+document.getElementById(
+    "countInductionRemedial"
+).innerText =
+`🔴 ${remedial}`;
+
+document.getElementById(
+    "countInductionRemedialLate"
+).innerText =
+`🚨 ${remedialLate}`;
+
+document.getElementById(
+    "countInductionResign"
+).innerText =
+`⚫ ${resign}`;
 }
 // ======================
 // ASSIGNMENT COUNT

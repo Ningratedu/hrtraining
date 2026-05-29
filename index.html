@@ -1018,195 +1018,197 @@ nav .text-slate-400{
 
 </div>
     <!-- TABLE -->
-    <div class="overflow-auto max-h-[70vh] mobile-table">
+<div class="overflow-auto max-h-[70vh] mobile-table">
 
-        <table
-            class="w-full min-w-[1200px] border-collapse text-xs"
+    <table
+        class="w-full min-w-[1200px] border-collapse text-xs"
+    >
+
+        <!-- HEADER -->
+        <thead
+            class="sticky top-0 bg-white z-30 border-b border-slate-200"
         >
 
-            <!-- HEADER -->
-            <thead
-                class="sticky top-0 bg-white z-30 border-b border-slate-200"
-            >
+            <tr class="bg-slate-50 text-[12px] uppercase text-slate-600">
 
-                <tr class="bg-slate-50 text-[12px] uppercase text-slate-600">
+                <th class="sticky left-0 bg-white z-40 px-3 py-3 min-w-[70px]">
+                    No
+                </th>
 
-    <th class="sticky left-0 bg-white z-40 px-3 py-3 min-w-[70px]">
-        No
-    </th>
+                <th
+                    onclick="sortInduction('nama')"
+                    class="px-3 py-3 min-w-[220px] text-left cursor-pointer hover:bg-slate-100 transition"
+                >
+                    <div class="flex items-center gap-2">
 
-    <th
-        onclick="sortInduction('nama')"
-        class="px-3 py-3 min-w-[220px] text-left cursor-pointer hover:bg-slate-100 transition"
-    >
-        <div class="flex items-center gap-2">
+                        <span>Name</span>
 
-            <span>Name</span>
+                        <i
+                            data-lucide="arrow-up-down"
+                            class="w-3.5 h-3.5"
+                        ></i>
 
-            <i
-                data-lucide="arrow-up-down"
-                class="w-3.5 h-3.5"
-            ></i>
+                    </div>
+                </th>
 
-        </div>
-    </th>
+                <th
+                    onclick="sortInduction('username')"
+                    class="px-3 py-3 min-w-[180px] text-left cursor-pointer hover:bg-slate-100 transition"
+                >
+                    <div class="flex items-center gap-2">
 
-    <th
-        onclick="sortInduction('username')"
-        class="px-3 py-3 min-w-[180px] text-left cursor-pointer hover:bg-slate-100 transition"
-    >
-        <div class="flex items-center gap-2">
+                        <span>Username</span>
 
-            <span>Username</span>
+                        <i
+                            data-lucide="arrow-up-down"
+                            class="w-3.5 h-3.5"
+                        ></i>
 
-            <i
-                data-lucide="arrow-up-down"
-                class="w-3.5 h-3.5"
-            ></i>
+                    </div>
+                </th>
 
-        </div>
-    </th>
+                <th
+                    onclick="sortInduction('join_date')"
+                    class="px-3 py-3 min-w-[150px] text-left cursor-pointer hover:bg-slate-100 transition"
+                >
+                    <div class="flex items-center gap-2">
 
-    <th
-        onclick="sortInduction('join_date')"
-        class="px-3 py-3 min-w-[150px] text-left cursor-pointer hover:bg-slate-100 transition"
-    >
-        <div class="flex items-center gap-2">
+                        <span>Join Date</span>
 
-            <span>Join Date</span>
+                        <i
+                            data-lucide="arrow-up-down"
+                            class="w-3.5 h-3.5"
+                        ></i>
 
-            <i
-                data-lucide="arrow-up-down"
-                class="w-3.5 h-3.5"
-            ></i>
+                    </div>
+                </th>
 
-        </div>
-    </th>
+                <th
+                    onclick="sortInduction('department')"
+                    class="px-3 py-3 min-w-[180px] text-left cursor-pointer hover:bg-slate-100 transition"
+                >
+                    <div class="flex items-center gap-2">
 
-    <th
-        onclick="sortInduction('department')"
-        class="px-3 py-3 min-w-[180px] text-left cursor-pointer hover:bg-slate-100 transition"
-    >
-        <div class="flex items-center gap-2">
+                        <span>Department</span>
 
-            <span>Department</span>
+                        <i
+                            data-lucide="arrow-up-down"
+                            class="w-3.5 h-3.5"
+                        ></i>
 
-            <i
-                data-lucide="arrow-up-down"
-                class="w-3.5 h-3.5"
-            ></i>
+                    </div>
+                </th>
 
-        </div>
-    </th>
+                <th
+                    onclick="sortInduction('position')"
+                    class="px-3 py-3 min-w-[150px] text-left cursor-pointer hover:bg-slate-100 transition"
+                >
+                    <div class="flex items-center gap-2">
 
-    <th
-        onclick="sortInduction('position')"
-        class="px-3 py-3 min-w-[150px] text-left cursor-pointer hover:bg-slate-100 transition"
-    >
-        <div class="flex items-center gap-2">
+                        <span>Position</span>
 
-            <span>Position</span>
+                        <i
+                            data-lucide="arrow-up-down"
+                            class="w-3.5 h-3.5"
+                        ></i>
 
-            <i
-                data-lucide="arrow-up-down"
-                class="w-3.5 h-3.5"
-            ></i>
+                    </div>
+                </th>
 
-        </div>
-    </th>
+                <th
+                    onclick="sortInduction('progress')"
+                    class="px-3 py-3 min-w-[150px] text-center cursor-pointer hover:bg-slate-100 transition"
+                >
+                    <div class="flex items-center justify-center gap-2">
 
-    <th
-        onclick="sortInduction('progress')"
-        class="px-3 py-3 min-w-[150px] text-center cursor-pointer hover:bg-slate-100 transition"
-    >
-        <div class="flex items-center justify-center gap-2">
+                        <span>Progress</span>
 
-            <span>Progress</span>
+                        <i
+                            data-lucide="arrow-up-down"
+                            class="w-3.5 h-3.5"
+                        ></i>
 
-            <i
-                data-lucide="arrow-up-down"
-                class="w-3.5 h-3.5"
-            ></i>
+                    </div>
+                </th>
 
-        </div>
-    </th>
+                <th
+                    onclick="sortInduction('avg_score')"
+                    class="px-3 py-3 min-w-[150px] text-center cursor-pointer hover:bg-slate-100 transition"
+                >
+                    <div class="flex items-center justify-center gap-2">
 
-    <th
-    onclick="sortInduction('avg_score')"
-    class="px-3 py-3 min-w-[150px] text-center cursor-pointer hover:bg-slate-100 transition"
->
-    <div class="flex items-center justify-center gap-2">
+                        <span>Avg Score</span>
 
-        <span>Avg Score</span>
+                        <i
+                            data-lucide="arrow-up-down"
+                            class="w-3.5 h-3.5"
+                        ></i>
 
-        <i
-            data-lucide="arrow-up-down"
-            class="w-3.5 h-3.5"
-        ></i>
+                    </div>
+                </th>
 
-    </div>
-</th>
+                <th
+                    onclick="sortInduction('completed_training')"
+                    class="px-3 py-3 min-w-[150px] text-center cursor-pointer hover:bg-slate-100 transition"
+                >
+                    <div class="flex items-center justify-center gap-2">
 
-<th
-    onclick="sortInduction('completed_training')"
-    class="px-3 py-3 min-w-[150px] text-center cursor-pointer hover:bg-slate-100 transition"
->
-    <div class="flex items-center justify-center gap-2">
+                        <span>Completed</span>
 
-        <span>Completed</span>
+                        <i
+                            data-lucide="arrow-up-down"
+                            class="w-3.5 h-3.5"
+                        ></i>
 
-        <i
-            data-lucide="arrow-up-down"
-            class="w-3.5 h-3.5"
-        ></i>
+                    </div>
+                </th>
 
-    </div>
-</th>
+                <th class="px-3 py-3 min-w-[220px] text-center">
+                    Status
+                </th>
 
-<th class="px-3 py-3 min-w-[220px] text-center">
-    Status
-</th>
+                <th class="px-3 py-3 min-w-[170px] text-center">
+                    Tanggal Resign
+                </th>
 
-<th class="px-3 py-3 min-w-[170px] text-center">
-    Tanggal Resign
-</th>
+                <th class="px-3 py-3 min-w-[250px] text-center">
+                    Alasan Resign
+                </th>
 
-<th class="px-3 py-3 min-w-[250px] text-center">
-    Alasan Resign
-</th>
+            </tr>
 
-</tr>
+        </thead>
 
-</thead>
-            <!-- BODY -->
-            <tbody
-                id="inductionBody"
-                class="divide-y divide-slate-100"
-            >
+        <!-- BODY -->
+        <tbody
+            id="inductionBody"
+            class="divide-y divide-slate-100"
+        >
 
-                <tr>
+            <tr>
 
-                    <td
-                        colspan="10"
-                        class="text-center py-10 text-slate-400"
-                    >
+                <td
+                    colspan="12"
+                    class="text-center py-10 text-slate-400"
+                >
 
-                        Belum ada data induction training
+                    Belum ada data induction training
 
-                    </td>
+                </td>
 
-                </tr>
+            </tr>
 
-            </tbody>
+        </tbody>
 
-        </table>
-        <div
+    </table>
+
+</div>
+
+<!-- PAGINATION -->
+<div
     id="inductionPagination"
-    class="flex items-center gap-3 mt-4"
+    class="mt-4 px-4 flex justify-start"
 ></div>
-
-    </div>
-
 </div>
 
 <!-- ===================================== -->

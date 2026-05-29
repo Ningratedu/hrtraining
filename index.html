@@ -2396,12 +2396,21 @@ rows.push(`
     // ======================
     tbody.innerHTML =
     rows.join("");
-    tbody.innerHTML += `
-<tr>
-    <td colspan="12" class="px-4 py-3 border-t bg-white">
+    // ======================
+// PAGINATION UI
+// ======================
+const pagination =
+document.getElementById(
+    "inductionPagination"
+);
 
-        <div class="flex items-center justify-between">
+if(pagination){
 
+    pagination.innerHTML = `
+
+        <div class="flex items-center gap-3">
+
+            <!-- PREV -->
             <button
                 onclick="
                     if(inductionCurrentPage > 1){
@@ -2409,35 +2418,56 @@ rows.push(`
                         renderInductionTable();
                     }
                 "
-                class="px-3 py-1.5 text-xs border rounded-lg hover:bg-slate-100"
+                class="
+                    px-3 py-2
+                    text-xs
+                    border
+                    rounded-lg
+                    hover:bg-slate-100
+                    transition
+                "
             >
                 Previous
             </button>
 
+            <!-- PAGE -->
             <div class="text-xs text-slate-500">
-                Page ${inductionCurrentPage}
+
+                Page
+                ${inductionCurrentPage}
                 of
                 ${window.inductionTotalPages}
+
             </div>
 
+            <!-- NEXT -->
             <button
                 onclick="
-                    if(inductionCurrentPage < window.inductionTotalPages){
+                    if(
+                        inductionCurrentPage
+                        <
+                        window.inductionTotalPages
+                    ){
                         inductionCurrentPage++;
                         renderInductionTable();
                     }
                 "
-                class="px-3 py-1.5 text-xs border rounded-lg hover:bg-slate-100"
+                class="
+                    px-3 py-2
+                    text-xs
+                    border
+                    rounded-lg
+                    hover:bg-slate-100
+                    transition
+                "
             >
                 Next
             </button>
 
         </div>
 
-    </td>
-</tr>
-`;
-
+    `;
+}
     lucide.createIcons();
 }
 

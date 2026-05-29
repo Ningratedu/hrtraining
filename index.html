@@ -3978,12 +3978,81 @@ function openLegendModal(type){
     // ======================
     if(type.startsWith("induction")){
 
-        data = onboardingData.filter(item=>{
+        let inductionFiltered =
+        [...inductionData];
+
+        // FILTER PERIODE
+        const period =
+        document.getElementById(
+            "globalPeriodeFilter"
+        )?.value;
+
+        if(
+            period
+            &&
+            period !== "all"
+        ){
+
+            inductionFiltered =
+            inductionFiltered.filter(item=>{
+
+                if(
+                    !item.join_date
+                ) return false;
+
+                const join =
+                parseDateSafe(
+                    item.join_date
+                );
+
+                if(!join)
+                return false;
+
+                const month =
+                String(
+                    join.getMonth() + 1
+                ).padStart(2,"0");
+
+                const year =
+                join.getFullYear();
+
+                return `${year}-${month}`
+                === period;
+            });
+        }
+
+        // FILTER DEPARTMENT
+        if(
+            selectedDepartments
+            ?.length
+        ){
+
+            inductionFiltered =
+            inductionFiltered.filter(item=>
+
+                selectedDepartments
+                .includes(
+
+                    String(
+                        item.department
+                        || item.departement
+                        || ""
+                    )
+                    .trim()
+                    .toLowerCase()
+
+                )
+            );
+        }
+
+        data =
+        inductionFiltered.filter(item=>{
 
             const status =
             String(
                 item.status_training || ""
             )
+            .trim()
             .toLowerCase();
 
             switch(type){
@@ -4005,6 +4074,9 @@ function openLegendModal(type){
 
                 case "induction-resign":
                     return status === "resign";
+
+                default:
+                    return false;
             }
 
         });
@@ -4015,7 +4087,73 @@ function openLegendModal(type){
     // ======================
     if(type.startsWith("assignment")){
 
-        data = assignmentData.filter(item=>{
+        let assignmentFiltered =
+        [...assignmentData];
+
+        // FILTER PERIODE
+        const period =
+        document.getElementById(
+            "globalPeriodeFilter"
+        )?.value;
+
+        if(
+            period
+            &&
+            period !== "all"
+        ){
+
+            assignmentFiltered =
+            assignmentFiltered.filter(item=>{
+
+                if(
+                    !item.join_date
+                ) return false;
+
+                const join =
+                parseDateSafe(
+                    item.join_date
+                );
+
+                if(!join)
+                return false;
+
+                const month =
+                String(
+                    join.getMonth() + 1
+                ).padStart(2,"0");
+
+                const year =
+                join.getFullYear();
+
+                return `${year}-${month}`
+                === period;
+            });
+        }
+
+        // FILTER DEPARTMENT
+        if(
+            selectedDepartments
+            ?.length
+        ){
+
+            assignmentFiltered =
+            assignmentFiltered.filter(item=>
+
+                selectedDepartments
+                .includes(
+
+                    String(
+                        item.department || ""
+                    )
+                    .trim()
+                    .toLowerCase()
+
+                )
+            );
+        }
+
+        data =
+        assignmentFiltered.filter(item=>{
 
             const progress =
             Number(
@@ -4033,12 +4171,21 @@ function openLegendModal(type){
                     return progress >= 100;
 
                 case "assignment-ongoing":
-                    return progress < 100
-                    && usiaJoin < 15;
+                    return (
+                        progress < 100
+                        &&
+                        usiaJoin < 20
+                    );
 
                 case "assignment-failed":
-                    return progress < 100
-                    && usiaJoin >= 15;
+                    return (
+                        progress < 100
+                        &&
+                        usiaJoin >= 20
+                    );
+
+                default:
+                    return false;
             }
 
         });
@@ -4082,7 +4229,7 @@ function openLegendModal(type){
                 </td>
 
                 <td class="p-3">
-                    ${item.department || "-"}
+                    ${item.department || item.departement || "-"}
                 </td>
 
                 <td class="p-3">
@@ -4090,7 +4237,19 @@ function openLegendModal(type){
                 </td>
 
                 <td class="p-3">
-                    ${item.status_training || "-"}
+                    ${
+                        type.startsWith("assignment")
+                        ? (
+                            Number(item.progress_task || 0) >= 100
+                            ? "Done"
+                            : Number(item.usia_join || 0) < 20
+                            ? "Ongoing"
+                            : "Failed"
+                        )
+                        : (
+                            item.status_training || "-"
+                        )
+                    }
                 </td>
 
             </tr>
@@ -4105,7 +4264,6 @@ function openLegendModal(type){
     .classList
     .remove("hidden");
 }
-
 // ======================
 // CLOSE MODAL
 // ======================

@@ -3971,292 +3971,392 @@ if(completionDonut){
 // ======================
 function openLegendModal(type){
 
-    let data = [];
-
-    // ======================
-    // INDUCTION
-    // ======================
-    if(type.startsWith("induction")){
-
-        let inductionFiltered =
-        [...inductionData];
-
-        // FILTER PERIODE
-        const period =
-        document.getElementById(
-            "globalPeriodeFilter"
-        )?.value;
-
-        if(
-            period
-            &&
-            period !== "all"
-        ){
-
-            inductionFiltered =
-            inductionFiltered.filter(item=>{
-
-                if(
-                    !item.join_date
-                ) return false;
-
-                const join =
-                parseDateSafe(
-                    item.join_date
-                );
-
-                if(!join)
-                return false;
-
-                const month =
-                String(
-                    join.getMonth() + 1
-                ).padStart(2,"0");
-
-                const year =
-                join.getFullYear();
-
-                return `${year}-${month}`
-                === period;
-            });
-        }
-
-        // FILTER DEPARTMENT
-        if(
-            selectedDepartments
-            ?.length
-        ){
-
-            inductionFiltered =
-            inductionFiltered.filter(item=>
-
-                selectedDepartments
-                .includes(
-
-                    String(
-                        item.department
-                        || item.departement
-                        || ""
-                    )
-                    .trim()
-                    .toLowerCase()
-
-                )
-            );
-        }
-
-        data =
-        inductionFiltered.filter(item=>{
-
-            const status =
-            String(
-                item.status_training || ""
-            )
-            .trim()
-            .toLowerCase();
-
-            switch(type){
-
-                case "induction-completed":
-                    return status === "completed";
-
-                case "induction-progress":
-                    return status === "progress";
-
-                case "induction-late":
-                    return status === "late";
-
-                case "induction-remedial":
-                    return status === "remedial";
-
-                case "induction-remedial-late":
-                    return status === "remedial late";
-
-                case "induction-resign":
-                    return status === "resign";
-
-                default:
-                    return false;
-            }
-
-        });
-    }
-
-    // ======================
-    // ASSIGNMENT
-    // ======================
-    if(type.startsWith("assignment")){
-
-        let assignmentFiltered =
-        [...assignmentData];
-
-        // FILTER PERIODE
-        const period =
-        document.getElementById(
-            "globalPeriodeFilter"
-        )?.value;
-
-        if(
-            period
-            &&
-            period !== "all"
-        ){
-
-            assignmentFiltered =
-            assignmentFiltered.filter(item=>{
-
-                if(
-                    !item.join_date
-                ) return false;
-
-                const join =
-                parseDateSafe(
-                    item.join_date
-                );
-
-                if(!join)
-                return false;
-
-                const month =
-                String(
-                    join.getMonth() + 1
-                ).padStart(2,"0");
-
-                const year =
-                join.getFullYear();
-
-                return `${year}-${month}`
-                === period;
-            });
-        }
-
-        // FILTER DEPARTMENT
-        if(
-            selectedDepartments
-            ?.length
-        ){
-
-            assignmentFiltered =
-            assignmentFiltered.filter(item=>
-
-                selectedDepartments
-                .includes(
-
-                    String(
-                        item.department || ""
-                    )
-                    .trim()
-                    .toLowerCase()
-
-                )
-            );
-        }
-
-        data =
-        assignmentFiltered.filter(item=>{
-
-            const progress =
-            Number(
-                item.progress_task || 0
-            );
-
-            const usiaJoin =
-            Number(
-                item.usia_join || 0
-            );
-
-            switch(type){
-
-                case "assignment-done":
-                    return progress >= 100;
-
-                case "assignment-ongoing":
-                    return (
-                        progress < 100
-                        &&
-                        usiaJoin < 20
-                    );
-
-                case "assignment-failed":
-                    return (
-                        progress < 100
-                        &&
-                        usiaJoin >= 20
-                    );
-
-                default:
-                    return false;
-            }
-
-        });
-    }
-
-    // TITLE
-    document.getElementById(
-        "legendModalTitle"
-    ).innerText =
-    type
-    .replaceAll("-", " ")
-    .toUpperCase();
-
-    // TABLE
     const tbody =
     document.getElementById(
         "legendModalBody"
     );
 
-    tbody.innerHTML = "";
+    if(!tbody) return;
 
+    let data =
+    [...inductionData];
+
+    // ======================
+    // GROUP USER
+    // AMBIL PROGRESS TERBESAR
+    // ======================
+    const grouped = {};
+
+    data.forEach(item=>{
+
+        const key =
+        String(
+            item.username || "-"
+        )
+        .trim()
+        .toLowerCase();
+
+        if(
+            !grouped[key]
+            ||
+            Number(item.progress || 0)
+            >
+            Number(
+                grouped[key]
+                .progress || 0
+            )
+        ){
+            grouped[key] = item;
+        }
+
+    });
+
+    data =
+    Object.values(grouped);
+
+    // ======================
+    // FILTER PERIODE
+    // ======================
+    const period =
+    document.getElementById(
+        "globalPeriodeFilter"
+    )?.value;
+
+    if(
+        period
+        &&
+        period !== "all"
+    ){
+
+        data =
+        data.filter(item=>
+
+            item.parsedPeriod
+            ===
+            period
+
+        );
+    }
+
+    // ======================
+    // FILTER DEPARTMENT
+    // ======================
+    if(
+        selectedDepartments
+        ?.length
+    ){
+
+        data =
+        data.filter(item=>
+
+            selectedDepartments
+            .includes(
+
+                String(
+                    item.department ||
+                    item.departement ||
+                    ""
+                )
+                .trim()
+                .toLowerCase()
+
+            )
+
+        );
+    }
+
+    // ======================
+    // FILTER STATUS
+    // ======================
+    data =
+    data.filter(item=>{
+
+        const statusKaryawan =
+        String(
+            item.status_karyawan || ""
+        )
+        .trim()
+        .toLowerCase();
+
+        const joinDate =
+        parseDateSafe(
+            item.join_date
+        );
+
+        const today =
+        new Date();
+
+        const diffDays =
+        joinDate
+        ?
+        Math.floor(
+            (
+                today - joinDate
+            )
+            /
+            (
+                1000 * 60 * 60 * 24
+            )
+        )
+        :
+        0;
+
+        const isLate =
+        diffDays > 14;
+
+        const completed =
+        Number(
+            item.completed_training || 0
+        );
+
+        const total =
+        Number(
+            item.total_training || 0
+        );
+
+        const userMaterials =
+        inductionData.filter(r=>
+
+            String(
+                r.username || ""
+            )
+            .trim()
+            .toLowerCase()
+
+            ===
+
+            String(
+                item.username || ""
+            )
+            .trim()
+            .toLowerCase()
+
+        );
+
+        const hasRemedial =
+        userMaterials.some(r=>
+
+            String(
+                r.status || ""
+            )
+            .trim()
+            .toLowerCase()
+
+            ===
+
+            "remedial"
+
+        );
+
+        const isCompleted =
+        total > 0
+        &&
+        completed === total;
+
+        switch(type){
+
+            case "induction-completed":
+                return isCompleted;
+
+            case "induction-progress":
+                return (
+                    !isCompleted
+                    &&
+                    !hasRemedial
+                    &&
+                    !isLate
+                    &&
+                    statusKaryawan !== "resign"
+                );
+
+            case "induction-late":
+                return (
+                    isLate
+                    &&
+                    !hasRemedial
+                    &&
+                    statusKaryawan !== "resign"
+                );
+
+            case "induction-remedial":
+                return (
+                    hasRemedial
+                    &&
+                    !isLate
+                    &&
+                    statusKaryawan !== "resign"
+                );
+
+            case "induction-remedial-late":
+                return (
+                    hasRemedial
+                    &&
+                    isLate
+                    &&
+                    statusKaryawan !== "resign"
+                );
+
+            case "induction-resign":
+                return (
+                    statusKaryawan
+                    ===
+                    "resign"
+                );
+
+            default:
+                return false;
+        }
+
+    });
+
+    // ======================
+    // TITLE
+    // ======================
+    const titleMap = {
+
+        "induction-completed":
+        "Completed",
+
+        "induction-progress":
+        "On Progress",
+
+        "induction-late":
+        "On Progress + Late",
+
+        "induction-remedial":
+        "Remedial",
+
+        "induction-remedial-late":
+        "Remedial + Late",
+
+        "induction-resign":
+        "Resign"
+
+    };
+
+    document.getElementById(
+        "legendModalTitle"
+    ).innerText =
+    `Induction - ${
+        titleMap[type] || "Detail"
+    }`;
+
+    // ======================
+    // BUILD TABLE
+    // PERSIS INDUCTION TABLE
+    // ======================
+    tbody.innerHTML =
+    data.map((item,index)=>{
+
+        const progress =
+        Number(
+            item.progress || 0
+        );
+
+        const avg =
+        Number(
+            item.avg_score || 0
+        );
+
+        const completed =
+        Number(
+            item.completed_training || 0
+        );
+
+        const total =
+        Number(
+            item.total_training || 0
+        );
+
+        const formattedDate =
+        item.join_date
+        ?
+        new Intl.DateTimeFormat(
+            "id-ID",
+            {
+                timeZone:
+                "Asia/Jakarta"
+            }
+        ).format(
+            item.parsedJoinDate
+        )
+        :
+        "-";
+
+        return `
+
+        <tr class="hover:bg-slate-50 transition-all">
+
+            <td class="p-3">
+                ${index + 1}
+            </td>
+
+            <td class="p-3">
+                ${item.nama || "-"}
+            </td>
+
+            <td class="p-3">
+                ${item.username || "-"}
+            </td>
+
+            <td class="p-3">
+                ${formattedDate}
+            </td>
+
+            <td class="p-3">
+                ${item.department || "-"}
+            </td>
+
+            <td class="p-3">
+                ${item.position || "-"}
+            </td>
+
+            <td class="p-3">
+
+                <div class="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
+
+                    <div
+                        class="bg-blue-600 h-2 rounded-full"
+                        style="width:${progress}%"
+                    ></div>
+
+                </div>
+
+                <div class="text-center mt-1 text-[11px] font-semibold">
+                    ${progress}%
+                </div>
+
+            </td>
+
+            <td class="p-3 text-center">
+                ${avg}
+            </td>
+
+            <td class="p-3 text-center">
+                ${completed}/${total}
+            </td>
+
+        </tr>
+        `;
+
+    }).join("");
+
+    // EMPTY
     if(!data.length){
 
         tbody.innerHTML = `
-            <tr>
-                <td colspan="4" class="p-6 text-center text-slate-400">
-                    Tidak ada data
-                </td>
-            </tr>
+        <tr>
+            <td
+                colspan="9"
+                class="p-8 text-center text-slate-400"
+            >
+                Tidak ada data
+            </td>
+        </tr>
         `;
-
-    }else{
-
-        tbody.innerHTML =
-        data.map(item=>`
-
-            <tr class="border-b hover:bg-slate-50">
-
-                <td class="p-3">
-                    ${item.nama || "-"}
-                </td>
-
-                <td class="p-3">
-                    ${item.department || item.departement || "-"}
-                </td>
-
-                <td class="p-3">
-                    ${item.join_date || "-"}
-                </td>
-
-                <td class="p-3">
-                    ${
-                        type.startsWith("assignment")
-                        ? (
-                            Number(item.progress_task || 0) >= 100
-                            ? "Done"
-                            : Number(item.usia_join || 0) < 20
-                            ? "Ongoing"
-                            : "Failed"
-                        )
-                        : (
-                            item.status_training || "-"
-                        )
-                    }
-                </td>
-
-            </tr>
-
-        `).join("");
     }
 
+    // OPEN MODAL
     document
     .getElementById(
         "legendModal"

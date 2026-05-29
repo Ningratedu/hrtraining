@@ -3898,15 +3898,19 @@ data.slice(
         </tr>
         `;
     });
-tbody.innerHTML += `
-<tr>
+// ======================
+// PAGINATION UI
+// ======================
+const pagination =
+document.getElementById(
+    "assignmentPagination"
+);
 
-    <td
-        colspan="10"
-        class="px-4 py-4 border-t bg-white"
-    >
+if(pagination){
 
-        <div class="flex items-center justify-between">
+    pagination.innerHTML = `
+
+        <div class="flex items-center gap-3">
 
             <!-- PREV -->
             <button
@@ -3928,12 +3932,14 @@ tbody.innerHTML += `
                 Previous
             </button>
 
-            <!-- PAGE -->
+            <!-- PAGE INFO -->
             <div class="text-xs text-slate-500">
+
                 Page
                 ${assignmentCurrentPage}
                 of
                 ${window.assignmentTotalPages}
+
             </div>
 
             <!-- NEXT -->
@@ -3962,10 +3968,8 @@ tbody.innerHTML += `
 
         </div>
 
-    </td>
-
-</tr>
-`;
+    `;
+}
     lucide.createIcons();
 }
 

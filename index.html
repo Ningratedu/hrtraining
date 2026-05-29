@@ -1935,13 +1935,54 @@ item.parsedJoinDate;
 
         return;
     }
+// ======================
+// PAGINATION
+// ======================
+const inductionRowsPerPage = 10;
 
+const inductionTotalPages =
+Math.ceil(
+    data.length / inductionRowsPerPage
+) || 1;
+
+if(
+    typeof inductionCurrentPage ===
+    "undefined"
+){
+    inductionCurrentPage = 1;
+}
+
+if(
+    inductionCurrentPage >
+    inductionTotalPages
+){
+    inductionCurrentPage =
+    inductionTotalPages;
+}
+
+const inductionStart =
+(
+    inductionCurrentPage - 1
+)
+*
+inductionRowsPerPage;
+
+const inductionEnd =
+inductionStart
++
+inductionRowsPerPage;
+
+const paginatedData =
+data.slice(
+    inductionStart,
+    inductionEnd
+);
     // ======================
     // BUILD ROWS
     // ======================
     const rows = [];
 
-    data.forEach((item,index)=>{
+    paginatedData.forEach((item,index)=>{
 
         const progress =
         Number(
@@ -2171,7 +2212,7 @@ rows.push(`
 <tr class="hover:bg-slate-50 transition-all">
 
     <td class="sticky left-0 bg-white px-3 py-3 font-medium">
-        ${index + 1}
+        ${inductionStart + index + 1}
     </td>
 
     <td class="px-3 py-3">
@@ -2341,6 +2382,47 @@ rows.push(`
     // ======================
     tbody.innerHTML =
     rows.join("");
+    tbody.innerHTML += `
+<tr>
+    <td colspan="12" class="px-4 py-3 border-t bg-white">
+
+        <div class="flex items-center justify-between">
+
+            <button
+                onclick="
+                    if(inductionCurrentPage > 1){
+                        inductionCurrentPage--;
+                        renderInductionTable();
+                    }
+                "
+                class="px-3 py-1.5 text-xs border rounded-lg hover:bg-slate-100"
+            >
+                Previous
+            </button>
+
+            <div class="text-xs text-slate-500">
+                Page ${inductionCurrentPage}
+                of
+                ${inductionTotalPages}
+            </div>
+
+            <button
+                onclick="
+                    if(inductionCurrentPage < inductionTotalPages){
+                        inductionCurrentPage++;
+                        renderInductionTable();
+                    }
+                "
+                class="px-3 py-1.5 text-xs border rounded-lg hover:bg-slate-100"
+            >
+                Next
+            </button>
+
+        </div>
+
+    </td>
+</tr>
+`;
 
     lucide.createIcons();
 }
@@ -3555,7 +3637,33 @@ function renderAssignmentTable(){
 
         );
     }
+// ======================
+// PAGINATION
+// ======================
+const assignmentTotalPages =
+Math.ceil(
+    data.length / assignmentRowsPerPage
+) || 1;
 
+if(
+    assignmentCurrentPage >
+    assignmentTotalPages
+){
+    assignmentCurrentPage =
+    assignmentTotalPages;
+}
+
+const assignmentStart =
+(
+    assignmentCurrentPage - 1
+)
+*
+assignmentRowsPerPage;
+
+const assignmentEnd =
+assignmentStart
++
+assignmentRowsPerPage;
     // ======================
     // SORT
     // ======================
@@ -3634,7 +3742,11 @@ function renderAssignmentTable(){
         );
 
     });
-
+const paginatedData =
+data.slice(
+    assignmentStart,
+    assignmentEnd
+);
     // ======================
     // EMPTY STATE
     // ======================
@@ -3658,7 +3770,7 @@ function renderAssignmentTable(){
 
     tbody.innerHTML = "";
 
-    data.forEach((item,index)=>{
+    paginatedData.forEach((item,index)=>{
 
         const progress =
         Number(
@@ -3670,7 +3782,7 @@ function renderAssignmentTable(){
         <tr class="hover:bg-slate-50 transition-all">
 
             <td class="sticky left-0 bg-white px-3 py-3 font-medium">
-                ${index + 1}
+                ${assignmentStart + index + 1}
             </td>
 
             <td class="px-3 py-3">
@@ -3774,7 +3886,74 @@ function renderAssignmentTable(){
         </tr>
         `;
     });
+tbody.innerHTML += `
+<tr>
 
+    <td
+        colspan="10"
+        class="px-4 py-4 border-t bg-white"
+    >
+
+        <div class="flex items-center justify-between">
+
+            <!-- PREV -->
+            <button
+                onclick="
+                    if(assignmentCurrentPage > 1){
+                        assignmentCurrentPage--;
+                        renderAssignmentTable();
+                    }
+                "
+                class="
+                    px-3 py-2
+                    text-xs
+                    border
+                    rounded-lg
+                    hover:bg-slate-100
+                    transition
+                "
+            >
+                Previous
+            </button>
+
+            <!-- PAGE -->
+            <div class="text-xs text-slate-500">
+                Page
+                ${assignmentCurrentPage}
+                of
+                ${assignmentTotalPages}
+            </div>
+
+            <!-- NEXT -->
+            <button
+                onclick="
+                    if(
+                        assignmentCurrentPage
+                        <
+                        assignmentTotalPages
+                    ){
+                        assignmentCurrentPage++;
+                        renderAssignmentTable();
+                    }
+                "
+                class="
+                    px-3 py-2
+                    text-xs
+                    border
+                    rounded-lg
+                    hover:bg-slate-100
+                    transition
+                "
+            >
+                Next
+            </button>
+
+        </div>
+
+    </td>
+
+</tr>
+`;
     lucide.createIcons();
 }
 
@@ -5106,16 +5285,57 @@ function renderRecruitmentTable(){
 
         );
     }
+// ======================
+// PAGINATION
+// ======================
+const recruitmentRowsPerPage = 10;
 
+const recruitmentTotalPages =
+Math.ceil(
+    data.length / recruitmentRowsPerPage
+) || 1;
+
+if(
+    typeof recruitmentCurrentPage ===
+    "undefined"
+){
+    recruitmentCurrentPage = 1;
+}
+
+if(
+    recruitmentCurrentPage >
+    recruitmentTotalPages
+){
+    recruitmentCurrentPage =
+    recruitmentTotalPages;
+}
+
+const recruitmentStart =
+(
+    recruitmentCurrentPage - 1
+)
+*
+recruitmentRowsPerPage;
+
+const recruitmentEnd =
+recruitmentStart
++
+recruitmentRowsPerPage;
+
+const paginatedData =
+data.slice(
+    recruitmentStart,
+    recruitmentEnd
+);
     tbody.innerHTML = "";
 
-    data.forEach((item,index)=>{
+    paginatedData.forEach((item,index)=>{
 
         tbody.innerHTML += `
         <tr class="border-b hover:bg-slate-50">
 
             <td class="sticky left-0 bg-white z-20 px-3 py-2 text-xs font-semibold whitespace-nowrap shadow-[4px_0_10px_rgba(0,0,0,0.03)]">
-                ${index + 1}
+                ${recruitmentStart + index + 1}
             </td>
 
             <td class="px-3 py-2 text-xs font-medium whitespace-nowrap">
@@ -5185,6 +5405,48 @@ function renderRecruitmentTable(){
 `;
 });
 
+tbody.innerHTML += `
+<tr>
+    <td colspan="10" class="px-4 py-3 border-t bg-white">
+
+        <div class="flex items-center justify-between">
+
+            <button
+                onclick="
+                    if(recruitmentCurrentPage > 1){
+                        recruitmentCurrentPage--;
+                        renderRecruitmentTable();
+                    }
+                "
+                class="px-3 py-1.5 text-xs border rounded-lg hover:bg-slate-100"
+            >
+                Previous
+            </button>
+
+            <div class="text-xs text-slate-500">
+                Page ${recruitmentCurrentPage}
+                of
+                ${recruitmentTotalPages}
+            </div>
+
+            <button
+                onclick="
+                    if(recruitmentCurrentPage < recruitmentTotalPages){
+                        recruitmentCurrentPage++;
+                        renderRecruitmentTable();
+                    }
+                "
+                class="px-3 py-1.5 text-xs border rounded-lg hover:bg-slate-100"
+            >
+                Next
+            </button>
+
+        </div>
+
+    </td>
+</tr>
+`;
+    
 updateFunnel();
 
 lucide.createIcons();

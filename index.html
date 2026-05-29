@@ -644,359 +644,266 @@ nav .text-slate-400{
     </div>
 </div>
 
-        <!-- CARD -->
-<div class="grid grid-cols-2 lg:grid-cols-4 gap-2 md:gap-3">
+<!-- CARD -->
+<div class="grid grid-cols-2 lg:grid-cols-4 gap-2 md:gap-3 items-stretch">
 
-    <!-- RECRUITMENT (TETAP SINGLE VALUE) -->
+    <!-- RECRUITMENT -->
     <div
-        class="funnel-card bg-gradient-to-br from-blue-50 to-white rounded-[24px] p-4 border border-blue-200 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 cursor-pointer relative overflow-hidden"
+        class="funnel-card whitespace-nowrap bg-gradient-to-br from-blue-50 to-white rounded-[24px] p-3 md:p-4 border border-blue-200 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 cursor-pointer relative overflow-hidden"
         onclick="filterByStage('Recruitment')"
     >
+
         <div class="absolute top-0 right-0 w-24 h-24 bg-blue-100/40 blur-3xl rounded-full"></div>
 
-        <p class="text-[11px] md:text-xs font-medium text-slate-500 relative z-10">
+        <p class="text-[9px] md:text-xs font-medium text-slate-500 relative z-10 whitespace-nowrap">
             Recruitment
         </p>
 
-        <h2
-            id="countRecruitment"
-            class="text-xl md:text-2xl font-extrabold italic tracking-tight text-blue-700 mt-1 relative z-10"
-        >
-            0
-        </h2>
+        <div class="flex justify-center items-center h-[165px] relative z-10">
+
+            <div class="text-center">
+
+                <p class="text-[8px] md:text-[9px] uppercase tracking-wide text-slate-400 font-semibold">
+                    Total
+                </p>
+
+                <h2
+                    id="countRecruitment"
+                    class="text-3xl md:text-4xl font-extrabold italic tracking-tight text-blue-700 leading-none"
+                >
+                    0
+                </h2>
+
+            </div>
+
+        </div>
     </div>
 
     <!-- INDUCTION -->
-<div
-    class="funnel-card bg-gradient-to-br from-amber-50 to-white rounded-[24px] p-4 border border-amber-200 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 cursor-pointer relative overflow-hidden"
-    onclick="filterByStage('In Class Training')"
->
+    <div
+        class="funnel-card whitespace-nowrap bg-gradient-to-br from-amber-50 to-white rounded-[24px] p-3 md:p-4 border border-amber-200 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 cursor-pointer relative overflow-hidden"
+        onclick="filterByStage('In Class Training')"
+    >
 
-    <!-- BLUR BG -->
-    <div class="absolute top-0 right-0 w-24 h-24 bg-amber-100/40 blur-3xl rounded-full"></div>
+        <div class="absolute top-0 right-0 w-24 h-24 bg-amber-100/40 blur-3xl rounded-full"></div>
 
-    <!-- TITLE -->
-    <p class="text-[11px] md:text-xs font-medium text-slate-500 relative z-10">
-        Induction Training
-    </p>
+        <p class="text-[9px] md:text-xs font-medium text-slate-500 relative z-10 whitespace-nowrap">
+            Induction Training
+        </p>
 
-    <!-- DONUT -->
-    <div class="flex justify-center mt-3 relative z-10">
+        <div class="flex justify-center mt-2 relative z-10">
 
-        <div
-            id="inductionDonut"
-            class="relative w-[95px] h-[95px] rounded-full flex items-center justify-center transition-all duration-500"
-            style="
-                background:
-                conic-gradient(
-                    #16a34a 0deg,
-                    #16a34a 60deg,
-                    #2563eb 60deg,
-                    #2563eb 120deg,
-                    #f59e0b 120deg,
-                    #f59e0b 180deg,
-                    #dc2626 180deg,
-                    #dc2626 240deg,
-                    #e11d48 240deg,
-                    #e11d48 300deg,
-                    #64748b 300deg,
-                    #64748b 360deg
-                );
-            "
-        >
+            <div
+                id="inductionDonut"
+                class="relative w-[85px] md:w-[95px] h-[85px] md:h-[95px] rounded-full flex items-center justify-center transition-all duration-500"
+            >
 
-            <!-- CENTER -->
-            <div class="w-[62px] h-[62px] bg-white rounded-full shadow-sm flex flex-col items-center justify-center">
+                <div class="w-[56px] md:w-[62px] h-[56px] md:h-[62px] bg-white rounded-full shadow-sm flex flex-col items-center justify-center">
 
-                <span
-                    id="countInduction"
-                    class="text-lg font-extrabold italic text-slate-800 leading-none"
-                >
-                    0
-                </span>
+                    <span
+                        id="countInduction"
+                        class="text-base md:text-lg font-extrabold italic text-slate-800 leading-none"
+                    >
+                        0
+                    </span>
 
-                <span class="text-[8px] text-slate-500 font-medium">
-                    Total
-                </span>
+                    <span class="text-[7px] md:text-[8px] text-slate-500 font-medium">
+                        Total
+                    </span>
+
+                </div>
 
             </div>
         </div>
+
+        <div class="grid grid-cols-2 gap-1 mt-3 relative z-10 text-[7px] md:text-[8px] font-semibold">
+
+            <div class="flex justify-between items-center px-1 py-1 rounded bg-green-100 text-green-700">
+                <span class="whitespace-nowrap">✅ Completed</span>
+                <span id="countInductionCompleted">0</span>
+            </div>
+
+            <div class="flex justify-between items-center px-1 py-1 rounded bg-blue-100 text-blue-700">
+                <span class="whitespace-nowrap">⏳ Progress</span>
+                <span id="countInductionProgress">0</span>
+            </div>
+
+            <div class="flex justify-between items-center px-1 py-1 rounded bg-amber-100 text-amber-700">
+                <span class="whitespace-nowrap">🕒 Late</span>
+                <span id="countInductionProgressLate">0</span>
+            </div>
+
+            <div class="flex justify-between items-center px-1 py-1 rounded bg-red-100 text-red-700">
+                <span class="whitespace-nowrap">❌ Remedial</span>
+                <span id="countInductionRemedial">0</span>
+            </div>
+
+            <div class="flex justify-between items-center px-1 py-1 rounded bg-rose-100 text-rose-700">
+                <span class="whitespace-nowrap">🚨 Remed Late</span>
+                <span id="countInductionRemedialLate">0</span>
+            </div>
+
+            <div class="flex justify-between items-center px-1 py-1 rounded bg-slate-200 text-slate-700">
+                <span class="whitespace-nowrap">👋 Resign</span>
+                <span id="countInductionResign">0</span>
+            </div>
+
+        </div>
     </div>
 
-    <!-- LEGEND -->
-    <div class="grid grid-cols-2 gap-1 mt-3 relative z-10 text-[8px] leading-none font-semibold">
-
-        <div class="flex items-center justify-between px-1 py-1 rounded bg-green-100 text-green-700">
-            <span>✅ Completed</span>
-            <span id="countInductionCompleted">
-                0
-            </span>
-        </div>
-
-        <div class="flex items-center justify-between px-1 py-1 rounded bg-blue-100 text-blue-700">
-            <span>⏳ Progress</span>
-            <span id="countInductionProgress">
-                0
-            </span>
-        </div>
-
-        <div class="flex items-center justify-between px-1 py-1 rounded bg-amber-100 text-amber-700">
-            <span>🕒 Late</span>
-            <span id="countInductionProgressLate">
-                0
-            </span>
-        </div>
-
-        <div class="flex items-center justify-between px-1 py-1 rounded bg-red-100 text-red-700">
-            <span>❌ Remedial</span>
-            <span id="countInductionRemedial">
-                0
-            </span>
-        </div>
-
-        <div class="flex items-center justify-between px-1 py-1 rounded bg-rose-100 text-rose-700">
-            <span>🚨 Remed Late</span>
-            <span id="countInductionRemedialLate">
-                0
-            </span>
-        </div>
-
-        <div class="flex items-center justify-between px-1 py-1 rounded bg-slate-200 text-slate-700">
-            <span>👋 Resign</span>
-            <span id="countInductionResign">
-                0
-            </span>
-        </div>
-
-    </div>
-</div>
-    
     <!-- ASSIGNMENT -->
-<div
-    class="funnel-card bg-gradient-to-br from-purple-50 to-white rounded-[24px] p-4 border border-purple-200 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 cursor-pointer relative overflow-hidden"
-    onclick="document.getElementById('assignmentSection')?.scrollIntoView({ behavior:'smooth' })"
->
+    <div
+        class="funnel-card whitespace-nowrap bg-gradient-to-br from-purple-50 to-white rounded-[24px] p-3 md:p-4 border border-purple-200 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 cursor-pointer relative overflow-hidden"
+        onclick="document.getElementById('assignmentSection')?.scrollIntoView({ behavior:'smooth' })"
+    >
 
-    <!-- BLUR BG -->
-    <div class="absolute top-0 right-0 w-24 h-24 bg-purple-100/40 blur-3xl rounded-full"></div>
+        <div class="absolute top-0 right-0 w-24 h-24 bg-purple-100/40 blur-3xl rounded-full"></div>
 
-    <!-- TITLE -->
-    <p class="text-[11px] md:text-xs font-medium text-slate-500 relative z-10">
-        Assignment
-    </p>
+        <p class="text-[9px] md:text-xs font-medium text-slate-500 relative z-10 whitespace-nowrap">
+            Assignment
+        </p>
 
-    <!-- DONUT -->
-    <div class="flex justify-center mt-3 relative z-10">
+        <div class="flex justify-center mt-2 relative z-10">
 
-        <div
-            id="assignmentDonut"
-            class="relative w-[95px] h-[95px] rounded-full flex items-center justify-center transition-all duration-500"
-            style="
-                background:
-                conic-gradient(
-                    #16a34a 0deg,
-                    #16a34a 120deg,
-                    #2563eb 120deg,
-                    #2563eb 240deg,
-                    #dc2626 240deg,
-                    #dc2626 360deg
-                );
-            "
-        >
+            <div
+                id="assignmentDonut"
+                class="relative w-[85px] md:w-[95px] h-[85px] md:h-[95px] rounded-full flex items-center justify-center transition-all duration-500"
+            >
 
-            <!-- CENTER -->
-            <div class="w-[62px] h-[62px] bg-white rounded-full shadow-sm flex flex-col items-center justify-center">
+                <div class="w-[56px] md:w-[62px] h-[56px] md:h-[62px] bg-white rounded-full shadow-sm flex flex-col items-center justify-center">
 
-                <span
-                    id="countAssignment"
-                    class="text-lg font-extrabold italic text-slate-800 leading-none"
-                >
-                    0
-                </span>
+                    <span
+                        id="countAssignment"
+                        class="text-base md:text-lg font-extrabold italic text-slate-800 leading-none"
+                    >
+                        0
+                    </span>
 
-                <span class="text-[8px] text-slate-500 font-medium">
-                    Total
-                </span>
+                    <span class="text-[7px] md:text-[8px] text-slate-500 font-medium">
+                        Total
+                    </span>
+
+                </div>
 
             </div>
         </div>
+
+        <div class="grid grid-cols-2 gap-1 mt-3 relative z-10 text-[7px] md:text-[8px] font-semibold">
+
+            <div class="flex justify-between items-center px-1 py-1 rounded bg-green-100 text-green-700">
+                <span class="whitespace-nowrap">✅ Done</span>
+                <span id="countAssignmentDone">0</span>
+            </div>
+
+            <div class="flex justify-between items-center px-1 py-1 rounded bg-blue-100 text-blue-700">
+                <span class="whitespace-nowrap">⏳ Ongoing</span>
+                <span id="countAssignmentOngoing">0</span>
+            </div>
+
+            <div class="flex justify-between items-center px-1 py-1 rounded bg-red-100 text-red-700 col-span-2">
+                <span class="whitespace-nowrap">❌ Failed</span>
+                <span id="countAssignmentFailed">0</span>
+            </div>
+
+        </div>
     </div>
-
-    <!-- LEGEND -->
-    <div class="grid grid-cols-2 gap-1 mt-3 relative z-10 text-[8px] leading-none font-semibold">
-
-        <div class="flex items-center justify-between px-1 py-1 rounded bg-green-100 text-green-700">
-            <span>✅ Done</span>
-            <span id="countAssignmentDone">
-                0
-            </span>
-        </div>
-
-        <div class="flex items-center justify-between px-1 py-1 rounded bg-blue-100 text-blue-700">
-            <span>⏳ Ongoing</span>
-            <span id="countAssignmentOngoing">
-                0
-            </span>
-        </div>
-
-        <div class="flex items-center justify-between px-1 py-1 rounded bg-red-100 text-red-700 col-span-2">
-            <span>❌ Failed</span>
-            <span id="countAssignmentFailed">
-                0
-            </span>
-        </div>
-
-    </div>
-</div>
 
     <!-- SERAH TERIMA USER -->
-<div
-    class="funnel-card bg-gradient-to-br from-emerald-50 to-white rounded-[24px] p-4 border border-emerald-200 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 cursor-pointer relative overflow-hidden"
-    onclick="filterByStage('Serah Terima User')"
->
-
-    <!-- BG -->
-    <div class="absolute top-0 right-0 w-24 h-24 bg-emerald-100/40 blur-3xl rounded-full"></div>
-
-    <!-- HEADER -->
-    <div class="relative z-10 flex items-start justify-between">
-
-        <div>
-            <p class="text-[11px] md:text-xs font-medium text-slate-500">
-                Serah Terima User
-            </p>
-
-            <div class="mt-1">
-
-    <p class="text-[9px] uppercase tracking-wide text-slate-400 font-semibold">
-        Total
-    </p>
-
-    <h2
-        id="countUser"
-        class="text-2xl font-extrabold italic tracking-tight text-emerald-700 leading-none"
-    >
-        0
-    </h2>
-
-</div>
-        </div>
-
-        <!-- COMPLETION DONUT -->
-<div class="flex flex-col items-center">
-
     <div
-        id="completionDonut"
-        class="relative w-[64px] h-[64px] rounded-full flex items-center justify-center transition-all duration-700"
-        style="
-            background:
-            conic-gradient(
-                #10b981 0deg,
-                #10b981 0deg,
-                #d1fae5 0deg,
-                #d1fae5 360deg
-            );
-        "
+        class="funnel-card whitespace-nowrap bg-gradient-to-br from-emerald-50 to-white rounded-[24px] p-3 md:p-4 border border-emerald-200 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 cursor-pointer relative overflow-hidden"
+        onclick="filterByStage('Serah Terima User')"
     >
 
-        <!-- CENTER -->
-        <div class="w-[44px] h-[44px] rounded-full bg-white shadow-sm flex items-center justify-center">
+        <div class="absolute top-0 right-0 w-24 h-24 bg-emerald-100/40 blur-3xl rounded-full"></div>
 
-            <span
-                id="completionRate"
-                class="text-[11px] font-extrabold italic text-emerald-700"
-            >
-                0%
-            </span>
+        <div class="relative z-10 flex justify-between items-start gap-2">
+
+            <div class="min-w-0">
+
+                <p class="text-[9px] md:text-xs font-medium text-slate-500 whitespace-nowrap">
+                    Serah Terima User
+                </p>
+
+                <p class="text-[7px] md:text-[9px] uppercase tracking-wide text-slate-400 font-semibold mt-1">
+                    Total
+                </p>
+
+                <h2
+                    id="countUser"
+                    class="text-2xl md:text-3xl font-extrabold italic text-emerald-700 leading-none"
+                >
+                    0
+                </h2>
+
+            </div>
+
+            <div class="flex flex-col items-center shrink-0">
+
+                <div
+                    id="completionDonut"
+                    class="relative w-[58px] md:w-[64px] h-[58px] md:h-[64px] rounded-full flex items-center justify-center transition-all duration-700"
+                >
+
+                    <div class="w-[40px] md:w-[44px] h-[40px] md:h-[44px] rounded-full bg-white shadow-sm flex items-center justify-center">
+
+                        <span
+                            id="completionRate"
+                            class="text-[9px] md:text-[11px] font-extrabold italic text-emerald-700"
+                        >
+                            0%
+                        </span>
+
+                    </div>
+                </div>
+
+                <p class="text-[6px] md:text-[8px] text-slate-500 font-medium mt-1 whitespace-nowrap">
+                    Induction → Serah Terima
+                </p>
+
+            </div>
 
         </div>
-    </div>
 
-    <!-- LABEL -->
-    <p class="text-[8px] text-center text-slate-500 font-medium mt-1 leading-tight">
-        Induction →<br>
-        Serah Terima
-    </p>
+        <div class="mt-3 space-y-2 relative z-10">
+
+            <div>
+                <div class="flex justify-between text-[7px] md:text-[9px] font-semibold mb-1 whitespace-nowrap">
+                    <span class="text-slate-600">Recruitment → Induction</span>
+                    <span id="ratioRecruitmentInduction" class="text-blue-700">0%</span>
+                </div>
+
+                <div class="h-1.5 rounded-full bg-slate-100 overflow-hidden">
+                    <div id="barRecruitmentInduction" class="h-full bg-blue-500 rounded-full transition-all duration-700" style="width:0%"></div>
+                </div>
+            </div>
+
+            <div>
+                <div class="flex justify-between text-[7px] md:text-[9px] font-semibold mb-1 whitespace-nowrap">
+                    <span class="text-slate-600">Induction → Assignment</span>
+                    <span id="ratioInductionAssignment" class="text-amber-700">0%</span>
+                </div>
+
+                <div class="h-1.5 rounded-full bg-slate-100 overflow-hidden">
+                    <div id="barInductionAssignment" class="h-full bg-amber-500 rounded-full transition-all duration-700" style="width:0%"></div>
+                </div>
+            </div>
+
+            <div>
+                <div class="flex justify-between text-[7px] md:text-[9px] font-semibold mb-1 whitespace-nowrap">
+                    <span class="text-slate-600">Assignment → Serah Terima</span>
+                    <span id="ratioAssignmentUser" class="text-purple-700">0%</span>
+                </div>
+
+                <div class="h-1.5 rounded-full bg-slate-100 overflow-hidden">
+                    <div id="barAssignmentUser" class="h-full bg-purple-500 rounded-full transition-all duration-700" style="width:0%"></div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
 
 </div>
-
-    </div>
-
-    <!-- FUNNEL SUMMARY -->
-    <div class="mt-4 relative z-10 space-y-2">
-
-        <!-- Recruitment -> Induction -->
-        <div>
-            <div class="flex justify-between text-[9px] font-semibold mb-1">
-                <span class="text-slate-600">
-                    Recruitment → Induction
-                </span>
-                <span
-                    id="ratioRecruitmentInduction"
-                    class="text-blue-700"
-                >
-                    0%
-                </span>
-            </div>
-
-            <div class="h-1.5 rounded-full bg-slate-100 overflow-hidden">
-                <div
-                    id="barRecruitmentInduction"
-                    class="h-full bg-blue-500 rounded-full transition-all duration-700"
-                    style="width:0%"
-                ></div>
-            </div>
-        </div>
-
-        <!-- Induction -> Assignment -->
-        <div>
-            <div class="flex justify-between text-[9px] font-semibold mb-1">
-                <span class="text-slate-600">
-                    Induction → Assignment
-                </span>
-                <span
-                    id="ratioInductionAssignment"
-                    class="text-amber-700"
-                >
-                    0%
-                </span>
-            </div>
-
-            <div class="h-1.5 rounded-full bg-slate-100 overflow-hidden">
-                <div
-                    id="barInductionAssignment"
-                    class="h-full bg-amber-500 rounded-full transition-all duration-700"
-                    style="width:0%"
-                ></div>
-            </div>
-        </div>
-
-        <!-- Assignment -> Serah Terima -->
-        <div>
-            <div class="flex justify-between text-[9px] font-semibold mb-1">
-                <span class="text-slate-600">
-                    Assignment → Serah Terima
-                </span>
-                <span
-                    id="ratioAssignmentUser"
-                    class="text-purple-700"
-                >
-                    0%
-                </span>
-            </div>
-
-            <div class="h-1.5 rounded-full bg-slate-100 overflow-hidden">
-                <div
-                    id="barAssignmentUser"
-                    class="h-full bg-purple-500 rounded-full transition-all duration-700"
-                    style="width:0%"
-                ></div>
-            </div>
-        </div>
-
-    </div>
-</div>
-    </div>
 
     <!-- TABLE SECTION -->
     <div class="bg-white rounded-[28px] border border-slate-200 shadow-sm overflow-hidden">

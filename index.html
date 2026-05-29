@@ -953,11 +953,11 @@ nav .text-slate-400{
                 >
                 </tbody>
             </table>
-            <div
-    id="recruitmentPagination"
-    class="flex items-center gap-3 mt-4"
-></div>
         </div>
+        <div
+    id="recruitmentPagination"
+    class="mt-4 px-4 flex justify-start"
+></div>
     </div>
 
     <!-- INDUCTION TRAINING -->
@@ -1952,7 +1952,7 @@ item.parsedJoinDate;
 // ======================
 const inductionRowsPerPage = 10;
 
-const inductionTotalPages =
+window.inductionTotalPages =
 Math.ceil(
     data.length / inductionRowsPerPage
 ) || 1;
@@ -1966,10 +1966,10 @@ if(
 
 if(
     inductionCurrentPage >
-    inductionTotalPages
+    window.inductionTotalPages
 ){
     inductionCurrentPage =
-    inductionTotalPages;
+    window.inductionTotalPages;
 }
 
 const inductionStart =
@@ -2415,12 +2415,12 @@ rows.push(`
             <div class="text-xs text-slate-500">
                 Page ${inductionCurrentPage}
                 of
-                ${inductionTotalPages}
+                ${window.inductionTotalPages}
             </div>
 
             <button
                 onclick="
-                    if(inductionCurrentPage < inductionTotalPages){
+                    if(inductionCurrentPage < window.inductionTotalPages){
                         inductionCurrentPage++;
                         renderInductionTable();
                     }
@@ -5306,7 +5306,7 @@ function renderRecruitmentTable(){
 // ======================
 const recruitmentRowsPerPage = 10;
 
-const recruitmentTotalPages =
+window.recruitmentTotalPages =
 Math.ceil(
     data.length / recruitmentRowsPerPage
 ) || 1;
@@ -5320,10 +5320,10 @@ if(
 
 if(
     recruitmentCurrentPage >
-    recruitmentTotalPages
+    window.recruitmentTotalPages
 ){
     recruitmentCurrentPage =
-    recruitmentTotalPages;
+    window.recruitmentTotalPages;
 }
 
 const recruitmentStart =
@@ -5338,95 +5338,126 @@ recruitmentStart
 +
 recruitmentRowsPerPage;
 
+// ======================
+// SLICE DATA
+// ======================
 const paginatedData =
 data.slice(
     recruitmentStart,
     recruitmentEnd
 );
-    tbody.innerHTML = "";
 
-    paginatedData.forEach((item,index)=>{
+// ======================
+// RESET TABLE
+// ======================
+tbody.innerHTML = "";
 
-        tbody.innerHTML += `
-        <tr class="border-b hover:bg-slate-50">
+// ======================
+// RENDER ROWS
+// ======================
+paginatedData.forEach((item,index)=>{
 
-            <td class="sticky left-0 bg-white z-20 px-3 py-2 text-xs font-semibold whitespace-nowrap shadow-[4px_0_10px_rgba(0,0,0,0.03)]">
-                ${recruitmentStart + index + 1}
-            </td>
+    tbody.innerHTML += `
 
-            <td class="px-3 py-2 text-xs font-medium whitespace-nowrap">
-                ${item.nama || ""}
-            </td>
+    <tr class="border-b hover:bg-slate-50">
 
-            <td class="px-3 py-2 text-xs whitespace-nowrap">
-                ${item.username || ""}
-            </td>
+        <td class="sticky left-0 bg-white z-20 px-3 py-2 text-xs font-semibold whitespace-nowrap shadow-[4px_0_10px_rgba(0,0,0,0.03)]">
+            ${recruitmentStart + index + 1}
+        </td>
 
-            <td class="px-4 py-4">
-                ${item.company || ""}
-            </td>
+        <td class="px-3 py-2 text-xs font-medium whitespace-nowrap">
+            ${item.nama || ""}
+        </td>
 
-            <td class="px-4 py-4">
-                ${item.departement || ""}
-            </td>
+        <td class="px-3 py-2 text-xs whitespace-nowrap">
+            ${item.username || ""}
+        </td>
 
-            <td class="px-4 py-4">
-                ${item.designation || ""}
-            </td>
+        <td class="px-4 py-4">
+            ${item.company || ""}
+        </td>
 
-            <td class="px-4 py-4">
-                ${item.location || ""}
-            </td>
+        <td class="px-4 py-4">
+            ${item.departement || ""}
+        </td>
 
-            <td class="px-4 py-4">
-                ${item.date_join || ""}
-            </td>
+        <td class="px-4 py-4">
+            ${item.designation || ""}
+        </td>
 
-            <td class="px-4 py-4">
-    ${item.kontak || ""}
-</td>
+        <td class="px-4 py-4">
+            ${item.location || ""}
+        </td>
 
-<td class="px-4 py-4">
+        <td class="px-4 py-4">
+            ${item.date_join || ""}
+        </td>
 
-    <div class="flex items-center justify-center gap-2">
+        <td class="px-4 py-4">
+            ${item.kontak || ""}
+        </td>
 
-        <!-- EDIT -->
-        <button
-            onclick="editRecruitment(${recruitmentData.indexOf(item)})"
-            class="text-blue-600 hover:text-blue-800 transition"
-        >
-            <i data-lucide="pencil" class="w-4 h-4"></i>
-        </button>
+        <td class="px-4 py-4">
 
-        <!-- DELETE -->
-        <button
-            onclick="deleteRecruitment(${recruitmentData.indexOf(item)})"
-            class="text-red-600 hover:text-red-800 transition"
-        >
-            <i data-lucide="trash-2" class="w-4 h-4"></i>
-        </button>
+            <div class="flex items-center justify-center gap-2">
 
-        <button
-    onclick="sendWhatsApp('${item.kontak}', '${item.nama}')"
-    class="text-green-600 hover:text-green-800 transition"
->
-    <i data-lucide="message-circle-more" class="w-4 h-4"></i>
-</button>
+                <!-- EDIT -->
+                <button
+                    onclick="editRecruitment(${recruitmentData.indexOf(item)})"
+                    class="text-blue-600 hover:text-blue-800 transition"
+                >
+                    <i
+                        data-lucide="pencil"
+                        class="w-4 h-4"
+                    ></i>
+                </button>
 
-    </div>
+                <!-- DELETE -->
+                <button
+                    onclick="deleteRecruitment(${recruitmentData.indexOf(item)})"
+                    class="text-red-600 hover:text-red-800 transition"
+                >
+                    <i
+                        data-lucide="trash-2"
+                        class="w-4 h-4"
+                    ></i>
+                </button>
 
-</td>
+                <!-- WA -->
+                <button
+                    onclick="sendWhatsApp('${item.kontak}', '${item.nama}')"
+                    class="text-green-600 hover:text-green-800 transition"
+                >
+                    <i
+                        data-lucide="message-circle-more"
+                        class="w-4 h-4"
+                    ></i>
+                </button>
 
-</tr>
-`;
+            </div>
+
+        </td>
+
+    </tr>
+
+    `;
 });
 
-tbody.innerHTML += `
-<tr>
-    <td colspan="10" class="px-4 py-3 border-t bg-white">
+// ======================
+// PAGINATION UI
+// ======================
+const pagination =
+document.getElementById(
+    "recruitmentPagination"
+);
 
-        <div class="flex items-center justify-between">
+if(pagination){
 
+    pagination.innerHTML = `
+
+        <div class="flex items-center gap-3">
+
+            <!-- PREV -->
             <button
                 onclick="
                     if(recruitmentCurrentPage > 1){
@@ -5434,34 +5465,56 @@ tbody.innerHTML += `
                         renderRecruitmentTable();
                     }
                 "
-                class="px-3 py-1.5 text-xs border rounded-lg hover:bg-slate-100"
+                class="
+                    px-3 py-2
+                    text-xs
+                    border
+                    rounded-lg
+                    hover:bg-slate-100
+                    transition
+                "
             >
                 Previous
             </button>
 
+            <!-- PAGE -->
             <div class="text-xs text-slate-500">
-                Page ${recruitmentCurrentPage}
+
+                Page
+                ${recruitmentCurrentPage}
                 of
-                ${recruitmentTotalPages}
+                ${window.recruitmentTotalPages}
+
             </div>
 
+            <!-- NEXT -->
             <button
                 onclick="
-                    if(recruitmentCurrentPage < recruitmentTotalPages){
+                    if(
+                        recruitmentCurrentPage
+                        <
+                        window.recruitmentTotalPages
+                    ){
                         recruitmentCurrentPage++;
                         renderRecruitmentTable();
                     }
                 "
-                class="px-3 py-1.5 text-xs border rounded-lg hover:bg-slate-100"
+                class="
+                    px-3 py-2
+                    text-xs
+                    border
+                    rounded-lg
+                    hover:bg-slate-100
+                    transition
+                "
             >
                 Next
             </button>
 
         </div>
 
-    </td>
-</tr>
-`;
+    `;
+}
     
 updateFunnel();
 

@@ -874,19 +874,43 @@ nav .text-slate-400{
             </h2>
         </div>
 
-        <div class="bg-emerald-100 rounded-xl px-3 py-2 text-center">
+        <!-- COMPLETION DONUT -->
+<div class="flex flex-col items-center">
 
-            <p class="text-[8px] uppercase font-semibold text-emerald-600 tracking-wide">
-                Completion
-            </p>
+    <div
+        id="completionDonut"
+        class="relative w-[64px] h-[64px] rounded-full flex items-center justify-center transition-all duration-700"
+        style="
+            background:
+            conic-gradient(
+                #10b981 0deg,
+                #10b981 0deg,
+                #d1fae5 0deg,
+                #d1fae5 360deg
+            );
+        "
+    >
 
-            <div
+        <!-- CENTER -->
+        <div class="w-[44px] h-[44px] rounded-full bg-white shadow-sm flex items-center justify-center">
+
+            <span
                 id="completionRate"
-                class="text-lg font-extrabold italic text-emerald-700 leading-none"
+                class="text-[11px] font-extrabold italic text-emerald-700"
             >
                 0%
-            </div>
+            </span>
+
         </div>
+    </div>
+
+    <!-- LABEL -->
+    <p class="text-[8px] text-center text-slate-500 font-medium mt-1 leading-tight">
+        Induction →<br>
+        Serah Terima
+    </p>
+
+</div>
 
     </div>
 
@@ -3748,6 +3772,27 @@ function updateAssignmentCount(){
         "completionRate"
     ).innerText =
     `${completion}%`;
+    // ======================
+// COMPLETION DONUT
+// ======================
+const completionDonut =
+document.getElementById(
+    "completionDonut"
+);
+
+if(completionDonut){
+
+    const deg =
+    (
+        completion / 100
+    ) * 360;
+
+    completionDonut.style.background =
+    `conic-gradient(
+        #10b981 0deg ${deg}deg,
+        #d1fae5 ${deg}deg 360deg
+    )`;
+}
 
     // ======================
     // UPDATE BAR

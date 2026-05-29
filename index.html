@@ -3971,12 +3971,26 @@ if(completionDonut){
 // ======================
 function openLegendModal(type){
 
+    const modal =
+    document.getElementById(
+        "legendModal"
+    );
+
+    const title =
+    document.getElementById(
+        "legendModalTitle"
+    );
+
     const tbody =
     document.getElementById(
         "legendModalBody"
     );
 
-    if(!tbody) return;
+    if(
+        !modal
+        ||
+        !tbody
+    ) return;
 
     let data =
     [...inductionData];
@@ -4006,7 +4020,9 @@ function openLegendModal(type){
                 .progress || 0
             )
         ){
-            grouped[key] = item;
+
+            grouped[key] =
+            item;
         }
 
     });
@@ -4090,13 +4106,21 @@ function openLegendModal(type){
         joinDate
         ?
         Math.floor(
+
             (
-                today - joinDate
+                today -
+                joinDate
             )
+
             /
+
             (
-                1000 * 60 * 60 * 24
+                1000 *
+                60 *
+                60 *
+                24
             )
+
         )
         :
         0;
@@ -4149,9 +4173,12 @@ function openLegendModal(type){
         );
 
         const isCompleted =
-        total > 0
-        &&
-        completed === total;
+
+            total > 0
+
+            &&
+
+            completed === total;
 
         switch(type){
 
@@ -4166,7 +4193,9 @@ function openLegendModal(type){
                     &&
                     !isLate
                     &&
-                    statusKaryawan !== "resign"
+                    statusKaryawan
+                    !==
+                    "resign"
                 );
 
             case "induction-late":
@@ -4175,7 +4204,9 @@ function openLegendModal(type){
                     &&
                     !hasRemedial
                     &&
-                    statusKaryawan !== "resign"
+                    statusKaryawan
+                    !==
+                    "resign"
                 );
 
             case "induction-remedial":
@@ -4184,7 +4215,9 @@ function openLegendModal(type){
                     &&
                     !isLate
                     &&
-                    statusKaryawan !== "resign"
+                    statusKaryawan
+                    !==
+                    "resign"
                 );
 
             case "induction-remedial-late":
@@ -4193,7 +4226,9 @@ function openLegendModal(type){
                     &&
                     isLate
                     &&
-                    statusKaryawan !== "resign"
+                    statusKaryawan
+                    !==
+                    "resign"
                 );
 
             case "induction-resign":
@@ -4234,16 +4269,44 @@ function openLegendModal(type){
 
     };
 
-    document.getElementById(
-        "legendModalTitle"
-    ).innerText =
+    title.innerText =
     `Induction - ${
-        titleMap[type] || "Detail"
+        titleMap[type]
+        || "Detail"
     }`;
 
     // ======================
+    // EMPTY STATE
+    // ======================
+    if(!data.length){
+
+        tbody.innerHTML =
+        `
+        <tr>
+            <td
+                colspan="12"
+                class="
+                text-center
+                py-10
+                text-slate-400
+                "
+            >
+                Tidak ada data
+            </td>
+        </tr>
+        `;
+
+        modal
+        .classList
+        .remove(
+            "hidden"
+        );
+
+        return;
+    }
+
+    // ======================
     // BUILD TABLE
-    // PERSIS INDUCTION TABLE
     // ======================
     tbody.innerHTML =
     data.map((item,index)=>{
@@ -4287,83 +4350,99 @@ function openLegendModal(type){
 
         <tr class="hover:bg-slate-50 transition-all">
 
-            <td class="p-3">
+            <td class="px-3 py-3">
                 ${index + 1}
             </td>
 
-            <td class="p-3">
+            <td class="px-3 py-3">
                 ${item.nama || "-"}
             </td>
 
-            <td class="p-3">
+            <td class="px-3 py-3">
                 ${item.username || "-"}
             </td>
 
-            <td class="p-3">
+            <td class="px-3 py-3">
                 ${formattedDate}
             </td>
 
-            <td class="p-3">
+            <td class="px-3 py-3">
                 ${item.department || "-"}
             </td>
 
-            <td class="p-3">
+            <td class="px-3 py-3">
                 ${item.position || "-"}
             </td>
 
-            <td class="p-3">
+            <td class="px-3 py-3">
 
                 <div class="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
 
                     <div
                         class="bg-blue-600 h-2 rounded-full"
-                        style="width:${progress}%"
+                        style="
+                        width:
+                        ${progress}%
+                        "
                     ></div>
 
                 </div>
 
-                <div class="text-center mt-1 text-[11px] font-semibold">
-                    ${progress}%
+                <div class="text-center mt-1">
+
+                    <div class="text-[11px] font-semibold text-slate-700">
+                        ${progress}%
+                    </div>
+
                 </div>
 
             </td>
 
-            <td class="p-3 text-center">
+            <td class="px-3 py-3 text-center font-semibold">
                 ${avg}
             </td>
 
-            <td class="p-3 text-center">
+            <td class="px-3 py-3 text-center">
                 ${completed}/${total}
             </td>
 
+            <td class="px-3 py-3 text-center">
+                ${
+                    item.status_karyawan
+                    || "-"
+                }
+            </td>
+
+            <td class="px-3 py-3 text-center">
+                ${
+                    item.resign_date
+                    || "-"
+                }
+            </td>
+
+            <td class="px-3 py-3">
+                ${
+                    item.resign_reason
+                    || "-"
+                }
+            </td>
+
         </tr>
+
         `;
 
     }).join("");
 
-    // EMPTY
-    if(!data.length){
-
-        tbody.innerHTML = `
-        <tr>
-            <td
-                colspan="9"
-                class="p-8 text-center text-slate-400"
-            >
-                Tidak ada data
-            </td>
-        </tr>
-        `;
-    }
-
+    // ======================
     // OPEN MODAL
-    document
-    .getElementById(
-        "legendModal"
-    )
+    // ======================
+    modal
     .classList
-    .remove("hidden");
+    .remove(
+        "hidden"
+    );
 }
+
 // ======================
 // CLOSE MODAL
 // ======================
@@ -4373,8 +4452,10 @@ function closeLegendModal(){
     .getElementById(
         "legendModal"
     )
-    .classList
-    .add("hidden");
+    ?.classList
+    .add(
+        "hidden"
+    );
 }
 // ======================
 // SAFE DATE PARSER

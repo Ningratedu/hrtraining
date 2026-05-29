@@ -854,27 +854,120 @@ nav .text-slate-400{
     class="funnel-card bg-gradient-to-br from-emerald-50 to-white rounded-[24px] p-4 border border-emerald-200 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 cursor-pointer relative overflow-hidden"
     onclick="filterByStage('Serah Terima User')"
 >
+
+    <!-- BG BLUR -->
     <div class="absolute top-0 right-0 w-24 h-24 bg-emerald-100/40 blur-3xl rounded-full"></div>
 
-    <p class="text-[11px] md:text-xs font-medium text-slate-500 relative z-10">
-        Serah Terima User
-    </p>
+    <!-- TITLE -->
+    <div class="relative z-10">
 
-    <h2
-        id="countUser"
-        class="text-xl md:text-2xl font-extrabold italic tracking-tight text-emerald-700 mt-1 relative z-10"
-    >
-        0
-    </h2>
+        <p class="text-[11px] md:text-xs font-medium text-slate-500">
+            Serah Terima User
+        </p>
 
-    <!-- STATUS -->
-    <div class="mt-1 text-[10px] md:text-[11px] font-medium text-slate-500 relative z-10">
-        <span id="countUserDone">
-            ✅ Done 0
-        </span>
     </div>
-</div>
-</div>
+
+    <!-- CONTENT -->
+    <div class="flex items-center justify-between mt-3 relative z-10">
+
+        <!-- DONUT -->
+        <div
+            id="userDonut"
+            class="relative w-[88px] h-[88px] rounded-full flex items-center justify-center shrink-0 transition-all duration-500"
+            style="
+                background:
+                conic-gradient(
+                    #10b981 0deg,
+                    #10b981 0deg,
+                    #d1fae5 0deg,
+                    #d1fae5 360deg
+                );
+            "
+        >
+
+            <!-- CENTER -->
+            <div class="w-[58px] h-[58px] rounded-full bg-white shadow-sm flex flex-col items-center justify-center">
+
+                <span
+                    id="countUser"
+                    class="text-lg font-extrabold italic text-emerald-700 leading-none"
+                >
+                    0
+                </span>
+
+                <span class="text-[8px] text-slate-500">
+                    User
+                </span>
+
+            </div>
+        </div>
+
+        <!-- KPI -->
+        <div class="flex-1 ml-3">
+
+            <!-- SUCCESS RATE -->
+            <div class="bg-emerald-100 rounded-xl px-3 py-2">
+
+                <p class="text-[9px] uppercase tracking-wide text-emerald-600 font-semibold">
+                    Success Rate
+                </p>
+
+                <div class="flex items-end gap-1">
+
+                    <span
+                        id="countUserPercent"
+                        class="text-xl font-extrabold italic text-emerald-700 leading-none"
+                    >
+                        0%
+                    </span>
+
+                </div>
+            </div>
+
+            <!-- SUMMARY -->
+            <div class="mt-2 text-[9px] text-slate-600 leading-tight">
+
+                <div class="flex justify-between">
+                    <span>Assignment Done</span>
+                    <span
+                        id="countUserDone"
+                        class="font-bold text-slate-700"
+                    >
+                        0
+                    </span>
+                </div>
+
+                <div class="flex justify-between mt-1">
+                    <span>Conversion</span>
+                    <span
+                        id="countUserRatio"
+                        class="font-bold text-emerald-700"
+                    >
+                        0 / 0
+                    </span>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- PROGRESS BAR -->
+    <div class="mt-3 relative z-10">
+
+        <div class="h-2 rounded-full bg-emerald-100 overflow-hidden">
+
+            <div
+                id="userProgressBar"
+                class="h-full rounded-full bg-emerald-500 transition-all duration-700"
+                style="width:0%"
+            ></div>
+
+        </div>
+
+    </div>
+
 </div>
 
     <!-- TABLE SECTION -->

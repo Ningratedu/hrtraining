@@ -645,7 +645,7 @@ nav .text-slate-400{
 </div>
 
         <!-- CARD -->
-<div class="grid grid-cols-2 lg:grid-cols-5 gap-2 md:gap-3">
+<div class="grid grid-cols-2 lg:grid-cols-4 gap-2 md:gap-3">
 
     <!-- RECRUITMENT (TETAP SINGLE VALUE) -->
     <div
@@ -757,25 +757,31 @@ nav .text-slate-400{
         </div>
     </div>
 
-    <!-- SERAH TERIMA -->
-    <div
-        class="funnel-card bg-gradient-to-br from-emerald-50 to-white rounded-[24px] p-4 border border-emerald-200 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 cursor-pointer relative overflow-hidden"
-        onclick="filterByStage('Serah Terima User')"
+    <!-- SERAH TERIMA USER -->
+<div
+    class="funnel-card bg-gradient-to-br from-emerald-50 to-white rounded-[24px] p-4 border border-emerald-200 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 cursor-pointer relative overflow-hidden"
+    onclick="filterByStage('Serah Terima User')"
+>
+    <div class="absolute top-0 right-0 w-24 h-24 bg-emerald-100/40 blur-3xl rounded-full"></div>
+
+    <p class="text-[11px] md:text-xs font-medium text-slate-500 relative z-10">
+        Serah Terima User
+    </p>
+
+    <h2
+        id="countUser"
+        class="text-xl md:text-2xl font-extrabold italic tracking-tight text-emerald-700 mt-1 relative z-10"
     >
-        <div class="absolute top-0 right-0 w-24 h-24 bg-emerald-100/40 blur-3xl rounded-full"></div>
+        0
+    </h2>
 
-        <p class="text-[11px] md:text-xs font-medium text-slate-500 relative z-10">
-            Serah Terima User
-        </p>
-
-        <h2
-            id="countUser"
-            class="text-xl md:text-2xl font-extrabold italic tracking-tight text-emerald-700 mt-1 relative z-10"
-        >
-            0
-        </h2>
+    <!-- STATUS -->
+    <div class="mt-1 text-[10px] md:text-[11px] font-medium text-slate-500 relative z-10">
+        <span id="countUserDone">
+            ✅ Done 0
+        </span>
     </div>
-  </div>
+</div>
 </div>
 
     <!-- TABLE SECTION -->
@@ -3294,13 +3300,9 @@ function updateAssignmentCount(){
     )?.value;
 
     if(
-
         period
-
         &&
-
         period !== "all"
-
     ){
 
         data =
@@ -3312,7 +3314,7 @@ function updateAssignmentCount(){
 
             const join =
             parseDateSafe(
-            item.join_date
+                item.join_date
             );
 
             if(!join)
@@ -3399,7 +3401,7 @@ function updateAssignmentCount(){
     });
 
     // ======================
-    // UPDATE UI
+    // UPDATE UI ASSIGNMENT
     // ======================
     document.getElementById(
         "countAssignment"
@@ -3420,8 +3422,33 @@ function updateAssignmentCount(){
         "countAssignmentFailed"
     ).innerText =
     `❌ ${failed}`;
-}
 
+    // ======================
+    // SERAH TERIMA USER
+    // = DONE ASSIGNMENT
+    // ======================
+    const userCount =
+    document.getElementById(
+        "countUser"
+    );
+
+    if(userCount){
+
+        userCount.innerText =
+        done;
+    }
+
+    const userDone =
+    document.getElementById(
+        "countUserDone"
+    );
+
+    if(userDone){
+
+        userDone.innerText =
+        `✅ Done ${done}`;
+    }
+}
 // ======================
 // SAFE DATE PARSER
 // SUPPORT:

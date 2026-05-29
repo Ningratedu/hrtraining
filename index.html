@@ -953,6 +953,10 @@ nav .text-slate-400{
                 >
                 </tbody>
             </table>
+            <div
+    id="recruitmentPagination"
+    class="flex items-center gap-3 mt-4"
+></div>
         </div>
     </div>
 
@@ -1196,6 +1200,10 @@ nav .text-slate-400{
             </tbody>
 
         </table>
+        <div
+    id="inductionPagination"
+    class="flex items-center gap-3 mt-4"
+></div>
 
     </div>
 
@@ -1444,6 +1452,10 @@ nav .text-slate-400{
             </tbody>
 
         </table>
+        <div
+    id="assignmentPagination"
+    class="flex items-center gap-3 mt-4"
+></div>
 
     </div>
 
@@ -3640,17 +3652,17 @@ function renderAssignmentTable(){
 // ======================
 // PAGINATION
 // ======================
-const assignmentTotalPages =
+window.assignmentTotalPages =
 Math.ceil(
     data.length / assignmentRowsPerPage
 ) || 1;
 
 if(
     assignmentCurrentPage >
-    assignmentTotalPages
+    window.assignmentTotalPages
 ){
     assignmentCurrentPage =
-    assignmentTotalPages;
+    window.assignmentTotalPages;
 }
 
 const assignmentStart =
@@ -3921,7 +3933,7 @@ tbody.innerHTML += `
                 Page
                 ${assignmentCurrentPage}
                 of
-                ${assignmentTotalPages}
+                ${window.assignmentTotalPages}
             </div>
 
             <!-- NEXT -->
@@ -3930,7 +3942,7 @@ tbody.innerHTML += `
                     if(
                         assignmentCurrentPage
                         <
-                        assignmentTotalPages
+                        window.assignmentTotalPages
                     ){
                         assignmentCurrentPage++;
                         renderAssignmentTable();

@@ -3650,30 +3650,98 @@ function updateAssignmentCount(){
     }
 
     // ======================
-    // SERAH TERIMA USER
-    // = DONE ASSIGNMENT
-    // ======================
-    const userCount =
-    document.getElementById(
-        "countUser"
-    );
+// SERAH TERIMA USER
+// ======================
+const userCount =
+document.getElementById(
+    "countUser"
+);
 
-    if(userCount){
+if(userCount){
 
-        userCount.innerText =
-        done;
-    }
+    userCount.innerText =
+    done;
+}
 
-    const userDone =
-    document.getElementById(
-        "countUserDone"
-    );
+// ======================
+// CALCULATE %
+// ======================
+const totalAssignment =
+data.length || 0;
 
-    if(userDone){
+const percent =
+totalAssignment > 0
+? Math.round(
+    (done / totalAssignment)
+    * 100
+)
+: 0;
 
-        userDone.innerText =
-        `✅ Done ${done}`;
-    }
+// PERCENT TEXT
+const percentEl =
+document.getElementById(
+    "countUserPercent"
+);
+
+if(percentEl){
+
+    percentEl.innerText =
+    `${percent}%`;
+}
+
+// RATIO
+const ratioEl =
+document.getElementById(
+    "countUserRatio"
+);
+
+if(ratioEl){
+
+    ratioEl.innerText =
+    `${done} / ${totalAssignment}`;
+}
+
+// DONE
+const userDone =
+document.getElementById(
+    "countUserDone"
+);
+
+if(userDone){
+
+    userDone.innerText =
+    done;
+}
+
+// PROGRESS BAR
+const progressBar =
+document.getElementById(
+    "userProgressBar"
+);
+
+if(progressBar){
+
+    progressBar.style.width =
+    `${percent}%`;
+}
+
+// DONUT
+const donut =
+document.getElementById(
+    "userDonut"
+);
+
+if(donut){
+
+    const deg =
+    (percent / 100)
+    * 360;
+
+    donut.style.background =
+    `conic-gradient(
+        #10b981 0deg ${deg}deg,
+        #d1fae5 ${deg}deg 360deg
+    )`;
 }
 // ======================
 // SAFE DATE PARSER

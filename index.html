@@ -2318,15 +2318,24 @@ if(inductionStatusFilter){
 
             case "late":
 
-                return (
-                    !hasRemedial
-                    &&
-                    isLate
-                    &&
-                    statusKaryawan
-                    !==
-                    "resign"
-                );
+    return (
+
+        !isCompleted
+
+        &&
+
+        !hasRemedial
+
+        &&
+
+        isLate
+
+        &&
+
+        statusKaryawan
+        !==
+        "resign"
+    );
 
             case "remedial":
 

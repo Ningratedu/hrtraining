@@ -788,32 +788,68 @@ nav .text-slate-400{
 
         <div class="grid grid-cols-2 gap-1 mt-3 relative z-10 text-[7px] md:text-[8px] font-semibold">
 
-            <div class="flex justify-between items-center px-1 py-1 rounded bg-green-100 text-green-700">
+            <div
+    onclick="
+        event.stopPropagation();
+        filterInductionLegend('completed')
+    "
+    class="flex justify-between items-center px-1 py-1 rounded bg-green-100 text-green-700 cursor-pointer hover:opacity-80 transition"
+>
                 <span class="whitespace-nowrap">✅ Completed</span>
                 <span id="countInductionCompleted">0</span>
             </div>
 
-            <div class="flex justify-between items-center px-1 py-1 rounded bg-blue-100 text-blue-700">
+            <div
+    onclick="
+        event.stopPropagation();
+        filterInductionLegend('progress')
+    "
+    class="flex justify-between items-center px-1 py-1 rounded bg-blue-100 text-blue-700 cursor-pointer hover:opacity-80 transition"
+>
                 <span class="whitespace-nowrap">⏳ Progress</span>
                 <span id="countInductionProgress">0</span>
             </div>
 
-            <div class="flex justify-between items-center px-1 py-1 rounded bg-amber-100 text-amber-700">
+            <div
+    onclick="
+        event.stopPropagation();
+        filterInductionLegend('late')
+    "
+    class="flex justify-between items-center px-1 py-1 rounded bg-amber-100 text-amber-700 cursor-pointer hover:opacity-80 transition"
+>
                 <span class="whitespace-nowrap">🕒 Late</span>
                 <span id="countInductionProgressLate">0</span>
             </div>
 
-            <div class="flex justify-between items-center px-1 py-1 rounded bg-red-100 text-red-700">
+            <div
+    onclick="
+        event.stopPropagation();
+        filterInductionLegend('remedial')
+    "
+    class="flex justify-between items-center px-1 py-1 rounded bg-red-100 text-red-700 cursor-pointer hover:opacity-80 transition"
+>
                 <span class="whitespace-nowrap">❌ Remedial</span>
                 <span id="countInductionRemedial">0</span>
             </div>
 
-            <div class="flex justify-between items-center px-1 py-1 rounded bg-rose-100 text-rose-700">
+            <div
+    onclick="
+        event.stopPropagation();
+        filterInductionLegend('remedial_late')
+    "
+    class="flex justify-between items-center px-1 py-1 rounded bg-rose-100 text-rose-700 cursor-pointer hover:opacity-80 transition"
+>
                 <span class="whitespace-nowrap">🚨 Remed Late</span>
                 <span id="countInductionRemedialLate">0</span>
             </div>
 
-            <div class="flex justify-between items-center px-1 py-1 rounded bg-slate-200 text-slate-700">
+            <div
+    onclick="
+        event.stopPropagation();
+        filterInductionLegend('resign')
+    "
+    class="flex justify-between items-center px-1 py-1 rounded bg-slate-200 text-slate-700 cursor-pointer hover:opacity-80 transition"
+>
                 <span class="whitespace-nowrap">👋 Resign</span>
                 <span id="countInductionResign">0</span>
             </div>
@@ -2001,6 +2037,33 @@ parseDateSafe(
         );
     }
 }
+
+// =====================================
+// FILTER INDUCTION LEGEND
+// =====================================
+function filterInductionLegend(status){
+
+    inductionStatusFilter = status;
+
+    inductionCurrentPage = 1;
+
+    const section =
+    document.querySelector(
+        "#inductionBody"
+    );
+
+    if(section){
+
+        section.scrollIntoView({
+
+            behavior:"smooth",
+            block:"start"
+
+        });
+    }
+
+    renderInductionTable();
+}
     
 // =====================================
 // RENDER INDUCTION TABLE
@@ -2134,7 +2197,176 @@ item.parsedJoinDate;
             )
         );
     }
+// ======================
+// FILTER STATUS LEGEND
+// ======================
+if(inductionStatusFilter){
 
+    data =
+    data.filter(item=>{
+
+        const statusKaryawan =
+        String(
+            item.status_karyawan || ""
+        )
+        .trim()
+        .toLowerCase();
+
+        const completed =
+        Number(
+            item.completed_training || 0
+        );
+
+        const total =
+        Number(
+            item.total_training || 0
+        );
+
+        const joinDate =
+        new Date(
+            item.join_date
+        );
+
+        const today =
+        new Date();
+
+        const diffDays =
+        Math.floor(
+
+            (
+                today -
+                joinDate
+            )
+
+            /
+
+            (
+                1000 *
+                60 *
+                60 *
+                24
+            )
+        );
+
+        const isLate =
+        diffDays > 14;
+
+        const userMaterials =
+        inductionData.filter(r=>
+
+            String(
+                r.username || ""
+            )
+            .trim()
+            .toLowerCase()
+
+            ===
+
+            String(
+                item.username || ""
+            )
+            .trim()
+            .toLowerCase()
+        );
+
+        const hasRemedial =
+        userMaterials.some(r=>
+
+            String(
+                r.status || ""
+            )
+            .trim()
+            .toLowerCase()
+
+            ===
+
+            "remedial"
+        );
+
+        const isCompleted =
+
+            total > 0
+
+            &&
+
+            completed === total;
+
+        // ======================
+        // MATCH FILTER
+        // ======================
+        switch(
+            inductionStatusFilter
+        ){
+
+            case "completed":
+
+                return isCompleted;
+
+            case "progress":
+
+                return (
+                    !isCompleted
+                    &&
+                    !hasRemedial
+                    &&
+                    !isLate
+                    &&
+                    statusKaryawan
+                    !==
+                    "resign"
+                );
+
+            case "late":
+
+                return (
+                    !hasRemedial
+                    &&
+                    isLate
+                    &&
+                    statusKaryawan
+                    !==
+                    "resign"
+                );
+
+            case "remedial":
+
+                return (
+                    hasRemedial
+                    &&
+                    !isLate
+                    &&
+                    statusKaryawan
+                    !==
+                    "resign"
+                );
+
+            case "remedial_late":
+
+                return (
+                    hasRemedial
+                    &&
+                    isLate
+                    &&
+                    statusKaryawan
+                    !==
+                    "resign"
+                );
+
+            case "resign":
+
+                return (
+                    statusKaryawan
+                    ===
+                    "resign"
+                );
+
+            default:
+
+                return true;
+        }
+
+    });
+}
     // ======================
     // SORT
     // ======================
@@ -5483,6 +5715,7 @@ let selectedStage = "";
 // INDUCTION STATE
 // ======================
 let inductionData = [];
+let inductionStatusFilter = "";
 let inductionSortField = "nama";
 let inductionSortDirection = "asc";
         

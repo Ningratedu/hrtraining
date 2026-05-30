@@ -4461,52 +4461,8 @@ function renderAssignmentTable(){
 
         );
     }
+
 // ======================
-// PAGINATION
-// ======================
-window.assignmentTotalPages =
-Math.ceil(
-    data.length /
-    assignmentRowsPerPage
-) || 1;
-console.log(
-    "FILTERED TOTAL:",
-    data.length,
-    "TOTAL PAGE:",
-    window.assignmentTotalPages,
-    "FILTER:",
-    assignmentStatusFilter
-);
-// ======================
-// FIX EMPTY PAGE
-// ======================
-assignmentCurrentPage =
-Math.max(
-
-    1,
-
-    Math.min(
-
-        assignmentCurrentPage,
-
-        window.assignmentTotalPages
-
-    )
-);
-
-const assignmentStart =
-(
-    assignmentCurrentPage - 1
-)
-*
-assignmentRowsPerPage;
-
-const assignmentEnd =
-assignmentStart
-+
-assignmentRowsPerPage;
-
-    // ======================
 // FILTER STATUS LEGEND
 // ======================
 if(assignmentStatusFilter){
@@ -4565,6 +4521,51 @@ if(assignmentStatusFilter){
 
     });
 }
+// ======================
+// PAGINATION
+// ======================
+window.assignmentTotalPages =
+Math.ceil(
+    data.length /
+    assignmentRowsPerPage
+) || 1;
+console.log(
+    "FILTERED TOTAL:",
+    data.length,
+    "TOTAL PAGE:",
+    window.assignmentTotalPages,
+    "FILTER:",
+    assignmentStatusFilter
+);
+// ======================
+// FIX EMPTY PAGE
+// ======================
+assignmentCurrentPage =
+Math.max(
+
+    1,
+
+    Math.min(
+
+        assignmentCurrentPage,
+
+        window.assignmentTotalPages
+
+    )
+);
+
+const assignmentStart =
+(
+    assignmentCurrentPage - 1
+)
+*
+assignmentRowsPerPage;
+
+const assignmentEnd =
+assignmentStart
++
+assignmentRowsPerPage;
+
     // ======================
     // SORT
     // ======================

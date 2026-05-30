@@ -7538,38 +7538,77 @@ async function saveResign(){
         
     function filterByStage(stage){
 
-    // FILTER RECRUITMENT
+    // RESET FILTER
+    inductionStatusFilter = "";
+    assignmentStatusFilter = "";
+
+    // ======================
+    // RECRUITMENT
+    // ======================
     if(stage === "Recruitment"){
 
-        const recruitmentTable =
+        renderRecruitmentTable?.();
+
+        const section =
         document
         .querySelector(
             "#recruitmentBody"
         );
 
-        recruitmentTable
+        section
         ?.closest(".bg-white")
         ?.scrollIntoView({
+
             behavior:"smooth",
             block:"start"
         });
+
+        return;
     }
 
-    // FILTER INDUCTION
+    // ======================
+    // INDUCTION
+    // ======================
     if(stage === "In Class Training"){
 
-        const inductionTable =
+        renderInductionTable();
+
+        const section =
         document
         .querySelector(
             "#inductionBody"
         );
 
-        inductionTable
+        section
         ?.closest(".bg-white")
         ?.scrollIntoView({
+
             behavior:"smooth",
             block:"start"
         });
+
+        return;
+    }
+
+    // ======================
+    // SERAH TERIMA USER
+    // ======================
+    if(stage === "Serah Terima User"){
+
+        renderAssignmentTable();
+
+        const section =
+        document.getElementById(
+            "assignmentSection"
+        );
+
+        section?.scrollIntoView({
+
+            behavior:"smooth",
+            block:"start"
+        });
+
+        return;
     }
 }
 

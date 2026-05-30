@@ -3997,24 +3997,20 @@ data.forEach(item=>{
     );
 
     // ======================
-    // SAME LOGIC TABLE
+    // STATUS LOGIC
     // ======================
     const isDone =
     progress >= 100;
 
     const isOngoing =
-    progress > 0
+    progress < 100
     &&
-    progress < 100;
+    usiaJoin < SLA_DAYS;
 
     const isFailed =
-    progress <= 0
-    ||
-    (
-        progress < 100
-        &&
-        usiaJoin > SLA_DAYS
-    );
+    progress < 100
+    &&
+    usiaJoin >= SLA_DAYS;
 
     if(isDone){
 
@@ -4030,7 +4026,6 @@ data.forEach(item=>{
     }
 
 });
-
     // ======================
     // TOTAL
     // ======================
@@ -4509,6 +4504,8 @@ assignmentRowsPerPage;
 // ======================
 if(assignmentStatusFilter){
 
+    const SLA_DAYS = 20;
+
     data =
     data.filter(item=>{
 
@@ -4522,22 +4519,21 @@ if(assignmentStatusFilter){
             item.usia_join || 0
         );
 
+        // ======================
+        // STATUS LOGIC
+        // ======================
         const isDone =
-progress >= 100;
+        progress >= 100;
 
-const isOngoing =
-progress > 0
-&&
-progress < 100;
+        const isOngoing =
+        progress < 100
+        &&
+        usiaJoin < SLA_DAYS;
 
-const isFailed =
-progress <= 0
-||
-(
-    progress < 100
-    &&
-    usiaJoin > 20
-);
+        const isFailed =
+        progress < 100
+        &&
+        usiaJoin >= SLA_DAYS;
 
         switch(
             assignmentStatusFilter

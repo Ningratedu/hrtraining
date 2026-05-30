@@ -3976,46 +3976,60 @@ function updateAssignmentCount(){
     }
 
     // ======================
-    // COUNT STATUS
+// COUNT STATUS
+// ======================
+let done = 0;
+let ongoing = 0;
+let failed = 0;
+
+const SLA_DAYS = 20;
+
+data.forEach(item=>{
+
+    const progress =
+    Number(
+        item.progress_task || 0
+    );
+
+    const usiaJoin =
+    Number(
+        item.usia_join || 0
+    );
+
     // ======================
-    let done = 0;
-    let ongoing = 0;
-    let failed = 0;
+    // SAME LOGIC TABLE
+    // ======================
+    const isDone =
+    progress >= 100;
 
-    data.forEach(item=>{
+    const isOngoing =
+    progress > 0
+    &&
+    progress < 100;
 
-        const progress =
-        Number(
-            item.progress_task || 0
-        );
+    const isFailed =
+    progress <= 0
+    ||
+    (
+        progress < 100
+        &&
+        usiaJoin > SLA_DAYS
+    );
 
-        const usiaJoin =
-        Number(
-            item.usia_join || 0
-        );
+    if(isDone){
 
-        // DONE
-        if(
-            progress >= 100
-        ){
+        done++;
 
-            done++;
-            return;
-        }
+    }else if(isOngoing){
 
-        // ONGOING
-        if(
-            usiaJoin < 20
-        ){
+        ongoing++;
 
-            ongoing++;
+    }else if(isFailed){
 
-        }else{
+        failed++;
+    }
 
-            failed++;
-        }
-
-    });
+});
 
     // ======================
     // TOTAL
@@ -4457,16 +4471,26 @@ function renderAssignmentTable(){
 // ======================
 window.assignmentTotalPages =
 Math.ceil(
-    data.length / assignmentRowsPerPage
+    data.length /
+    assignmentRowsPerPage
 ) || 1;
 
-if(
-    assignmentCurrentPage >
-    window.assignmentTotalPages
-){
-    assignmentCurrentPage =
-    window.assignmentTotalPages;
-}
+// ======================
+// FIX EMPTY PAGE
+// ======================
+assignmentCurrentPage =
+Math.max(
+
+    1,
+
+    Math.min(
+
+        assignmentCurrentPage,
+
+        window.assignmentTotalPages
+
+    )
+);
 
 const assignmentStart =
 (

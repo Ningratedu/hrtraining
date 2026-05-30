@@ -4469,7 +4469,14 @@ Math.ceil(
     data.length /
     assignmentRowsPerPage
 ) || 1;
-
+console.log(
+    "FILTERED TOTAL:",
+    data.length,
+    "TOTAL PAGE:",
+    window.assignmentTotalPages,
+    "FILTER:",
+    assignmentStatusFilter
+);
 // ======================
 // FIX EMPTY PAGE
 // ======================

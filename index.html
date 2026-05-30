@@ -1891,40 +1891,6 @@ updateDepartmentFilter();
     }
 }
 // =====================================
-// GET ASSIGNMENT STATUS
-// =====================================
-function getAssignmentStatus(item){
-
-    const progress =
-    Number(
-        item.progress_task || 0
-    );
-
-    const usiaJoin =
-    Number(
-        item.usia_join || 0
-    );
-
-    // DONE
-    if(
-        progress >= 100
-    ){
-
-        return "done";
-    }
-
-    // ONGOING
-    if(
-        usiaJoin < 20
-    ){
-
-        return "ongoing";
-    }
-
-    // FAILED
-    return "failed";
-}
-// =====================================
 // FILTER ASSIGNMENT LEGEND
 // =====================================
 function filterAssignmentLegend(status){
@@ -4352,8 +4318,492 @@ function parseDateSafe(dateString){
     return null;
 }    
     
-renderAssignmentPagination();
-    
+// =====================================
+// RENDER ASSIGNMENT TABLE
+// =====================================
+function renderAssignmentTable(){
+
+    const tbody =
+    document.getElementById(
+        "assignmentBody"
+    );
+
+    if(!tbody) return;
+
+    let data =
+    [...assignmentData];
+
+    // ======================
+    // FILTER PERIOD
+    // ======================
+    const period =
+    document.getElementById(
+        "globalPeriodeFilter"
+    )?.value;
+
+    if(
+        period
+        &&
+        period !== "all"
+    ){
+
+        data =
+        data.filter(item=>{
+
+            if(
+                !item.join_date
+            ) return false;
+
+            const join =
+            parseDateSafe(
+            item.join_date
+            );
+
+            if(!join)
+            return false;
+
+            const month =
+            String(
+                join.getMonth() + 1
+            ).padStart(2,"0");
+
+            const year =
+            join.getFullYear();
+
+            return `${year}-${month}`
+            === period;
+        });
+    }
+
+    // ======================
+    // FILTER DEPARTMENT
+    // ======================
+    if(
+        selectedDepartments
+        .length
+    ){
+
+        data =
+        data.filter(item=>
+
+            selectedDepartments
+            .includes(
+
+                String(
+                    item.department ||
+                    item.departement ||
+                    ""
+                )
+                .trim()
+                .toLowerCase()
+
+            )
+        );
+    }
+
+    // ======================
+    // SEARCH
+    // ======================
+    const keyword =
+    document
+    .getElementById(
+        "searchAssignment"
+    )
+    ?.value
+    ?.toLowerCase()
+    || "";
+
+    if(keyword){
+
+        data =
+        data.filter(item=>
+
+            Object.values(item)
+            .join(" ")
+            .toLowerCase()
+            .includes(keyword)
+
+        );
+    }
+// ======================
+// PAGINATION
+// ======================
+window.assignmentTotalPages =
+Math.ceil(
+    data.length / assignmentRowsPerPage
+) || 1;
+
+if(
+    assignmentCurrentPage >
+    window.assignmentTotalPages
+){
+    assignmentCurrentPage =
+    window.assignmentTotalPages;
+}
+
+const assignmentStart =
+(
+    assignmentCurrentPage - 1
+)
+*
+assignmentRowsPerPage;
+
+const assignmentEnd =
+assignmentStart
++
+assignmentRowsPerPage;
+
+    // ======================
+// FILTER STATUS LEGEND
+// ======================
+if(assignmentStatusFilter){
+
+    data =
+    data.filter(item=>{
+
+        const progress =
+        Number(
+            item.progress_task || 0
+        );
+
+        const usiaJoin =
+        Number(
+            item.usia_join || 0
+        );
+
+        const isDone =
+        progress >= 100;
+
+        const isFailed =
+        progress < 100
+        &&
+        usiaJoin > 14;
+
+        const isOngoing =
+        progress < 100
+        &&
+        usiaJoin <= 14;
+
+        switch(
+            assignmentStatusFilter
+        ){
+
+            case "done":
+
+                return isDone;
+
+            case "ongoing":
+
+                return isOngoing;
+
+            case "failed":
+
+                return isFailed;
+
+            default:
+
+                return true;
+        }
+
+    });
+}
+    // ======================
+    // SORT
+    // ======================
+    data.sort((a,b)=>{
+
+        let aVal =
+        a[
+            assignmentSortField
+        ];
+
+        let bVal =
+        b[
+            assignmentSortField
+        ];
+
+        // NUMERIC
+        if([
+            "usia_join",
+            "progress_task"
+        ].includes(
+            assignmentSortField
+        )){
+
+            aVal =
+            Number(aVal || 0);
+
+            bVal =
+            Number(bVal || 0);
+
+            return assignmentSortDirection
+            === "asc"
+            ? aVal - bVal
+            : bVal - aVal;
+        }
+
+        // DATE
+        if(
+            assignmentSortField
+            === "join_date"
+        ){
+
+            aVal =
+            new Date(
+                aVal || 0
+            ).getTime();
+
+            bVal =
+            new Date(
+                bVal || 0
+            ).getTime();
+
+            return assignmentSortDirection
+            === "asc"
+            ? aVal - bVal
+            : bVal - aVal;
+        }
+
+        // TEXT
+        aVal =
+        String(
+            aVal || ""
+        ).toLowerCase();
+
+        bVal =
+        String(
+            bVal || ""
+        ).toLowerCase();
+
+        return assignmentSortDirection
+        === "asc"
+        ? aVal.localeCompare(
+            bVal
+        )
+        : bVal.localeCompare(
+            aVal
+        );
+
+    });
+const paginatedData =
+data.slice(
+    assignmentStart,
+    assignmentEnd
+);
+    // ======================
+    // EMPTY STATE
+    // ======================
+    if(!data.length){
+
+        tbody.innerHTML = `
+        <tr>
+
+            <td
+                colspan="10"
+                class="text-center py-10 text-slate-400"
+            >
+                Tidak ada data
+            </td>
+
+        </tr>
+        `;
+
+        return;
+    }
+
+    tbody.innerHTML = "";
+
+    paginatedData.forEach((item,index)=>{
+
+        const progress =
+        Number(
+            item.progress_task || 0
+        );
+
+        tbody.innerHTML += `
+
+        <tr class="hover:bg-slate-50 transition-all">
+
+            <td class="sticky left-0 bg-white px-3 py-3 font-medium">
+                ${assignmentStart + index + 1}
+            </td>
+
+            <td class="px-3 py-3">
+                ${item.nama || "-"}
+            </td>
+
+            <td class="px-3 py-3">
+                ${item.username || "-"}
+            </td>
+
+            <td class="px-3 py-3">
+
+                ${
+                    item.join_date
+                    ? new Intl.DateTimeFormat(
+                        "id-ID",
+                        {
+                            timeZone:
+                            "Asia/Jakarta",
+                            day:"2-digit",
+                            month:"2-digit",
+                            year:"numeric"
+                        }
+                    ).format(
+                        new Date(
+                            item.join_date
+                        )
+                    )
+                    : "-"
+                }
+
+            </td>
+
+            <td class="px-3 py-3 text-center">
+                ${
+                    item.usia_join !== "-"
+                    ? `${item.usia_join} Hari`
+                    : "-"
+                }
+            </td>
+
+            <td class="px-3 py-3">
+                ${item.department || "-"}
+            </td>
+
+            <td class="px-3 py-3">
+                ${item.position || "-"}
+            </td>
+
+            <td class="px-3 py-3">
+                ${item.spv || "-"}
+            </td>
+
+            <td class="px-3 py-3">
+                ${item.bm || "-"}
+            </td>
+
+            <td class="px-3 py-3">
+
+                <div class="flex items-center gap-2">
+
+                    <div class="flex-1 bg-slate-100 rounded-full h-2 overflow-hidden">
+
+                        <div
+                            class="bg-blue-600 h-2 rounded-full"
+                            style="width:${progress}%"
+                        ></div>
+
+                    </div>
+
+                    <span class="text-[11px] font-semibold min-w-[40px]">
+                        ${progress}%
+                    </span>
+
+                    <button
+    onclick="editAssignment('${item.id}')"
+    class="text-slate-500 hover:text-blue-600 transition"
+    title="Edit Progress"
+>
+    <i
+        data-lucide="pencil"
+        class="w-4 h-4"
+    ></i>
+</button>
+
+<button
+    onclick="sendAssignmentReminder('${item.username}')"
+    class="text-green-600 hover:text-green-700 transition"
+    title="Reminder Progress"
+>
+    <i
+        data-lucide="message-circle"
+        class="w-4 h-4"
+    ></i>
+</button>
+
+                </div>
+
+            </td>
+
+        </tr>
+        `;
+    });
+// ======================
+// PAGINATION UI
+// ======================
+const pagination =
+document.getElementById(
+    "assignmentPagination"
+);
+
+if(pagination){
+
+    pagination.innerHTML = `
+
+        <div class="flex items-center gap-3">
+
+            <!-- PREV -->
+            <button
+                onclick="
+                    if(assignmentCurrentPage > 1){
+                        assignmentCurrentPage--;
+                        renderAssignmentTable();
+                    }
+                "
+                class="
+                    px-3 py-2
+                    text-xs
+                    border
+                    rounded-lg
+                    hover:bg-slate-100
+                    transition
+                "
+            >
+                Previous
+            </button>
+
+            <!-- PAGE INFO -->
+            <div class="text-xs text-slate-500">
+
+                Page
+                ${assignmentCurrentPage}
+                of
+                ${window.assignmentTotalPages}
+
+            </div>
+
+            <!-- NEXT -->
+            <button
+                onclick="
+                    if(
+                        assignmentCurrentPage
+                        <
+                        window.assignmentTotalPages
+                    ){
+                        assignmentCurrentPage++;
+                        renderAssignmentTable();
+                    }
+                "
+                class="
+                    px-3 py-2
+                    text-xs
+                    border
+                    rounded-lg
+                    hover:bg-slate-100
+                    transition
+                "
+            >
+                Next
+            </button>
+
+        </div>
+
+    `;
+}
+    lucide.createIcons();
+}
+
 function sendAssignmentReminder(username){
 
     // =========================

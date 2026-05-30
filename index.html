@@ -550,80 +550,520 @@ nav .text-slate-400{
     class="flex-1 min-w-0 overflow-y-auto pt-4 md:pt-1 px-2 md:px-3 pb-4 md:pb-4 bg-transparent"
             <!-- Dashboard Content (Default) -->
             <div id="tab-dashboard" class="tab-content space-y-4">
-                <!-- Stats Grid -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-4">
-                    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-                        <div class="flex justify-between items-start mb-4">
-                            <div class="bg-blue-100 p-2 rounded-lg text-blue-600"><i data-lucide="users"></i></div>
-                            <span class="text-xs font-semibold text-emerald-600 bg-emerald-50 px-2 py-1 rounded">+12%</span>
-                        </div>
-                        <h3 class="text-slate-500 text-sm font-medium">Total Peserta</h3>
-                        <p class="text-2xl font-bold mt-1">1,284</p>
-                    </div>
-                    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-                        <div class="flex justify-between items-start mb-4">
-                            <div class="bg-purple-100 p-2 rounded-lg text-purple-600"><i data-lucide="book-open"></i></div>
-                            <span class="text-xs font-semibold text-emerald-600 bg-emerald-50 px-2 py-1 rounded">+5%</span>
-                        </div>
-                        <h3 class="text-slate-500 text-sm font-medium">Training Selesai</h3>
-                        <p class="text-2xl font-bold mt-1">42</p>
-                    </div>
-                    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-                        <div class="flex justify-between items-start mb-4">
-                            <div class="bg-amber-100 p-2 rounded-lg text-amber-600"><i data-lucide="clock"></i></div>
-                            <span class="text-xs font-semibold text-amber-600 bg-amber-50 px-2 py-1 rounded">Pending</span>
-                        </div>
-                        <h3 class="text-slate-500 text-sm font-medium">Sesi Mendatang</h3>
-                        <p class="text-2xl font-bold mt-1">18</p>
-                    </div>
-                    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-                        <div class="flex justify-between items-start mb-4">
-                            <div class="bg-emerald-100 p-2 rounded-lg text-emerald-600"><i data-lucide="trending-up"></i></div>
-                            <span class="text-xs font-semibold text-emerald-600 bg-emerald-50 px-2 py-1 rounded">89%</span>
-                        </div>
-                        <h3 class="text-slate-500 text-sm font-medium">Completion Rate</h3>
-                        <p class="text-2xl font-bold mt-1">89%</p>
-                    </div>
+            <!-- FUNNEL -->
+    <div class="bg-white rounded-[24px] border border-slate-200 p-3 md:p-5 shadow-sm">
+
+        <div class="flex justify-between items-center mb-4">
+    <div>
+        <h3 class="text-base md:text-lg font-bold italic text-slate-800">
+            Onboarding Funnel
+        </h3>
+
+        <p class="text-xs md:text-sm italic text-slate-500">
+            Monitoring keterlaksanaan onboarding training
+        </p>
+    </div>
+</div>
+
+<!-- CARD -->
+<div class="grid grid-cols-2 lg:grid-cols-4 gap-2 md:gap-3 items-stretch">
+
+    <!-- RECRUITMENT -->
+<div
+    class="funnel-card whitespace-nowrap bg-gradient-to-br from-blue-50 to-white rounded-[24px] p-3 md:p-4 border border-blue-200 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 cursor-pointer relative overflow-hidden"
+    onclick="goToOnboardingStage('Recruitment')"
+>
+
+    <!-- BLUR BG -->
+    <div class="absolute top-0 right-0 w-24 h-24 bg-blue-100/40 blur-3xl rounded-full"></div>
+
+    <!-- ICON BG -->
+    <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+
+        <div class="relative opacity-[0.08]">
+
+            <!-- PERSON ICON -->
+            <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="w-[95px] h-[95px] md:w-[120px] md:h-[120px] text-blue-700"
+                fill="currentColor"
+                viewBox="0 0 24 24"
+            >
+                <path d="M12 12c2.761 0 5-2.462 5-5.5S14.761 1 12 1 7 3.462 7 6.5 9.239 12 12 12zm0 2c-4.418 0-8 2.91-8 6.5 0 .828.672 1.5 1.5 1.5h13c.828 0 1.5-.672 1.5-1.5 0-3.59-3.582-6.5-8-6.5z"/>
+            </svg>
+
+            <!-- PLUS ICON -->
+            <div class="absolute -top-1 right-0">
+
+                <div class="w-8 h-8 md:w-10 md:h-10 rounded-full bg-blue-200 flex items-center justify-center">
+
+                    <span class="text-lg md:text-xl font-bold text-blue-700">
+                        +
+                    </span>
+
                 </div>
 
-                <!-- Charts Placeholder & Recent Activity -->
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
-                    <div class="lg:col-span-2 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-                        <div class="flex justify-between items-center mb-6">
-                            <h3 class="font-bold text-slate-800">Progress Pelatihan Bulanan</h3>
-                            <select class="text-sm bg-slate-50 border-none rounded-lg p-2 outline-none">
-                                <option>Tahun 2024</option>
-                                <option>Tahun 2023</option>
-                            </select>
-                        </div>
-                        <div class="h-64 bg-slate-50 rounded-xl border border-dashed border-slate-300 flex items-center justify-center text-slate-400">
-                            [ Grafik Perkembangan Pelatihan ]
-                        </div>
-                    </div>
-                    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-                        <h3 class="font-bold text-slate-800 mb-6">Aktivitas Terbaru</h3>
-                        <div class="space-y-4">
-                            <div class="flex gap-3">
-                                <div class="w-8 h-8 rounded-full bg-blue-100 flex-shrink-0 flex items-center justify-center text-blue-600">
-                                    <i data-lucide="check-circle" class="w-4 h-4"></i>
-                                </div>
-                                <div>
-                                    <p class="text-sm font-medium">Budi Santoso telah menyelesaikan Mandatory Safety Training</p>
-                                    <p class="text-xs text-slate-400">2 jam yang lalu</p>
-                                </div>
-                            </div>
-                            <div class="flex gap-3">
-                                <div class="w-8 h-8 rounded-full bg-amber-100 flex-shrink-0 flex items-center justify-center text-amber-600">
-                                    <i data-lucide="calendar" class="w-4 h-4"></i>
-                                </div>
-                                <div>
-                                    <p class="text-sm font-medium">Jadwal Genba Area Produksi A telah diperbarui</p>
-                                    <p class="text-xs text-slate-400">5 jam yang lalu</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="relative z-10">
+
+        <div class="flex items-center gap-1 relative z-10">
+
+    <span class="text-[11px] md:text-sm">
+        👥
+    </span>
+
+    <p class="text-[9px] md:text-xs font-bold text-slate-700 whitespace-nowrap">
+        Recruitment
+    </p>
+
+</div>
+
+        <div class="flex flex-col items-center justify-center h-[165px]">
+
+            <p class="text-[8px] md:text-[9px] uppercase tracking-wide text-slate-400 font-semibold">
+                Total
+            </p>
+
+            <h2
+                id="countRecruitment"
+                class="text-3xl md:text-4xl font-extrabold italic tracking-tight text-blue-700 leading-none"
+            >
+                0
+            </h2>
+
+            <p class="text-[7px] md:text-[8px] text-slate-400 mt-2 font-medium">
+                New Join Candidate
+            </p>
+
+        </div>
+
+    </div>
+</div>
+
+    <!-- INDUCTION -->
+    <div
+        class="funnel-card whitespace-nowrap bg-gradient-to-br from-amber-50 to-white rounded-[24px] p-3 md:p-4 border border-amber-200 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 cursor-pointer relative overflow-hidden"
+        onclick="goToOnboardingStage('In Class Training')"
+    >
+
+        <div class="absolute top-0 right-0 w-24 h-24 bg-amber-100/40 blur-3xl rounded-full"></div>
+
+        <div class="flex items-center gap-1 relative z-10">
+
+    <span class="text-[11px] md:text-sm">
+        📖
+    </span>
+
+    <p class="text-[9px] md:text-xs font-bold text-slate-700 whitespace-nowrap">
+        Induction Training
+    </p>
+
+</div>
+
+        <div class="flex justify-center mt-2 relative z-10">
+
+            <div
+    id="inductionDonut"
+    class="relative w-[85px] md:w-[95px] h-[85px] md:h-[95px] rounded-full flex items-center justify-center transition-all duration-500"
+    style="
+        background:
+        conic-gradient(
+            #16a34a 0deg,
+            #16a34a 60deg,
+            #2563eb 60deg,
+            #2563eb 120deg,
+            #f59e0b 120deg,
+            #f59e0b 180deg,
+            #dc2626 180deg,
+            #dc2626 240deg,
+            #e11d48 240deg,
+            #e11d48 300deg,
+            #64748b 300deg,
+            #64748b 360deg
+        );
+    "
+>
+
+                <div class="w-[56px] md:w-[62px] h-[56px] md:h-[62px] bg-white rounded-full shadow-sm flex flex-col items-center justify-center">
+
+                    <span
+                        id="countInduction"
+                        class="text-base md:text-lg font-extrabold italic text-slate-800 leading-none"
+                    >
+                        0
+                    </span>
+
+                    <span class="text-[7px] md:text-[8px] text-slate-500 font-medium">
+                        Total
+                    </span>
+
                 </div>
+
+            </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-1 mt-3 relative z-10 text-[7px] md:text-[8px] font-semibold">
+
+            <div
+    onclick="
+        event.stopPropagation();
+        filterInductionLegend('completed')
+    "
+    class="flex justify-between items-center px-1 py-1 rounded bg-green-100 text-green-700 cursor-pointer hover:opacity-80 transition"
+>
+                <span class="whitespace-nowrap">✅ Completed</span>
+                <span id="countInductionCompleted">0</span>
+            </div>
+
+            <div
+    onclick="
+        event.stopPropagation();
+        filterInductionLegend('progress')
+    "
+    class="flex justify-between items-center px-1 py-1 rounded bg-blue-100 text-blue-700 cursor-pointer hover:opacity-80 transition"
+>
+                <span class="whitespace-nowrap">⏳ Progress</span>
+                <span id="countInductionProgress">0</span>
+            </div>
+
+            <div
+    onclick="
+        event.stopPropagation();
+        filterInductionLegend('late')
+    "
+    class="flex justify-between items-center px-1 py-1 rounded bg-amber-100 text-amber-700 cursor-pointer hover:opacity-80 transition"
+>
+                <span class="whitespace-nowrap">🕒 Late</span>
+                <span id="countInductionProgressLate">0</span>
+            </div>
+
+            <div
+    onclick="
+        event.stopPropagation();
+        filterInductionLegend('remedial')
+    "
+    class="flex justify-between items-center px-1 py-1 rounded bg-red-100 text-red-700 cursor-pointer hover:opacity-80 transition"
+>
+                <span class="whitespace-nowrap">❌ Remedial</span>
+                <span id="countInductionRemedial">0</span>
+            </div>
+
+            <div
+    onclick="
+        event.stopPropagation();
+        filterInductionLegend('remedial_late')
+    "
+    class="flex justify-between items-center px-1 py-1 rounded bg-rose-100 text-rose-700 cursor-pointer hover:opacity-80 transition"
+>
+                <span class="whitespace-nowrap">🚨 Remed Late</span>
+                <span id="countInductionRemedialLate">0</span>
+            </div>
+
+            <div
+    onclick="
+        event.stopPropagation();
+        filterInductionLegend('resign')
+    "
+    class="flex justify-between items-center px-1 py-1 rounded bg-slate-200 text-slate-700 cursor-pointer hover:opacity-80 transition"
+>
+                <span class="whitespace-nowrap">👋 Resign</span>
+                <span id="countInductionResign">0</span>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ASSIGNMENT -->
+    <div
+        class="funnel-card whitespace-nowrap bg-gradient-to-br from-purple-50 to-white rounded-[24px] p-3 md:p-4 border border-purple-200 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 cursor-pointer relative overflow-hidden"
+        onclick="goToOnboardingStage('Assignment')"
+    >
+
+        <div class="absolute top-0 right-0 w-24 h-24 bg-purple-100/40 blur-3xl rounded-full"></div>
+
+        <div class="flex items-center gap-1 relative z-10">
+
+    <span class="text-[11px] md:text-sm">
+        📝
+    </span>
+
+    <p class="text-[9px] md:text-xs font-bold text-slate-700 whitespace-nowrap">
+        Assignment
+    </p>
+
+</div>
+
+        <div class="flex justify-center mt-2 relative z-10">
+
+            <div
+    id="assignmentDonut"
+    class="relative w-[85px] md:w-[95px] h-[85px] md:h-[95px] rounded-full flex items-center justify-center transition-all duration-500"
+    style="
+        background:
+        conic-gradient(
+            #16a34a 0deg,
+            #16a34a 120deg,
+            #2563eb 120deg,
+            #2563eb 240deg,
+            #dc2626 240deg,
+            #dc2626 360deg
+        );
+    "
+>
+
+                <div class="w-[56px] md:w-[62px] h-[56px] md:h-[62px] bg-white rounded-full shadow-sm flex flex-col items-center justify-center">
+
+                    <span
+                        id="countAssignment"
+                        class="text-base md:text-lg font-extrabold italic text-slate-800 leading-none"
+                    >
+                        0
+                    </span>
+
+                    <span class="text-[7px] md:text-[8px] text-slate-500 font-medium">
+                        Total
+                    </span>
+
+                </div>
+
+            </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-1 mt-3 relative z-10 text-[7px] md:text-[8px] font-semibold">
+
+            <div
+    onclick="
+        event.stopPropagation();
+        filterAssignmentLegend('done')
+    "
+    class="flex justify-between items-center px-1 py-1 rounded bg-green-100 text-green-700 cursor-pointer hover:opacity-80 transition"
+>
+                <span class="whitespace-nowrap">✅ Done</span>
+                <span id="countAssignmentDone">0</span>
+            </div>
+
+            <div
+    onclick="
+        event.stopPropagation();
+        filterAssignmentLegend('ongoing')
+    "
+    class="flex justify-between items-center px-1 py-1 rounded bg-blue-100 text-blue-700 cursor-pointer hover:opacity-80 transition"
+>
+                <span class="whitespace-nowrap">⏳ Ongoing</span>
+                <span id="countAssignmentOngoing">0</span>
+            </div>
+
+            <div
+    onclick="
+        event.stopPropagation();
+        filterAssignmentLegend('failed')
+    "
+    class="flex justify-between items-center px-1 py-1 rounded bg-red-100 text-red-700 col-span-2 cursor-pointer hover:opacity-80 transition"
+>
+                <span class="whitespace-nowrap">❌ Failed</span>
+                <span id="countAssignmentFailed">0</span>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- SERAH TERIMA USER -->
+<div
+    class="funnel-card whitespace-nowrap bg-gradient-to-br from-emerald-50 to-white rounded-[24px] p-3 md:p-4 border border-emerald-200 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 cursor-pointer relative overflow-hidden"
+    onclick="goToOnboardingStage('Serah Terima User')"
+>
+
+    <!-- BG -->
+    <div class="absolute top-0 right-0 w-24 h-24 bg-emerald-100/40 blur-3xl rounded-full"></div>
+
+    <!-- TOP -->
+    <div class="relative z-10 flex justify-between items-start gap-2">
+
+        <!-- LEFT -->
+        <div class="min-w-0">
+
+            <!-- TITLE -->
+            <div class="flex items-center gap-1 whitespace-nowrap">
+
+                <span class="text-[11px] md:text-sm">
+                    🤝
+                </span>
+
+                <p class="text-[9px] md:text-xs font-bold text-slate-700 whitespace-nowrap">
+                    Serah Terima User
+                </p>
+
+            </div>
+
+            <!-- TOTAL -->
+            <div class="mt-2">
+
+                <p class="text-[7px] md:text-[9px] uppercase tracking-wide text-slate-400 font-semibold">
+                    Total
+                </p>
+
+                <h2
+                    id="countUser"
+                    class="text-2xl md:text-3xl font-extrabold italic text-emerald-700 leading-none"
+                >
+                    0
+                </h2>
+
+            </div>
+
+        </div>
+
+        <!-- RIGHT / COMPLETION -->
+        <div class="flex flex-col items-center shrink-0 mt-3">
+
+            <!-- DONUT -->
+            <div
+                id="completionDonut"
+                class="relative w-[58px] md:w-[64px] h-[58px] md:h-[64px] rounded-full flex items-center justify-center transition-all duration-700"
+                style="
+                    background:
+                    conic-gradient(
+                        #10b981 0deg,
+                        #10b981 0deg,
+                        #d1fae5 0deg,
+                        #d1fae5 360deg
+                    );
+                "
+            >
+
+                <!-- CENTER -->
+                <div class="w-[40px] md:w-[44px] h-[40px] md:h-[44px] rounded-full bg-white shadow-sm flex items-center justify-center">
+
+                    <span
+                        id="completionRate"
+                        class="text-[9px] md:text-[11px] font-extrabold italic text-emerald-700"
+                    >
+                        0%
+                    </span>
+
+                </div>
+
+            </div>
+
+            <!-- LABEL -->
+            <div class="mt-1 text-center leading-tight">
+
+                <p class="text-[6px] md:text-[8px] font-semibold text-emerald-700 whitespace-nowrap">
+                    Completion Rate
+                </p>
+
+                <p class="text-[5px] md:text-[7px] text-slate-500 font-medium whitespace-nowrap">
+                    (Induction → Serah Terima)
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- FUNNEL SUMMARY -->
+    <div class="mt-3 space-y-2 relative z-10">
+
+        <!-- Recruitment → Induction -->
+        <div>
+
+            <div class="flex justify-between text-[7px] md:text-[9px] font-semibold mb-1 whitespace-nowrap">
+
+                <span class="text-slate-600">
+                    Recruitment → Induction
+                </span>
+
+                <span
+                    id="ratioRecruitmentInduction"
+                    class="text-blue-700"
+                >
+                    0%
+                </span>
+
+            </div>
+
+            <div class="h-1.5 rounded-full bg-slate-100 overflow-hidden">
+
+                <div
+                    id="barRecruitmentInduction"
+                    class="h-full bg-blue-500 rounded-full transition-all duration-700"
+                    style="width:0%"
+                ></div>
+
+            </div>
+
+        </div>
+
+        <!-- Induction → Assignment -->
+        <div>
+
+            <div class="flex justify-between text-[7px] md:text-[9px] font-semibold mb-1 whitespace-nowrap">
+
+                <span class="text-slate-600">
+                    Induction → Assignment
+                </span>
+
+                <span
+                    id="ratioInductionAssignment"
+                    class="text-amber-700"
+                >
+                    0%
+                </span>
+
+            </div>
+
+            <div class="h-1.5 rounded-full bg-slate-100 overflow-hidden">
+
+                <div
+                    id="barInductionAssignment"
+                    class="h-full bg-amber-500 rounded-full transition-all duration-700"
+                    style="width:0%"
+                ></div>
+
+            </div>
+
+        </div>
+
+        <!-- Assignment → Serah Terima -->
+        <div>
+
+            <div class="flex justify-between text-[7px] md:text-[9px] font-semibold mb-1 whitespace-nowrap">
+
+                <span class="text-slate-600">
+                    Assignment → Serah Terima
+                </span>
+
+                <span
+                    id="ratioAssignmentUser"
+                    class="text-purple-700"
+                >
+                    0%
+                </span>
+
+            </div>
+
+            <div class="h-1.5 rounded-full bg-slate-100 overflow-hidden">
+
+                <div
+                    id="barAssignmentUser"
+                    class="h-full bg-purple-500 rounded-full transition-all duration-700"
+                    style="width:0%"
+                ></div>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
+</div>
+</div>
             </div>
 
             <!-- ONBOARDING TRAINING -->

@@ -915,17 +915,35 @@ nav .text-slate-400{
 
         <div class="grid grid-cols-2 gap-1 mt-3 relative z-10 text-[7px] md:text-[8px] font-semibold">
 
-            <div class="flex justify-between items-center px-1 py-1 rounded bg-green-100 text-green-700">
+            <div
+    onclick="
+        event.stopPropagation();
+        filterAssignmentLegend('done')
+    "
+    class="flex justify-between items-center px-1 py-1 rounded bg-green-100 text-green-700 cursor-pointer hover:opacity-80 transition"
+>
                 <span class="whitespace-nowrap">✅ Done</span>
                 <span id="countAssignmentDone">0</span>
             </div>
 
-            <div class="flex justify-between items-center px-1 py-1 rounded bg-blue-100 text-blue-700">
+            <div
+    onclick="
+        event.stopPropagation();
+        filterAssignmentLegend('ongoing')
+    "
+    class="flex justify-between items-center px-1 py-1 rounded bg-blue-100 text-blue-700 cursor-pointer hover:opacity-80 transition"
+>
                 <span class="whitespace-nowrap">⏳ Ongoing</span>
                 <span id="countAssignmentOngoing">0</span>
             </div>
 
-            <div class="flex justify-between items-center px-1 py-1 rounded bg-red-100 text-red-700 col-span-2">
+            <div
+    onclick="
+        event.stopPropagation();
+        filterAssignmentLegend('failed')
+    "
+    class="flex justify-between items-center px-1 py-1 rounded bg-red-100 text-red-700 col-span-2 cursor-pointer hover:opacity-80 transition"
+>
                 <span class="whitespace-nowrap">❌ Failed</span>
                 <span id="countAssignmentFailed">0</span>
             </div>
@@ -1872,7 +1890,32 @@ updateDepartmentFilter();
         );
     }
 }
-    
+// =====================================
+// FILTER ASSIGNMENT LEGEND
+// =====================================
+function filterAssignmentLegend(status){
+
+    assignmentStatusFilter = status;
+
+    assignmentCurrentPage = 1;
+
+    const section =
+    document.getElementById(
+        "assignmentSection"
+    );
+
+    if(section){
+
+        section.scrollIntoView({
+
+            behavior:"smooth",
+            block:"start"
+
+        });
+    }
+
+    renderAssignmentTable();
+}    
 // ======================
 // LOAD ASSIGNMENT
 // ======================
@@ -4409,6 +4452,61 @@ const assignmentEnd =
 assignmentStart
 +
 assignmentRowsPerPage;
+
+    // ======================
+// FILTER STATUS LEGEND
+// ======================
+if(assignmentStatusFilter){
+
+    data =
+    data.filter(item=>{
+
+        const progress =
+        Number(
+            item.progress_task || 0
+        );
+
+        const usiaJoin =
+        Number(
+            item.usia_join || 0
+        );
+
+        const isDone =
+        progress >= 100;
+
+        const isFailed =
+        progress < 100
+        &&
+        usiaJoin > 14;
+
+        const isOngoing =
+        progress < 100
+        &&
+        usiaJoin <= 14;
+
+        switch(
+            assignmentStatusFilter
+        ){
+
+            case "done":
+
+                return isDone;
+
+            case "ongoing":
+
+                return isOngoing;
+
+            case "failed":
+
+                return isFailed;
+
+            default:
+
+                return true;
+        }
+
+    });
+}
     // ======================
     // SORT
     // ======================
@@ -5725,6 +5823,7 @@ let selectedStage = "";
 // ======================
 let inductionData = [];
 let inductionStatusFilter = "";
+let assignmentStatusFilter = "";
 let inductionSortField = "nama";
 let inductionSortDirection = "asc";
         

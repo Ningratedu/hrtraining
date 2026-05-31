@@ -1897,15 +1897,22 @@ function renderDashboardFunnel(){
 
     dashboard.innerHTML = "";
 
+    // ======================
+    // CLONE UPDATED HTML
+    // ======================
+    dashboard.innerHTML =
+    onboardingFunnel.outerHTML;
+
     const clone =
-    onboardingFunnel
-    .cloneNode(true);
+    dashboard.firstElementChild;
+
+    if(!clone) return;
 
     clone.id =
     "dashboardFunnel";
 
     // ======================
-    // FIX DUPLICATE ID
+    // REMOVE DUPLICATE ID
     // ======================
     clone
     .querySelectorAll("[id]")
@@ -1916,7 +1923,7 @@ function renderDashboardFunnel(){
     });
 
     // ======================
-    // CLICK REDIRECT
+    // REDIRECT CLICK
     // ======================
     clone
     .querySelectorAll("[onclick]")
@@ -1970,10 +1977,6 @@ function renderDashboardFunnel(){
         }
 
     });
-
-    dashboard.appendChild(
-        clone
-    );
 }
 // ======================
 // LOAD ASSIGNMENT
@@ -2130,6 +2133,14 @@ parseDateSafe(
                 )
             };
         });
+    // ======================
+// REFRESH DASHBOARD
+// ======================
+setTimeout(()=>{
+
+    renderDashboardFunnel();
+
+},100);
 
     }catch(err){
 
@@ -5642,7 +5653,6 @@ async function initializeOnboarding(){
     await loadInductionData();
 
     await loadAssignmentData();
-    renderDashboardFunnel();
 
     generateGlobalPeriodeFilter();
 

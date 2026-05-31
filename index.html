@@ -2133,14 +2133,6 @@ parseDateSafe(
                 )
             };
         });
-    // ======================
-// REFRESH DASHBOARD
-// ======================
-setTimeout(()=>{
-
-    renderDashboardFunnel();
-
-},100);
 
     }catch(err){
 
@@ -5641,6 +5633,11 @@ function refreshOnboardingUI(){
     updateInductionCount();
 
     updateAssignmentCount();
+
+    // ======================
+    // REFRESH DASHBOARD
+    // ======================
+    renderDashboardFunnel();
 
     lucide.createIcons();
 }

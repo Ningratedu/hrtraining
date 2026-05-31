@@ -5650,13 +5650,15 @@ function refreshOnboardingUI(){
 // ======================
 async function initializeOnboarding(){
 
-    await loadInductionData();
+await loadRecruitmentData();
 
-    await loadAssignmentData();
+await loadInductionData();
 
-    generateGlobalPeriodeFilter();
+await loadAssignmentData();
 
-    refreshOnboardingUI();
+generateGlobalPeriodeFilter();
+
+refreshOnboardingUI();
 }    
 // =====================================
 // AUTO LOAD

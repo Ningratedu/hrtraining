@@ -5616,6 +5616,60 @@ html:`
 
     });
 }
+// ======================
+// SHOW LOADING
+// ======================
+function showLoading(text = "Memuat data..."){
+
+    const overlay =
+    document.getElementById(
+        "loadingOverlay"
+    );
+
+    const label =
+    document.getElementById(
+        "loadingText"
+    );
+
+    if(label){
+
+        label.innerText =
+        text;
+    }
+
+    if(overlay){
+
+        overlay.classList.remove(
+            "hidden"
+        );
+
+        overlay.classList.add(
+            "flex"
+        );
+    }
+}
+
+// ======================
+// HIDE LOADING
+// ======================
+function hideLoading(){
+
+    const overlay =
+    document.getElementById(
+        "loadingOverlay"
+    );
+
+    if(overlay){
+
+        overlay.classList.add(
+            "hidden"
+        );
+
+        overlay.classList.remove(
+            "flex"
+        );
+    }
+}
     
 // ======================
 // GLOBAL REFRESH
@@ -5647,15 +5701,38 @@ function refreshOnboardingUI(){
 // ======================
 async function initializeOnboarding(){
 
-await loadRecruitmentData();
+    try{
 
-await loadInductionData();
+        showLoading(
+            "Memuat data onboarding..."
+        );
 
-await loadAssignmentData();
+        await loadRecruitmentData();
 
-generateGlobalPeriodeFilter();
+        showLoading(
+            "Memuat data induction..."
+        );
 
-refreshOnboardingUI();
+        await loadInductionData();
+
+        showLoading(
+            "Memuat data assignment..."
+        );
+
+        await loadAssignmentData();
+
+        generateGlobalPeriodeFilter();
+
+        refreshOnboardingUI();
+
+    }catch(err){
+
+        console.error(err);
+
+    }finally{
+
+        hideLoading();
+    }
 }    
 // =====================================
 // AUTO LOAD
@@ -8217,5 +8294,37 @@ async function(e){
     </div>
 
 </div>
+
+    <!-- ======================
+LOADING OVERLAY
+====================== -->
+<div
+    id="loadingOverlay"
+    class="fixed inset-0 hidden items-center justify-center bg-black/40 backdrop-blur-sm z-[99999]"
+>
+
+    <div class="bg-white rounded-3xl px-8 py-6 shadow-xl text-center min-w-[260px]">
+
+        <div
+            class="animate-spin rounded-full h-12 w-12 border-4 border-slate-200 border-t-blue-600 mx-auto mb-4"
+        ></div>
+
+        <div
+            id="loadingText"
+            class="font-semibold text-slate-700"
+        >
+            Memuat data...
+        </div>
+
+        <div
+            class="text-xs text-slate-500 mt-1"
+        >
+            Mohon tunggu sebentar
+        </div>
+
+    </div>
+
+</div>
+    
 </body>
 </html>

@@ -6065,6 +6065,8 @@ const schedulesData = {
 
     renderTrainingSummaryCards();
 
+    renderTrainingScheduleTable();
+
 }
 
 function renderTrainingSummaryCards() {
@@ -6194,6 +6196,75 @@ function renderTrainingSummaryCards() {
             `;
         }
     );
+
+}
+        function renderTrainingScheduleTable() {
+
+    const tbody =
+        document.getElementById(
+            'trainingScheduleTableBody'
+        );
+
+    if (!tbody) return;
+
+    tbody.innerHTML = '';
+
+    jadwalTrainingData.forEach(row => {
+
+        tbody.innerHTML += `
+            <tr class="border-t">
+
+                <td class="px-4 py-3">
+                    ${row.Status || ''}
+                </td>
+
+                <td class="px-4 py-3">
+                    ${row['Training Program'] || ''}
+                </td>
+
+                <td class="px-4 py-3">
+                    ${row['Materi / Modul'] || ''}
+                </td>
+
+                <td class="px-4 py-3">
+                    ${row.Departement || row.Departemen || ''}
+                </td>
+
+                <td class="px-4 py-3">
+                    ${row['Plan Trainer'] || ''}
+                </td>
+
+                <td class="px-4 py-3">
+                    ${row['Plan Start'] || ''}
+                </td>
+
+                <td class="px-4 py-3">
+                    ${row['Plan Peserta'] || ''}
+                </td>
+
+                <td class="px-4 py-3">
+                    ${row['Actual Peserta'] || ''}
+                </td>
+
+                <td class="px-4 py-3">
+                    ${row['Jumlah Lulus'] || ''}
+                </td>
+
+                <td class="px-4 py-3">
+                    ${row['Jumlah Tidak Lulus'] || ''}
+                </td>
+
+                <td class="px-4 py-3">
+                    <button
+                        class="px-2 py-1 bg-blue-500 text-white rounded"
+                    >
+                        Edit
+                    </button>
+                </td>
+
+            </tr>
+        `;
+    });
 
 }
 

@@ -1835,18 +1835,23 @@ updateDepartmentFilter();
         await res.json();
 
         jadwalTrainingData =
-        (result || []).map(item=>({
+(result || []).map(item=>({
 
-            ...item,
+    ...item,
 
-            searchIndex:
-            Object.values(item)
-            .join(" ")
-            .toLowerCase()
+    searchIndex:
+    Object.values(item)
+    .join(" ")
+    .toLowerCase()
 
-        }));
+}));
 
-        renderTrainingSummaryCards();
+console.log(
+    "Jadwal Training Loaded:",
+    jadwalTrainingData.length
+);
+
+renderTrainingSummaryCards();
 
     }catch(err){
 
@@ -5770,6 +5775,11 @@ async function initializeOnboarding(){
         );
 
         await loadAssignmentData();
+        showLoading(
+    "Memuat jadwal training..."
+);
+
+await loadJadwalTrainingData();
 
         generateGlobalPeriodeFilter();
 

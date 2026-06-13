@@ -5900,9 +5900,10 @@ document
             ]
         };
 
-        const schedulesData = {
-            let jadwalTrainingData = [];
-            training: [
+        let jadwalTrainingData = [];
+
+const schedulesData = {
+    training: [
                 { title: "Training ISO 9001:2015", date: "15 April 2024", time: "09:00 - 12:00", loc: "R. Meeting Utama", type: "Internal" },
                 { title: "Soft Skill Communication", date: "17 April 2024", time: "13:00 - 16:00", loc: "R. Serbaguna", type: "Internal" },
             ],
@@ -6017,7 +6018,13 @@ document
     if (type !== 'training') return;
 
     renderTrainingSummaryCards();
-    renderTrainingScheduleTable();
+    function renderSchedule(type) {
+
+    if (type !== 'training') return;
+
+    renderTrainingSummaryCards();
+
+}
 
 }
         function renderTrainingSummaryCards() {

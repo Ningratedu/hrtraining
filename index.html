@@ -5819,12 +5819,61 @@ document
                 </div>
             </div>
 
-            <!-- Schedule Template -->
             <div id="tab-schedule" class="tab-content hidden">
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="schedule-grid">
-                    <!-- Schedule cards injected here -->
-                </div>
-            </div>
+
+    <!-- SUMMARY -->
+    <div id="trainingSummaryCards"
+         class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 mb-6">
+    </div>
+
+    <!-- SEARCH -->
+    <div class="bg-white rounded-xl border border-slate-200 p-4 mb-4">
+        <input
+            type="search"
+            id="trainingScheduleSearch"
+            placeholder="Cari program, materi, trainer, departemen..."
+            class="w-full px-4 py-2 border border-slate-300 rounded-lg"
+        >
+    </div>
+
+    <!-- TABLE -->
+    <div class="bg-white rounded-xl border border-slate-200 overflow-hidden">
+
+        <div class="overflow-x-auto">
+
+            <table class="w-full text-sm">
+
+                <thead class="bg-slate-50">
+
+                    <tr>
+
+                        <th class="px-4 py-3 text-left">Status</th>
+                        <th class="px-4 py-3 text-left">Program</th>
+                        <th class="px-4 py-3 text-left">Materi</th>
+                        <th class="px-4 py-3 text-left">Departemen</th>
+                        <th class="px-4 py-3 text-left">Trainer</th>
+                        <th class="px-4 py-3 text-left">Plan Start</th>
+                        <th class="px-4 py-3 text-left">Plan Peserta</th>
+                        <th class="px-4 py-3 text-left">Actual Peserta</th>
+                        <th class="px-4 py-3 text-left">Lulus</th>
+                        <th class="px-4 py-3 text-left">Tidak Lulus</th>
+                        <th class="px-4 py-3 text-left">Aksi</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody id="trainingScheduleTableBody">
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
         </div>
     </main>
 
@@ -5852,6 +5901,7 @@ document
         };
 
         const schedulesData = {
+            let jadwalTrainingData = [];
             training: [
                 { title: "Training ISO 9001:2015", date: "15 April 2024", time: "09:00 - 12:00", loc: "R. Meeting Utama", type: "Internal" },
                 { title: "Soft Skill Communication", date: "17 April 2024", time: "13:00 - 16:00", loc: "R. Serbaguna", type: "Internal" },
@@ -5963,39 +6013,130 @@ document
         }
 
         function renderSchedule(type) {
-            const grid = document.getElementById('schedule-grid');
-            grid.innerHTML = '';
-            const data = schedulesData[type] || [];
 
-            data.forEach(item => {
-                grid.innerHTML += `
-                    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:border-blue-300 transition-all group">
-                        <div class="flex justify-between items-start mb-4">
-                            <div class="bg-blue-50 p-3 rounded-xl text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-colors">
-                                <i data-lucide="${type === 'training' ? 'book-marked' : 'map'}"></i>
-                            </div>
-                            <span class="text-[10px] uppercase font-bold tracking-widest text-slate-400">${item.type}</span>
-                        </div>
-                        <h4 class="font-bold text-slate-800 mb-2">${item.title}</h4>
-                        <div class="space-y-2 mb-6">
-                            <div class="flex items-center gap-2 text-sm text-slate-500">
-                                <i data-lucide="calendar" class="w-4 h-4"></i> ${item.date}
-                            </div>
-                            <div class="flex items-center gap-2 text-sm text-slate-500">
-                                <i data-lucide="clock" class="w-4 h-4"></i> ${item.time}
-                            </div>
-                            <div class="flex items-center gap-2 text-sm text-slate-500">
-                                <i data-lucide="map-pin" class="w-4 h-4"></i> ${item.loc}
-                            </div>
-                        </div>
-                        <button class="w-full py-2 bg-slate-50 text-slate-600 rounded-xl text-sm font-semibold hover:bg-slate-100 transition-all">
-                            Lihat Detail
-                        </button>
-                    </div>
-                `;
-            });
-            lucide.createIcons();
+    if (type !== 'training') return;
+
+    renderTrainingSummaryCards();
+    renderTrainingScheduleTable();
+
+}
+        function renderTrainingSummaryCards() {
+
+    const container =
+        document.getElementById(
+            'trainingSummaryCards'
+        );
+
+    if (!container) return;
+
+    container.innerHTML = '';
+
+    const grouped = {};
+
+    jadwalTrainingData.forEach(row => {
+
+        const program =
+            row['Training Program'] ||
+            'Tanpa Program';
+
+        if (!grouped[program]) {
+
+            grouped[program] = {
+                total: 0,
+                done: 0,
+
+                planPeserta: 0,
+                actualPeserta: 0,
+
+                lulus: 0,
+                gagal: 0
+            };
+
         }
+
+        grouped[program].total++;
+
+        if (
+            (row.Status || '')
+            .toLowerCase()
+            .includes('done')
+        ) {
+            grouped[program].done++;
+        }
+
+        grouped[program].planPeserta +=
+            Number(row['Plan Peserta']) || 0;
+
+        grouped[program].actualPeserta +=
+            Number(row['Actual Peserta']) || 0;
+
+        grouped[program].lulus +=
+            Number(row['Jumlah Lulus']) || 0;
+
+        grouped[program].gagal +=
+            Number(row['Jumlah Tidak Lulus']) || 0;
+
+    });
+
+    Object.entries(grouped).forEach(
+        ([program, item]) => {
+
+            const keterlaksanaan =
+                item.total
+                ? Math.round(
+                    item.done / item.total * 100
+                )
+                : 0;
+
+            const kehadiran =
+                item.planPeserta
+                ? Math.round(
+                    item.actualPeserta /
+                    item.planPeserta *
+                    100
+                )
+                : 0;
+
+            const kelulusan =
+                (item.lulus + item.gagal)
+                ? Math.round(
+                    item.lulus /
+                    (item.lulus + item.gagal)
+                    * 100
+                )
+                : 0;
+
+            container.innerHTML += `
+                <div class="bg-white border border-slate-200 rounded-xl p-4">
+
+                    <div class="font-bold text-slate-800 mb-3">
+                        ${program}
+                    </div>
+
+                    <div class="text-sm mb-2">
+                        Keterlaksanaan
+                        <b>${keterlaksanaan}%</b>
+                        (${item.done}/${item.total})
+                    </div>
+
+                    <div class="text-sm mb-2">
+                        Kehadiran
+                        <b>${kehadiran}%</b>
+                        (${item.actualPeserta}/${item.planPeserta})
+                    </div>
+
+                    <div class="text-sm">
+                        Kelulusan
+                        <b>${kelulusan}%</b>
+                        (${item.lulus}/${item.lulus + item.gagal})
+                    </div>
+
+                </div>
+            `;
+        }
+    );
+
+}
     </script>
     
     <script>

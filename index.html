@@ -6064,34 +6064,29 @@ const schedulesData = {
     if (type !== 'training') return;
 
     renderTrainingSummaryCards();
-    function renderSchedule(type) {
 
-    if (type !== 'training') return;
-
-    renderTrainingSummaryCards();
-
-    }
 }
-        function renderTrainingSummaryCards() {
-            console.log(
-    "SUMMARY RUN",
-    jadwalTrainingData.length
-);
+
+function renderTrainingSummaryCards() {
 
     const container =
         document.getElementById(
             'trainingSummaryCards'
         );
 
-    if (!container) return;
+    if (!container) {
+
+        console.error(
+            'trainingSummaryCards NOT FOUND'
+        );
+
+        return;
+    }
 
     container.innerHTML = '';
 
     const grouped = {};
-    console.log(
-    "SAMPLE ROW",
-    jadwalTrainingData[0]
-);
+
     jadwalTrainingData.forEach(row => {
 
         const program =
@@ -6116,7 +6111,7 @@ const schedulesData = {
         grouped[program].total++;
 
         if (
-            (row.Status || '')
+            String(row.Status || '')
             .toLowerCase()
             .includes('done')
         ) {
@@ -6143,56 +6138,56 @@ const schedulesData = {
             const keterlaksanaan =
                 item.total
                 ? Math.round(
-                    item.done / item.total * 100
+                    (item.done / item.total) * 100
                 )
                 : 0;
 
             const kehadiran =
                 item.planPeserta
                 ? Math.round(
-                    item.actualPeserta /
-                    item.planPeserta *
-                    100
+                    (item.actualPeserta / item.planPeserta) * 100
                 )
                 : 0;
+
+            const totalPesertaUjian =
+                item.lulus + item.gagal;
 
             const kelulusan =
-                (item.lulus + item.gagal)
+                totalPesertaUjian
                 ? Math.round(
-                    item.lulus /
-                    (item.lulus + item.gagal)
-                    * 100
+                    (item.lulus / totalPesertaUjian) * 100
                 )
                 : 0;
-            console.log(
-    "PROGRAM",
-    program,
-    item
-);
 
             container.innerHTML += `
-                <div class="bg-white border border-slate-200 rounded-xl p-4">
+                <div class="bg-white border border-slate-200 rounded-xl p-4 shadow-sm">
 
-                    <div class="font-bold text-slate-800 mb-3">
+                    <div class="font-bold text-slate-800 text-base mb-3">
                         ${program}
                     </div>
 
-                    <div class="text-sm mb-2">
+                    <div class="text-sm text-slate-600 mb-2">
                         Keterlaksanaan
-                        <b>${keterlaksanaan}%</b>
+                        <span class="font-semibold text-slate-900">
+                            ${keterlaksanaan}%
+                        </span>
                         (${item.done}/${item.total})
                     </div>
 
-                    <div class="text-sm mb-2">
+                    <div class="text-sm text-slate-600 mb-2">
                         Kehadiran
-                        <b>${kehadiran}%</b>
+                        <span class="font-semibold text-slate-900">
+                            ${kehadiran}%
+                        </span>
                         (${item.actualPeserta}/${item.planPeserta})
                     </div>
 
-                    <div class="text-sm">
+                    <div class="text-sm text-slate-600">
                         Kelulusan
-                        <b>${kelulusan}%</b>
-                        (${item.lulus}/${item.lulus + item.gagal})
+                        <span class="font-semibold text-slate-900">
+                            ${kelulusan}%
+                        </span>
+                        (${item.lulus}/${totalPesertaUjian})
                     </div>
 
                 </div>
@@ -6201,7 +6196,8 @@ const schedulesData = {
     );
 
 }
-    </script>
+
+</script>
     
     <script>
 

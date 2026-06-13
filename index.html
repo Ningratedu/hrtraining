@@ -1821,6 +1821,42 @@ updateDepartmentFilter();
         );
     }
 }
+
+    async function loadJadwalTrainingData(){
+
+    try{
+
+        const res =
+        await fetch(
+            `${API_URL}?sheet=jadwal_training`
+        );
+
+        const result =
+        await res.json();
+
+        jadwalTrainingData =
+        (result || []).map(item=>({
+
+            ...item,
+
+            searchIndex:
+            Object.values(item)
+            .join(" ")
+            .toLowerCase()
+
+        }));
+
+        renderTrainingSummaryCards();
+
+    }catch(err){
+
+        console.error(err);
+
+        alert(
+            "Gagal load jadwal training"
+        );
+    }
+}
 // =====================================
 // GO TO ASSIGNMENT TABLE
 // =====================================

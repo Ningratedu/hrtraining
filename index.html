@@ -6439,7 +6439,10 @@ function resendTrainingInvitation(index){
     if(
         isNaN(planStart)
     ){
-        return 0;
+        return {
+            total:0,
+            peserta:[]
+        };
     }
 
     const minJoinDate =
@@ -6449,21 +6452,14 @@ function resendTrainingInvitation(index){
         minJoinDate.getDate() - 7
     );
 
-    let total = 0;
+    const peserta = [];
 
     recruitmentData.forEach(emp=>{
 
         const joinDate =
-    parseDateSafe(
-        emp.date_join
-    );
-
-console.log(
-    'JOIN',
-    emp.nama,
-    emp.date_join,
-    joinDate
-);
+            parseDateSafe(
+                emp.date_join
+            );
 
         if(!joinDate) return;
 
@@ -6471,12 +6467,21 @@ console.log(
             joinDate >= minJoinDate &&
             joinDate <= planStart
         ){
-            total++;
+
+            peserta.push(emp);
+
         }
 
     });
 
-    return total;
+    return {
+
+        total:
+        peserta.length,
+
+        peserta
+
+    };
 
 }
         function showLmsPreview(
@@ -6484,6 +6489,8 @@ console.log(
     participants
 ){
 let planPeserta = 0;
+
+let planPesertaList = [];
 
 const program =
     String(
@@ -6499,10 +6506,16 @@ if(
     )
 ){
 
-    planPeserta =
+    const result =
         calculatePlanPeserta(
             trainingRow
         );
+
+    planPeserta =
+        result.total;
+
+    planPesertaList =
+        result.peserta;
 
 }else{
 
@@ -6619,6 +6632,81 @@ const kehadiran =
         ${planPeserta}
     </div>
 
+<div style="margin-top:10px">
+
+    <b>
+        Detail Plan Peserta
+        (${planPeserta})
+    </b>
+
+</div>
+
+<div
+    style="
+        max-height:200px;
+        overflow:auto;
+        border:1px solid #ddd;
+        margin-top:8px;
+        margin-bottom:12px;
+    "
+>
+
+<table
+    style="
+        width:100%;
+        border-collapse:collapse;
+        font-size:12px;
+    "
+>
+
+<thead>
+
+<tr>
+
+<th>Nama</th>
+<th>Username</th>
+<th>Company</th>
+<th>Departement</th>
+<th>Designation</th>
+<th>Location</th>
+<th>Date Join</th>
+<th>Kontak</th>
+<th>Stage</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+${
+    planPesertaList
+    .map(emp=>`
+
+<tr>
+
+<td>${emp.nama || ''}</td>
+<td>${emp.username || ''}</td>
+<td>${emp.company || ''}</td>
+<td>${emp.departement || ''}</td>
+<td>${emp.designation || ''}</td>
+<td>${emp.location || ''}</td>
+<td>${emp.date_join || ''}</td>
+<td>${emp.kontak || ''}</td>
+<td>${emp.stage || ''}</td>
+
+</tr>
+
+`)
+.join('')
+}
+
+</tbody>
+
+</table>
+
+</div>
+
     <div>
         <b>Periode Join :</b>
         7 hari sebelum
@@ -6680,20 +6768,23 @@ const kehadiran =
 
         <thead>
 
-            <tr>
+    <tr>
 
-                <th>Pilih</th>
-                <th>Nama</th>
-                <th>Dept</th>
-                <th>Posisi</th>
-                <th>SPV</th>
-                <th>BM</th>
-                <th>Pre</th>
-                <th>Post</th>
+        <th>Pilih</th>
+        <th>Nama</th>
+        <th>Join Date</th>
+        <th>Tgl Training LMS</th>
+        <th>Dept</th>
+        <th>Posisi</th>
+        <th>SPV</th>
+        <th>BM</th>
+        <th>RM</th>
+        <th>Pre</th>
+        <th>Post</th>
 
-            </tr>
+    </tr>
 
-        </thead>
+</thead>
 
         <tbody>
 `;
@@ -6723,7 +6814,19 @@ const kehadiran =
                         ''
                     }
                 </td>
+<td>
+    ${
+        p['Join Date'] ||
+        ''
+    }
+</td>
 
+<td>
+    ${
+        p['Tgl. Training'] ||
+        ''
+    }
+</td>
                 <td>
                     ${
                         p.Departement ||
@@ -6754,7 +6857,12 @@ const kehadiran =
                         ''
                     }
                 </td>
-
+<td>
+    ${
+        p.RM ||
+        ''
+    }
+</td>
                 <td>
                     ${
                         p.Pretest ||

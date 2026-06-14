@@ -5806,6 +5806,16 @@ document
 
         lucide.createIcons();
 
+        // LMS UPLOAD
+        document
+        .getElementById(
+            "lmsUploadInput"
+        )
+        ?.addEventListener(
+            "change",
+            handleLmsUpload
+        );
+
         // SEARCH INDUCTION
         document
         .getElementById(
@@ -5947,6 +5957,8 @@ document
         };
 
         let jadwalTrainingData = [];
+        let selectedTrainingIndex = null;
+        let lmsPreviewData = [];
 
 const schedulesData = {
     training: [
@@ -6299,13 +6311,16 @@ function editTrainingSchedule(index){
 
 function openTrainingResultModal(index){
 
-    console.log(
-        'UPLOAD HASIL',
-        jadwalTrainingData[index]
-    );
+    selectedTrainingIndex = index;
+
+    document
+        .getElementById(
+            'lmsUploadInput'
+        )
+        .click();
 
 }
-
+        
 function resendTrainingInvitation(index){
 
     console.log(
@@ -6314,6 +6329,112 @@ function resendTrainingInvitation(index){
     );
 
 }
+        async function handleLmsUpload(event){
+
+    const file =
+    event.target.files[0];
+
+    if(!file) return;
+
+    try{
+
+        const reader =
+        new FileReader();
+
+        reader.onload =
+        function(e){
+
+            const data =
+            new Uint8Array(
+                e.target.result
+            );
+
+            const workbook =
+            XLSX.read(
+                data,
+                { type:'array' }
+            );
+
+            const sheet =
+            workbook.Sheets[
+                workbook.SheetNames[0]
+            ];
+
+            const json =
+            XLSX.utils.sheet_to_json(
+                sheet,
+                {
+                    defval:''
+                }
+            );
+
+            processLmsData(
+                json
+            );
+
+        };
+
+        reader.readAsArrayBuffer(
+            file
+        );
+
+    }catch(err){
+
+        console.error(err);
+
+        alert(
+            'Gagal membaca file LMS'
+        );
+
+    }
+
+}
+        function processLmsData(data){
+
+    const row =
+    jadwalTrainingData[
+        selectedTrainingIndex
+    ];
+
+    if(!row) return;
+
+    const materi =
+    String(
+        row['Materi / Modul'] || ''
+    )
+    .trim()
+    .toLowerCase();
+
+    lmsPreviewData =
+    data.filter(item=>{
+
+        const training =
+        String(
+            item.Training || ''
+        )
+        .trim()
+        .toLowerCase();
+
+        return training === materi;
+
+    });
+
+    console.log(
+        'TARGET MATERI',
+        materi
+    );
+
+    console.log(
+        'LMS MATCH',
+        lmsPreviewData
+    );
+
+    alert(
+        `${lmsPreviewData.length} peserta ditemukan`
+    );
+
+}
+        
 </script>
     
     <script>
@@ -8648,6 +8769,12 @@ LOADING OVERLAY
     </div>
 
 </div>
-    
+<input
+    type="file"
+    id="lmsUploadInput"
+    accept=".xlsx,.xls"
+    class="hidden"
+/>
+
 </body>
 </html>

@@ -6429,7 +6429,7 @@ function resendTrainingInvitation(index){
     trainingRow
 ){
 
-    const startDate =
+    const planStart =
         new Date(
             trainingRow[
                 'Plan Start'
@@ -6437,13 +6437,13 @@ function resendTrainingInvitation(index){
         );
 
     if(
-        isNaN(startDate)
+        isNaN(planStart)
     ){
         return 0;
     }
 
     const minJoinDate =
-        new Date(startDate);
+        new Date(planStart);
 
     minJoinDate.setDate(
         minJoinDate.getDate() - 7
@@ -6462,7 +6462,7 @@ function resendTrainingInvitation(index){
 
         if(
             joinDate >= minJoinDate &&
-            joinDate <= startDate
+            joinDate <= planStart
         ){
             total++;
         }
@@ -6476,10 +6476,49 @@ function resendTrainingInvitation(index){
     trainingRow,
     participants
 ){
-const planPeserta =
-    calculatePlanPeserta(
-        trainingRow
-    );
+let planPeserta = 0;
+
+const program =
+    String(
+        trainingRow[
+            'Training Program'
+        ] || ''
+    )
+    .toLowerCase();
+
+if(
+    program.includes(
+        'onboarding'
+    )
+){
+
+    planPeserta =
+        calculatePlanPeserta(
+            trainingRow
+        );
+
+}else{
+
+    planPeserta =
+        Number(
+            trainingRow[
+                'Plan Peserta'
+            ]
+        ) || 0;
+
+}
+
+console.log(
+    'PROGRAM',
+    trainingRow[
+        'Training Program'
+    ]
+);
+
+console.log(
+    'PLAN PESERTA',
+    planPeserta
+);
 
 const trainingDate =
     participants.length

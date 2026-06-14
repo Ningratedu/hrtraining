@@ -6209,7 +6209,7 @@ function renderTrainingSummaryCards() {
 
     tbody.innerHTML = '';
 
-    jadwalTrainingData.forEach(row => {
+    jadwalTrainingData.forEach((row,index) => {
 
         tbody.innerHTML += `
             <tr class="border-t">
@@ -6255,19 +6255,65 @@ function renderTrainingSummaryCards() {
                 </td>
 
                 <td class="px-4 py-3">
-                    <button
-                        class="px-2 py-1 bg-blue-500 text-white rounded"
-                    >
-                        Edit
-                    </button>
-                </td>
+
+    <div class="flex gap-2">
+
+        <button
+            onclick="editTrainingSchedule(${index})"
+            class="px-2 py-1 bg-blue-500 text-white rounded text-xs"
+        >
+            Edit
+        </button>
+
+        <button
+            onclick="openTrainingResultModal(${index})"
+            class="px-2 py-1 bg-green-600 text-white rounded text-xs"
+        >
+            Upload Hasil
+        </button>
+
+        <button
+            onclick="resendTrainingInvitation(${index})"
+            class="px-2 py-1 bg-amber-500 text-white rounded text-xs"
+        >
+            Resend
+        </button>
+
+    </div>
+
+</td>
 
             </tr>
         `;
     });
 
 }
+function editTrainingSchedule(index){
 
+    console.log(
+        'EDIT',
+        jadwalTrainingData[index]
+    );
+
+}
+
+function openTrainingResultModal(index){
+
+    console.log(
+        'UPLOAD HASIL',
+        jadwalTrainingData[index]
+    );
+
+}
+
+function resendTrainingInvitation(index){
+
+    console.log(
+        'RESEND',
+        jadwalTrainingData[index]
+    );
+
+}
 </script>
     
     <script>

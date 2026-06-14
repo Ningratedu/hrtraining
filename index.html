@@ -6419,19 +6419,168 @@ function resendTrainingInvitation(index){
 
     });
 
-    console.log(
-        'TARGET MATERI',
-        materi
-    );
-
-    console.log(
-        'LMS MATCH',
+    showLmsPreview(
+        row,
         lmsPreviewData
     );
 
-    alert(
-        `${lmsPreviewData.length} peserta ditemukan`
+}
+        function showLmsPreview(
+    trainingRow,
+    participants
+){
+
+    let html = `
+
+    <div
+        style="
+            max-height:500px;
+            overflow:auto;
+        "
+    >
+
+        <div
+            style="
+                margin-bottom:15px;
+                font-weight:bold;
+            "
+        >
+            ${trainingRow['Materi / Modul']}
+        </div>
+
+        <table
+            style="
+                width:100%;
+                border-collapse:collapse;
+            "
+        >
+
+            <thead>
+
+                <tr>
+
+                    <th>Pilih</th>
+                    <th>Nama</th>
+                    <th>Dept</th>
+                    <th>Posisi</th>
+                    <th>SPV</th>
+                    <th>BM</th>
+                    <th>Pre</th>
+                    <th>Post</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+    `;
+
+    participants.forEach(
+        (p,index)=>{
+
+            html += `
+
+            <tr>
+
+                <td>
+
+                    <input
+                        type="checkbox"
+                        checked
+                        class="lms-check"
+                        data-index="${index}"
+                    >
+
+                </td>
+
+                <td>
+                    ${
+                        p.Nama ||
+                        p.Name ||
+                        ''
+                    }
+                </td>
+
+                <td>
+                    ${
+                        p.Departement ||
+                        p.Department ||
+                        ''
+                    }
+                </td>
+
+                <td>
+                    ${
+                        p.Position ||
+                        p.Jabatan ||
+                        ''
+                    }
+                </td>
+
+                <td>
+                    ${
+                        p.SPV ||
+                        ''
+                    }
+                </td>
+
+                <td>
+                    ${
+                        p.BM ||
+                        p.MM ||
+                        ''
+                    }
+                </td>
+
+                <td>
+                    ${
+                        p.Pretest ||
+                        p['Pre Test'] ||
+                        ''
+                    }
+                </td>
+
+                <td>
+                    ${
+                        p.Posttest ||
+                        p['Post Test'] ||
+                        ''
+                    }
+                </td>
+
+            </tr>
+
+            `;
+
+        }
     );
+
+    html += `
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+    `;
+
+    Swal.fire({
+
+        title:
+        'Preview Peserta LMS',
+
+        width:'90%',
+
+        html:html,
+
+        showCancelButton:true,
+
+        confirmButtonText:
+        'Lanjut'
+
+    });
 
 }
         

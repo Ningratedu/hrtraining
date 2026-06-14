@@ -6429,8 +6429,148 @@ function resendTrainingInvitation(index){
     trainingRow,
     participants
 ){
+const planPeserta =
+    Number(
+        trainingRow['Plan Peserta']
+    ) || 0;
 
+const trainingDate =
+    participants.length
+    ? (
+        participants[0]['Tgl. Training']
+        || '-'
+    )
+    : '-';
+
+const totalPeserta =
+    participants.length;
+
+const totalLulus =
+    participants.filter(
+        p => Number(
+            p.Posttest
+        ) >= 80
+    ).length;
+
+const totalTidakLulus =
+    totalPeserta -
+    totalLulus;
+
+const avgPre =
+    totalPeserta
+    ? Math.round(
+        participants.reduce(
+            (a,b)=>
+            a +
+            (
+                Number(
+                    b.Pretest
+                ) || 0
+            ),
+            0
+        ) /
+        totalPeserta
+    )
+    : 0;
+
+const avgPost =
+    totalPeserta
+    ? Math.round(
+        participants.reduce(
+            (a,b)=>
+            a +
+            (
+                Number(
+                    b.Posttest
+                ) || 0
+            ),
+            0
+        ) /
+        totalPeserta
+    )
+    : 0;
+
+const kehadiran =
+    planPeserta
+    ? Math.round(
+        totalPeserta /
+        planPeserta *
+        100
+    )
+    : 0;
     let html = `
+
+<div
+    style="
+        background:#f8fafc;
+        padding:12px;
+        border-radius:8px;
+        margin-bottom:15px;
+        font-size:14px;
+    "
+>
+
+    <div>
+        <b>Materi :</b>
+        ${trainingRow['Materi / Modul']}
+    </div>
+
+    <div>
+        <b>Tanggal Training :</b>
+        ${trainingDate}
+    </div>
+
+    <div>
+        <b>Plan Peserta :</b>
+        ${planPeserta}
+    </div>
+
+    <hr style="margin:10px 0">
+
+    <div>
+        <b>Total Terbaca :</b>
+        ${totalPeserta}
+    </div>
+
+    <div>
+        <b>Peserta Terpilih :</b>
+        ${totalPeserta}
+    </div>
+
+    <div>
+        <b>Kehadiran :</b>
+        ${kehadiran}%
+    </div>
+
+    <div>
+        <b>Lulus :</b>
+        ${totalLulus}
+    </div>
+
+    <div>
+        <b>Tidak Lulus :</b>
+        ${totalTidakLulus}
+    </div>
+
+    <div>
+        <b>Avg Pre Test :</b>
+        ${avgPre}
+    </div>
+
+    <div>
+        <b>Avg Post Test :</b>
+        ${avgPost}
+    </div>
+
+</div>
+
+<div
+    style="
+        max-height:500px;
+        overflow:auto;
+    "
+>
+`;
 
     <div
         style="

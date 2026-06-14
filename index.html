@@ -6425,14 +6425,61 @@ function resendTrainingInvitation(index){
     );
 
 }
+        function calculatePlanPeserta(
+    trainingRow
+){
+
+    const startDate =
+        new Date(
+            trainingRow[
+                'Plan Start'
+            ]
+        );
+
+    if(
+        isNaN(startDate)
+    ){
+        return 0;
+    }
+
+    const minJoinDate =
+        new Date(startDate);
+
+    minJoinDate.setDate(
+        minJoinDate.getDate() - 7
+    );
+
+    let total = 0;
+
+    recruitmentData.forEach(emp=>{
+
+        const joinDate =
+            parseDateSafe(
+                emp.join_date
+            );
+
+        if(!joinDate) return;
+
+        if(
+            joinDate >= minJoinDate &&
+            joinDate <= startDate
+        ){
+            total++;
+        }
+
+    });
+
+    return total;
+
+}
         function showLmsPreview(
     trainingRow,
     participants
 ){
 const planPeserta =
-    Number(
-        trainingRow['Plan Peserta']
-    ) || 0;
+    calculatePlanPeserta(
+        trainingRow
+    );
 
 const trainingDate =
     participants.length
@@ -6524,6 +6571,12 @@ const kehadiran =
     <div>
         <b>Plan Peserta :</b>
         ${planPeserta}
+    </div>
+
+    <div>
+        <b>Periode Join :</b>
+        7 hari sebelum
+        tanggal training
     </div>
 
     <hr style="margin:10px 0">

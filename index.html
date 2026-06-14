@@ -6570,51 +6570,33 @@ const kehadiran =
         overflow:auto;
     "
 >
-`;
 
-    <div
+    <table
         style="
-            max-height:500px;
-            overflow:auto;
+            width:100%;
+            border-collapse:collapse;
         "
     >
 
-        <div
-            style="
-                margin-bottom:15px;
-                font-weight:bold;
-            "
-        >
-            ${trainingRow['Materi / Modul']}
-        </div>
+        <thead>
 
-        <table
-            style="
-                width:100%;
-                border-collapse:collapse;
-            "
-        >
+            <tr>
 
-            <thead>
+                <th>Pilih</th>
+                <th>Nama</th>
+                <th>Dept</th>
+                <th>Posisi</th>
+                <th>SPV</th>
+                <th>BM</th>
+                <th>Pre</th>
+                <th>Post</th>
 
-                <tr>
+            </tr>
 
-                    <th>Pilih</th>
-                    <th>Nama</th>
-                    <th>Dept</th>
-                    <th>Posisi</th>
-                    <th>SPV</th>
-                    <th>BM</th>
-                    <th>Pre</th>
-                    <th>Post</th>
+        </thead>
 
-                </tr>
-
-            </thead>
-
-            <tbody>
-
-    `;
+        <tbody>
+`;
 
     participants.forEach(
         (p,index)=>{

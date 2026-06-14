@@ -6454,9 +6454,16 @@ function resendTrainingInvitation(index){
     recruitmentData.forEach(emp=>{
 
         const joinDate =
-            parseDateSafe(
-                emp.join_date
-            );
+    parseDateSafe(
+        emp.date_join
+    );
+
+console.log(
+    'JOIN',
+    emp.nama,
+    emp.date_join,
+    joinDate
+);
 
         if(!joinDate) return;
 

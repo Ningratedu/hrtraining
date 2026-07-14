@@ -6231,7 +6231,52 @@ function renderTrainingSummaryCards() {
 
     tbody.innerHTML = '';
 
-    jadwalTrainingData.forEach((row,index) => {
+    // =====================================
+    // SEARCH FILTER
+    // =====================================
+    const searchInput =
+        document.getElementById(
+            'trainingScheduleSearch'
+        );
+
+    const keyword =
+        searchInput
+        ? searchInput.value
+            .trim()
+            .toLowerCase()
+        : '';
+
+    const filteredRows =
+        jadwalTrainingData
+        .map((row, index) => ({ row, index }))
+        .filter(({ row }) => {
+
+            if(!keyword) return true;
+
+            const haystack =
+                row.searchIndex ||
+                Object.values(row)
+                .join(' ')
+                .toLowerCase();
+
+            return haystack.includes(keyword);
+
+        });
+
+    if(!filteredRows.length){
+
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="11" class="px-4 py-6 text-center text-slate-400">
+                    Tidak ada data yang cocok
+                </td>
+            </tr>
+        `;
+
+        return;
+    }
+
+    filteredRows.forEach(({ row, index }) => {
 
         tbody.innerHTML += `
             <tr class="border-t">
@@ -6310,6 +6355,24 @@ function renderTrainingSummaryCards() {
     });
 
 }
+
+// =====================================
+// WIRE SEARCH INPUT (Jadwal Training)
+// =====================================
+document.addEventListener(
+    'input',
+    function(e){
+
+        if(
+            e.target.id ===
+            'trainingScheduleSearch'
+        ){
+
+            renderTrainingScheduleTable();
+        }
+
+    }
+);
 function editTrainingSchedule(index){
 
     console.log(
@@ -6439,24 +6502,18 @@ function resendTrainingInvitation(index){
     trainingRow
 ){
 
-    const planStart =
-        new Date(
-            trainingRow[
-                'Plan Start'
-            ]
-        );
+    // =====================================
+    // TARGET = karyawan yang join dalam
+    // 7 hari terakhir dari HARI INI
+    // (bukan dari Plan Start training)
+    // =====================================
+    const today =
+        new Date();
 
-    if(
-        isNaN(planStart)
-    ){
-        return {
-            total:0,
-            peserta:[]
-        };
-    }
+    today.setHours(0,0,0,0);
 
     const minJoinDate =
-        new Date(planStart);
+        new Date(today);
 
     minJoinDate.setDate(
         minJoinDate.getDate() - 7
@@ -6473,9 +6530,11 @@ function resendTrainingInvitation(index){
 
         if(!joinDate) return;
 
+        joinDate.setHours(0,0,0,0);
+
         if(
             joinDate >= minJoinDate &&
-            joinDate <= planStart
+            joinDate <= today
         ){
 
             peserta.push(emp);

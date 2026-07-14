@@ -6498,26 +6498,126 @@ function resendTrainingInvitation(index){
     );
 
 }
+        // =====================================
+        // TARGET WINDOW (per batch)
+        //
+        // Sales & Marketing (1 batch/minggu):
+        //   Training hari Rabu, target = join
+        //   Rabu minggu lalu s.d Selasa
+        //   (planStart-7 s/d planStart-1)
+        //
+        // Non-Sales (2 batch/minggu):
+        //   Batch Selasa: training hari Selasa,
+        //   target = join Sabtu s/d Selasa
+        //   (planStart-3 s/d planStart)
+        //
+        //   Batch Jumat: training hari Jumat,
+        //   target = join Rabu s/d Jumat
+        //   (planStart-2 s/d planStart)
+        // =====================================
+        function getTargetWindow(
+    trainingRow
+){
+
+    const dept =
+        String(
+            trainingRow.Departement ||
+            trainingRow.Departemen ||
+            ''
+        )
+        .toLowerCase();
+
+    const isSalesMarketing =
+        dept.includes('sales') ||
+        dept.includes('marketing');
+
+    const planStart =
+        parseDateSafe(
+            trainingRow['Plan Start']
+        );
+
+    if(!planStart) return null;
+
+    planStart.setHours(0,0,0,0);
+
+    const dayOfWeek =
+        planStart.getDay();
+    // 0=Minggu 1=Senin 2=Selasa
+    // 3=Rabu 4=Kamis 5=Jumat 6=Sabtu
+
+    let start =
+        new Date(planStart);
+
+    let end =
+        new Date(planStart);
+
+    if(isSalesMarketing){
+
+        // training Rabu, target
+        // Rabu lalu - Selasa
+        start.setDate(
+            planStart.getDate() - 7
+        );
+
+        end.setDate(
+            planStart.getDate() - 1
+        );
+
+    }else if(dayOfWeek === 2){
+
+        // BATCH SELASA
+        // target Sabtu - Selasa
+        start.setDate(
+            planStart.getDate() - 3
+        );
+
+    }else if(dayOfWeek === 5){
+
+        // BATCH JUMAT
+        // target Rabu - Jumat
+        start.setDate(
+            planStart.getDate() - 2
+        );
+
+    }else{
+
+        // fallback kalau Plan Start
+        // gak jatuh di hari batch yg
+        // dikenal: pakai 7 hari ke
+        // belakang sampai Plan Start
+        start.setDate(
+            planStart.getDate() - 6
+        );
+
+    }
+
+    start.setHours(0,0,0,0);
+    end.setHours(23,59,59,999);
+
+    return {
+        start,
+        end,
+        isSalesMarketing
+    };
+
+}
+
         function calculatePlanPeserta(
     trainingRow
 ){
 
-    // =====================================
-    // TARGET = karyawan yang join dalam
-    // 7 hari terakhir dari HARI INI
-    // (bukan dari Plan Start training)
-    // =====================================
-    const today =
-        new Date();
+    const window =
+        getTargetWindow(
+            trainingRow
+        );
 
-    today.setHours(0,0,0,0);
+    if(!window){
 
-    const minJoinDate =
-        new Date(today);
-
-    minJoinDate.setDate(
-        minJoinDate.getDate() - 7
-    );
+        return {
+            total:0,
+            peserta:[]
+        };
+    }
 
     const peserta = [];
 
@@ -6533,8 +6633,8 @@ function resendTrainingInvitation(index){
         joinDate.setHours(0,0,0,0);
 
         if(
-            joinDate >= minJoinDate &&
-            joinDate <= today
+            joinDate >= window.start &&
+            joinDate <= window.end
         ){
 
             peserta.push(emp);
@@ -6561,6 +6661,9 @@ let planPeserta = 0;
 
 let planPesertaList = [];
 
+let targetWindowLabel =
+    '-';
+
 const program =
     String(
         trainingRow[
@@ -6585,6 +6688,24 @@ if(
 
     planPesertaList =
         result.peserta;
+
+    const win =
+        getTargetWindow(
+            trainingRow
+        );
+
+    if(win){
+
+        targetWindowLabel =
+            `${formatDisplayDate(win.start)} `
+            +
+            `s/d `
+            +
+            `${formatDisplayDate(win.end)} `
+            +
+            `(${win.isSalesMarketing ? 'Sales & Marketing' : 'Non-Sales'})`;
+
+    }
 
 }else{
 
@@ -6778,8 +6899,7 @@ ${
 
     <div>
         <b>Periode Join :</b>
-        7 hari sebelum
-        tanggal training
+        ${targetWindowLabel}
     </div>
 
     <hr style="margin:10px 0">

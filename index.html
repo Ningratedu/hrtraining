@@ -1853,6 +1853,16 @@ console.log(
 
 renderTrainingSummaryCards();
 
+if(
+    document
+    .getElementById(
+        'trainingScheduleTableBody'
+    )
+){
+
+    renderTrainingScheduleTable();
+}
+
     }catch(err){
 
         console.error(err);
@@ -6837,6 +6847,7 @@ ${
 
                 <td>
                     ${
+                        p.Posisi ||
                         p.Position ||
                         p.Jabatan ||
                         ''
@@ -6908,9 +6919,178 @@ ${
         showCancelButton:true,
 
         confirmButtonText:
-        'Lanjut'
+        'Lanjut',
+
+        cancelButtonText:
+        'Batal',
+
+        preConfirm: () => {
+
+            const checked =
+            Array.from(
+                document.querySelectorAll(
+                    '.lms-check:checked'
+                )
+            ).map(el =>
+                Number(el.dataset.index)
+            );
+
+            if(!checked.length){
+
+                Swal.showValidationMessage(
+                    'Pilih minimal 1 peserta'
+                );
+
+                return false;
+            }
+
+            return checked;
+        }
+
+    }).then((result) => {
+
+        if(!result.isConfirmed) return;
+
+        const selectedIndexes =
+        result.value;
+
+        const selectedParticipants =
+        selectedIndexes.map(i =>
+            participants[i]
+        );
+
+        saveTrainingResult(
+            trainingRow,
+            selectedParticipants
+        );
 
     });
+
+}
+
+// =====================================
+// SAVE TRAINING RESULT TO BACKEND
+// =====================================
+async function saveTrainingResult(
+    trainingRow,
+    participants
+){
+
+    Swal.fire({
+
+        title:'Menyimpan hasil training...',
+
+        allowOutsideClick:false,
+
+        didOpen: () => {
+            Swal.showLoading();
+        }
+
+    });
+
+    try{
+
+        const rows =
+        participants.map(p => ({
+
+            username:
+            p.Username ||
+            p.username ||
+            '',
+
+            nama:
+            p.Nama ||
+            p.Name ||
+            '',
+
+            departement:
+            p.Departement ||
+            p.Department ||
+            '',
+
+            posisi:
+            p.Posisi ||
+            p.Position ||
+            p.Jabatan ||
+            '',
+
+            pretest:
+            p.Pretest ||
+            p['Pre Test'] ||
+            0,
+
+            posttest:
+            p.Posttest ||
+            p['Post Test'] ||
+            0,
+
+            tgl_training:
+            p['Tgl. Training'] ||
+            ''
+
+        }));
+
+        const res =
+        await fetch(API_URL, {
+
+            method:'POST',
+
+            body: JSON.stringify({
+
+                sheet:'training_result',
+                action:'bulk_create',
+                jadwal_id: trainingRow.id,
+                rows: rows
+
+            })
+
+        });
+
+        const result =
+        await res.json();
+
+        if(!result.success){
+
+            throw new Error(
+                result.message ||
+                'Gagal menyimpan hasil training'
+            );
+        }
+
+        await Swal.fire({
+
+            icon:'success',
+
+            title:'Berhasil disimpan',
+
+            text:
+            `${result.inserted} peserta tersimpan. `
+            +
+            `Lulus: ${result.jumlah_lulus}, `
+            +
+            `Tidak Lulus: ${result.jumlah_tidak_lulus}`
+
+        });
+
+        await loadJadwalTrainingData();
+
+        renderTrainingScheduleTable();
+
+    }catch(err){
+
+        console.error(err);
+
+        Swal.fire({
+
+            icon:'error',
+
+            title:'Gagal menyimpan',
+
+            text: err.message
+
+        });
+
+    }
 
 }
         
